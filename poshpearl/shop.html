@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Shop — PoshPearl</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/vendor/bootstrap-icons/bootstrap-icons.css">
+    <link id="style-switch" rel="stylesheet" href="assets/css/style.css">
+
+    
+    <style>
+      body{font-family:'Nunito Sans',Rubik,system-ui,Segoe UI,Arial,sans-serif;color:#222;margin:0;background:#fff}
+      .container{width:92%;max-width:1100px;margin:0 auto;padding:22px 0}
+      .site-header{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+      .site-header .logo img{height:64px}
+      .nav a{margin:0 10px;color:#6b6b6b;text-decoration:none;font-weight:600}
+      .shop-hero{padding:32px 0;text-align:center}
+      .products-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:18px}
+      .product{background:#fff;border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.04);text-align:left}
+      .product img{width:100%;height:180px;object-fit:cover;border-radius:8px}
+      .product h4{margin:10px 0 6px;font-size:1.05rem}
+      .price{color:var(--primary,#7c2c38);font-weight:700}
+      .product .cta{margin-top:10px}
+      @media(max-width:900px){.products-grid{grid-template-columns:repeat(2,1fr)}}
+      @media(max-width:520px){.products-grid{grid-template-columns:1fr}.product img{height:220px}}
+    </style>
+  </head>
+  <body>
+    <header class="site-header container">
+      <a class="logo" href="index.html"><img src="assets/logo.jpeg" alt="PoshPearl logo"></a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="#installation">Installation</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="shop-hero">
+        <h1 style="color:var(--primary)">Shop the Mode Series</h1>
+        <p style="color:#6b6b6b;max-width:720px;margin:8px auto">Browse our curated smart locks and accessories. Add items to cart or request a quote — buying is simple and secure.</p>
+      </section>
+
+      <section class="products">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:220px">
+            <input id="search" placeholder="Search products" style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6">
+          </div>
+          <div style="display:flex;gap:8px">
+            <select id="filter" style="padding:10px;border-radius:8px;border:1px solid #e6e6e6">
+              <option value="all">All categories</option>
+              <option value="locks">Locks</option>
+              <option value="accessories">Accessories</option>
+            </select>
+            <button id="clear" class="btn ghost">Clear</button>
+          </div>
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+          <!-- Example product cards -->
+          <article class="product" data-cat="locks">
+            <img src="assets/placeholder-1.svg" alt="Mode Smart Lock — Classic" loading="lazy">
+            <h4>Mode Smart Lock — Classic</h4>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="price">$249</div>
+              <div style="color:#6b6b6b;font-size:.95rem">In stock</div>
+            </div>
+            <p style="color:#6b6b6b;margin:8px 0;font-size:.95rem">Refined hardware, Bluetooth & optional Wi‑Fi hub.</p>
+            <div class="cta"><a class="btn primary" href="#">Buy</a> <a class="btn ghost" href="#" style="margin-left:8px">Details</a></div>
+          </article>
+
+          <article class="product" data-cat="locks">
+            <img src="assets/placeholder-2.svg" alt="Mode Smart Lock — Modern" loading="lazy">
+            <h4>Mode Smart Lock — Modern</h4>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="price">$269</div>
+              <div style="color:#6b6b6b;font-size:.95rem">Pre-order</div>
+            </div>
+            <p style="color:#6b6b6b;margin:8px 0;font-size:.95rem">Thin profile for flush doors, guest codes and audit trail.</p>
+            <div class="cta"><a class="btn primary" href="#">Buy</a> <a class="btn ghost" href="#" style="margin-left:8px">Details</a></div>
+          </article>
+
+          <article class="product" data-cat="accessories">
+            <img src="assets/placeholder-3.svg" alt="Keypad accessory" loading="lazy">
+            <h4>Outdoor Keypad</h4>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="price">$89</div>
+              <div style="color:#6b6b6b;font-size:.95rem">In stock</div>
+            </div>
+            <p style="color:#6b6b6b;margin:8px 0;font-size:.95rem">Weatherproof keypad for guest codes and one-time pins.</p>
+            <div class="cta"><a class="btn primary" href="#">Buy</a> <a class="btn ghost" href="#" style="margin-left:8px">Details</a></div>
+          </article>
+
+          <article class="product" data-cat="accessories">
+            <img src="assets/placeholder-1.svg" alt="Spare battery pack" loading="lazy">
+            <h4>Battery Pack — 4x AA</h4>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="price">$12</div>
+              <div style="color:#6b6b6b;font-size:.95rem">In stock</div>
+            </div>
+            <p style="color:#6b6b6b;margin:8px 0;font-size:.95rem">Long-life alkaline batteries and low-battery alerts.</p>
+            <div class="cta"><a class="btn primary" href="#">Buy</a> <a class="btn ghost" href="#" style="margin-left:8px">Details</a></div>
+          </article>
+
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function(){
+        var search=document.getElementById('search');
+        var filter=document.getElementById('filter');
+        var clear=document.getElementById('clear');
+        var grid=document.getElementById('productsGrid');
+        function filterProducts(){
+          var q=search.value.trim().toLowerCase();
+          var cat=filter.value;
+          Array.from(grid.children).forEach(function(card){
+            var title=card.querySelector('h4').textContent.toLowerCase();
+            var matchQ=!q||title.indexOf(q)!==-1;
+            var matchCat=cat==='all'||card.getAttribute('data-cat')===cat;
+            card.style.display=(matchQ && matchCat)?'block':'none';
+          });
+        }
+        search.addEventListener('input',filterProducts);
+        filter.addEventListener('change',filterProducts);
+        clear.addEventListener('click',function(){search.value='';filter.value='all';filterProducts()});
+      })();
+    </script>
+  </body>
+</html>

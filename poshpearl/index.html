@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>PoshPearl Smart Living</title>
+        <meta name="author" content="PoshPearl">
+        <meta name="description" content="PoshPearl Smart Living — elegant smart home solutions for security, comfort and design.">
+
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+
+        <!-- Vendor CSS (kept for compatibility) -->
+        <link rel="stylesheet" href="assets/vendor/font-awesome/css/all.min.css">
+        <link rel="stylesheet" href="assets/vendor/bootstrap-icons/bootstrap-icons.css">
+        <link rel="stylesheet" href="assets/vendor/tiny-slider/tiny-slider.css">
+        <link rel="stylesheet" href="assets/vendor/glightbox/css/glightbox.css">
+
+        <link id="style-switch" rel="stylesheet" href="assets/css/style.css">
+
+        <style>
+            /* Basic tokens */
+            :root{--primary:#7c2c38;--accent:#f5a623;--muted:#4e2c2c}
+            html{scroll-behavior:smooth}
+            body{font-family:'Nunito Sans',Rubik,system-ui,Segoe UI,Arial,sans-serif;color:#222;margin:0;background:#fff;line-height:1.5}
+            .container{width:92%;max-width:1100px;margin:0 auto}
+
+            /* Header */
+            .site-header{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,0.96);backdrop-filter:blur(6px);box-shadow:0 2px 8px rgba(0,0,0,.04)}
+            .header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+            .site-header .logo img{height:64px;vertical-align:middle;margin-right:10px}
+            .nav a{margin:0 10px;color:var(--muted);text-decoration:none;font-weight:600}
+            .nav-toggle{display:none;background:transparent;border:0;font-size:22px}
+
+            /* Layout */
+            .hero-grid{display:grid;grid-template-columns:1fr 520px;gap:28px;align-items:center}
+            .lead{line-height:1.4}
+            .btn{display:inline-block;padding:10px 16px;border-radius:8px;text-decoration:none;border:0;cursor:pointer}
+            .btn.primary{background:var(--primary);color:#fff}
+            .btn.ghost{background:transparent;color:var(--primary);border:2px solid var(--primary)}
+            .btn:focus{outline:3px solid rgba(124,44,56,.16);outline-offset:2px}
+            .section-title{color:var(--muted);margin:0 0 12px}
+            .product-card img{max-width:100%;height:auto;border-radius:8px}
+            .feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+            .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+
+            /* Responsive */
+            @media (max-width:900px) {
+                .feature-grid{grid-template-columns:repeat(2,1fr)}
+                .hero-grid{grid-template-columns:1fr}
+                .nav-toggle{display:block}
+                .gallery-grid{grid-template-columns:repeat(2,1fr)}
+                .product-card{grid-template-columns:1fr}
+                .header-inner{padding:10px 0}
+            }
+
+            /* Mobile navigation: slide-in panel */
+            .nav{position:fixed;top:0;right:0;height:100vh;width:280px;background:#fff;box-shadow:-6px 0 24px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .28s ease;display:flex;flex-direction:column;padding:72px 18px 18px;gap:8px}
+            .nav a{display:block;padding:12px 8px;border-radius:8px;color:var(--muted);font-weight:700}
+            .nav.open{transform:translateX(0)}
+
+            /* Make the toggle more visible on mobile */
+            .nav-toggle{background:transparent;border-radius:8px;padding:6px 10px}
+
+            /* Smaller logo on narrow screens */
+            @media (max-width:520px){
+                .site-header .logo img{height:48px}
+                .btn{width:100%;display:block;text-align:center}
+                .btn + .btn{margin-top:10px}
+                .hero-copy h1{font-size:clamp(1.6rem,4.5vw,2.2rem)}
+                .hero-copy .lead{font-size:0.98rem}
+                .feature-grid{grid-template-columns:1fr}
+                .gallery-grid{grid-template-columns:1fr}
+                .product-card{grid-template-columns:1fr}
+            }
+
+            /* Slightly larger tap targets */
+            .nav a{font-size:1.03rem}
+            @media(max-width:520px){
+                .feature-grid{grid-template-columns:1fr}
+                .gallery-grid{grid-template-columns:1fr}
+                .hero-grid{grid-template-columns:1fr}
+            }
+
+            /* Back-to-top */
+            .back-top{position:fixed;right:18px;bottom:18px;background:var(--primary);color:#fff;padding:10px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .22s ease,opacity .22s ease;opacity:0;pointer-events:none}
+            .back-top.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+
+            /* Focus & accessibility helpers */
+            .skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+            .skip-link:focus{left:12px;top:12px;width:auto;height:auto;padding:8px 12px;background:#fff;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.12);z-index:2000}
+
+            /* Simple toast */
+            .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;background:#111;color:#fff;padding:12px 18px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:opacity .22s ease,transform .22s ease}
+            .toast.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+            .toast.success{background:var(--primary)}
+
+            /* Small utilities */
+            img[loading="lazy"]{will-change:opacity}
+        </style>
+    </head>
+
+    <body>
+        <a class="skip-link" href="#main">Skip to content</a>
+
+        <header class="site-header">
+            <div class="container header-inner">
+                <a class="logo" href="#"><img src="assets/logo.jpeg" alt="PoshPearl logo"></a>
+                <nav class="nav" id="nav">
+                    <a href="#features">Features</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="#installation">Installation</a>
+                    <a href="#about">About</a>
+                    <a href="#preorder">Pre-order</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+                <button class="nav-toggle" id="navToggle" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">☰</button>
+            </div>
+        </header>
+
+    <main id="main">
+
+            <section class="hero" style="padding:56px 0;background:linear-gradient(180deg,rgba(124,44,56,0.04),rgba(245,166,35,0.02));">
+                <div class="container hero-grid">
+                    <div class="hero-copy">
+                        <h1 style="font-size:2.6rem;color:var(--primary);margin:0 0 12px;">Smart Living, Redefined</h1>
+                        <p class="lead" style="font-size:1.1rem;color:var(--muted);max-width:640px;">PoshPearl blends premium finishes, refined hardware and intuitive automation to create elegant, secure homes. Designed for architects, curated for living.</p>
+                        <p class="cta-row" style="margin:18px 0">
+                            <a class="btn primary" href="#products">View Mode Series</a>
+                            <a class="btn ghost" href="#contact" style="margin-left:12px;">Request a Demo</a>
+                        </p>
+                        <ul class="hero-highlights" style="margin-top:8px;list-style:none;padding:0;color:#6b6b6b;">
+                            <li>Architect-grade finishes</li>
+                            <li>App & voice control</li>
+                            <li>Enterprise-grade security</li>
+                        </ul>
+                    </div>
+                    <div class="hero-media">
+                        <img src="assets/hero.svg" alt="Mode Series" style="width:100%;max-width:520px;border-radius:14px;" loading="lazy"> 
+                    </div>
+                </div>
+            </section>
+
+            <section id="features" class="features" style="padding:36px 0;">
+                <div class="container">
+                    <h2 class="section-title">What we offer</h2>
+                    <div class="feature-grid" style="margin-top:18px;">
+                        <article class="feature" style="text-align:center;padding:18px;background:#fff;border-radius:12px;box-shadow:0 6px 20px rgba(17,17,17,.04)">
+                            <img src="assets/lock.svg" alt="Lock" style="width:64px;height:64px;margin-bottom:12px;" loading="lazy">
+                            <h3>Smart Locks</h3>
+                            <p style="color:#6b6b6b">Secure, keyless entry with refined hardware and remote management for modern homes.</p>
+                        </article>
+                        <article class="feature" style="text-align:center;padding:18px;background:#fff;border-radius:12px;box-shadow:0 6px 20px rgba(17,17,17,.04)">
+                            <img src="assets/automation.svg" alt="Automation" style="width:64px;height:64px;margin-bottom:12px;" loading="lazy">
+                            <h3>Automation</h3>
+                            <p style="color:#6b6b6b">Scenes, schedules and integrations that simplify daily life and harmonise with interiors.</p>
+                        </article>
+                        <article class="feature" style="text-align:center;padding:18px;background:#fff;border-radius:12px;box-shadow:0 6px 20px rgba(17,17,17,.04)">
+                            <img src="assets/security.svg" alt="Security" style="width:64px;height:64px;margin-bottom:12px;" loading="lazy">
+                            <h3>Security</h3>
+                            <p style="color:#6b6b6b">Encrypted communications, tamper alerts and optional monitoring for peace of mind.</p>
+                        </article>
+                        <article class="feature" style="text-align:center;padding:18px;background:#fff;border-radius:12px;box-shadow:0 6px 20px rgba(17,17,17,.04)">
+                            <img src="assets/support.svg" alt="Support" style="width:64px;height:64px;margin-bottom:12px;" loading="lazy">
+                            <h3>Design & Support</h3>
+                            <p style="color:#6b6b6b">Design-first approach with on-site support for architects and homeowners.</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured product -->
+            <section id="products" class="products" style="padding:36px 0;background:transparent;">
+                <div class="container">
+                    <h2 class="section-title">Featured — Mode Series</h2>
+                    <div class="product-card" style="display:grid;grid-template-columns:420px 1fr;gap:28px;align-items:center;margin-top:18px;">
+                        <div class="product-media"><img src="assets/hero.svg" alt="Mode" style="width:100%;border-radius:12px" loading="lazy"></div>
+                        <div class="product-info">
+                            <h3>Mode Series Smart Lock</h3>
+                            <p class="product-lead" style="color:#6b6b6b">Refined hardware with Bluetooth & Wi‑Fi connectivity, guest codes, and intuitive app control — crafted for premium interiors.</p>
+
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;color:#6b6b6b">
+                                <ul style="margin:0;padding-left:18px">
+                                    <li><strong>Finishes:</strong> Polished Pearl, Satin Bronze, Graphite</li>
+                                    <li><strong>Access:</strong> App, guest codes, physical key backup</li>
+                                </ul>
+                                <ul style="margin:0;padding-left:18px">
+                                    <li><strong>Security:</strong> Tamper alerts, audit logs, encrypted comms</li>
+                                    <li><strong>Power:</strong> Long-life batteries + low-battery alerts</li>
+                                </ul>
+                            </div>
+
+                            <p style="margin-top:12px;"><a class="btn primary" href="#preorder">Pre-order / Request Quote</a></p>
+                        </div>
+                    </div>
+
+                    <!-- Product details inspired layout -->
+                    <div style="display:grid;grid-template-columns:1fr 320px;gap:28px;margin-top:28px;align-items:start">
+                        <div>
+                            <h4 style="margin:0 0 8px;color:var(--muted)">Specifications</h4>
+                            <ul style="color:#6b6b6b">
+                                <li>Bluetooth 5.0 + 2.4GHz Wi‑Fi
+                                <li>Supports multiple user codes, schedules and audit history
+                                <li>Operating temp: -20°C to 60°C
+                                <li>Battery: 4x AA (typical 12–18 months)</li>
+                            </ul>
+                            <h4 style="margin-top:16px;margin-bottom:8px;color:var(--muted)">Downloads & Resources</h4>
+                            <p style="margin:0;color:#6b6b6b">Installation guide, specification sheets and CAD files available on request. Contact our team to receive technical documentation.</p>
+                        </div>
+                        <aside style="background:#fff;border-radius:8px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.04);text-align:center">
+                            <h5 style="margin:0 0 8px;color:var(--muted)">Finishes</h5>
+                            <img src="assets/placeholder-1.svg" alt="Finish" style="width:80%;margin-bottom:10px" loading="lazy">
+                            <p style="margin:0;color:#6b6b6b">Select from curated hardware finishes to match interiors and architecture.</p>
+                        </aside>
+                    </div>
+                </div>
+            </section>
+
+            <section id="gallery" class="gallery" style="padding:36px 0;">
+                <div class="container">
+                    <h2 class="section-title">Gallery</h2>
+                    <div class="gallery-grid" style="margin-top:16px;">
+                        <img src="assets/placeholder-1.svg" alt="Kitchen interior" style="width:100%;height:200px;object-fit:cover;border-radius:8px" loading="lazy">
+                        <img src="assets/placeholder-2.svg" alt="Door hardware" style="width:100%;height:200px;object-fit:cover;border-radius:8px" loading="lazy">
+                        <img src="assets/placeholder-3.svg" alt="Living room" style="width:100%;height:200px;object-fit:cover;border-radius:8px" loading="lazy">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Product list: kept as product variants -->
+            <section id="product-variants" class="locks" style="padding:36px 0;background:#fafafa;">
+                <div class="container">
+                    <h2 class="section-title">Products — Mode Series</h2>
+                    <div class="feature-grid" style="margin-top:18px;">
+                        <article style="padding:18px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.04)">
+                            <h3>Mode Smart Lock — Classic</h3>
+                            <p style="color:#6b6b6b">Keyless entry with refined hardware and guest-code management.</p>
+                            <p><a class="btn primary" href="#preorder">Pre-order</a></p>
+                        </article>
+                        <article style="padding:18px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.04)">
+                            <h3>Mode Smart Lock — Modern</h3>
+                            <p style="color:#6b6b6b">Thin profile for flush doors with Bluetooth + optional Wi‑Fi hub.</p>
+                            <p><a class="btn primary" href="#preorder">Pre-order</a></p>
+                        </article>
+                        <article style="padding:18px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.04)">
+                            <h3>Mode Deadbolt</h3>
+                            <p style="color:#6b6b6b">High-security deadbolt variant with audit logs and tamper alerts.</p>
+                            <p><a class="btn primary" href="#preorder">Pre-order</a></p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Installation & videos (renamed from videos) -->
+            <section id="installation" class="installation" style="padding:36px 0;">
+                <div class="container">
+                    <h2 class="section-title">Installation & Resources</h2>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;">
+                        <div style="background:#111;color:#fff;padding:12px;border-radius:8px;text-align:center;">
+                            <h4 style="margin:6px 0;color:#fff">Installation — Mode Lock</h4>
+                            <p style="color:#ddd">Step-by-step guide to install in 5 minutes</p>
+                            <a class="btn ghost" href="#" style="color:#fff;border-color:#fff">Watch</a>
+                        </div>
+                        <div style="background:#111;color:#fff;padding:12px;border-radius:8px;text-align:center;">
+                            <h4 style="margin:6px 0;color:#fff">Setup & App Pairing</h4>
+                            <p style="color:#ddd">Pairing guide for app and voice assistants</p>
+                            <a class="btn ghost" href="#" style="color:#fff;border-color:#fff">Watch</a>
+                        </div>
+                        <div style="background:#111;color:#fff;padding:12px;border-radius:8px;text-align:center;">
+                            <h4 style="margin:6px 0;color:#fff">Troubleshooting</h4>
+                            <p style="color:#ddd">Common tips and diagnostics</p>
+                            <a class="btn ghost" href="#" style="color:#fff;border-color:#fff">Watch</a>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:18px;color:#6b6b6b">
+                        <p>Need installation manuals or CAD files? Contact our technical team via the form and we'll provide download links and technical support.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="preorder" class="preorder" style="padding:36px 0;background:linear-gradient(90deg,rgba(124,44,56,0.06),rgba(245,166,35,0.02));">
+                <div class="container" style="text-align:center;">
+                    <h2 class="section-title">Pre-order the Mode Series</h2>
+                    <p style="color:#6b6b6b;max-width:700px;margin:8px auto;">Join our priority list and receive launch pricing, early access and dedicated design support.</p>
+                    <a class="btn primary" href="#contact">Join Priority List</a>
+                </div>
+            </section>
+
+            <section id="about" class="about" style="padding:36px 0;background:#fff;">
+                <div class="container">
+                    <h2 class="section-title">About PoshPearl</h2>
+                    <div style="display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:center;margin-top:12px;">
+                        <div>
+                            <p style="color:#6b6b6b;">PoshPearl designs premium smart home hardware and integrated systems that blend luxury finishes with reliable, secure automation. We partner with architects and homeowners to deliver elegant, intuitive smart living experiences across locks, security and automation.</p>
+                        </div>
+                        <div style="text-align:center"><img src="assets/logo.jpeg" alt="PoshPearl" style="max-width:320px"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact" class="contact" style="padding:36px 0;background:#fff;">
+                <div class="container">
+                    <h2 class="section-title">Get in touch</h2>
+                    <p style="color:#6b6b6b;">Request a demo, brochure, or speak to our design team about your next project.</p>
+                    <form id="contactForm" class="contact-form" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:700px;margin-top:12px;" novalidate>
+                        <label style="display:block;">
+                            Name
+                            <input type="text" name="name" required style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6" />
+                        </label>
+                        <label style="display:block;">
+                            Email
+                            <input type="email" name="email" required style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6" />
+                        </label>
+                        <label style="display:block;grid-column:1/3;">
+                            Message
+                            <textarea name="message" rows="4" style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6"></textarea>
+                        </label>
+                        <p style="grid-column:1/3;margin:0"><button class="btn primary" type="submit">Send request</button></p>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+
+    <div class="back-top" title="Back to top" aria-label="Back to top"><i class="bi bi-arrow-up-short" style="font-size:20px"></i></div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var navToggle = document.getElementById('navToggle');
+                var nav = document.getElementById('nav');
+                if (navToggle) {
+                    navToggle.addEventListener('click', function () {
+                        var expanded = this.getAttribute('aria-expanded') === 'true';
+                        this.setAttribute('aria-expanded', !expanded);
+                                nav.classList.toggle('open');
+                                // update toggle icon for clarity
+                                if (nav.classList.contains('open')) { navToggle.textContent = '✕'; } else { navToggle.textContent = '☰'; }
+                    });
+                    // allow Esc to close mobile nav
+                    document.addEventListener('keyup', function (e) {
+                        if (e.key === 'Escape' && nav.classList.contains('open')) {
+                            nav.classList.remove('open');
+                            navToggle.setAttribute('aria-expanded', 'false');
+                            navToggle.focus();
+                        }
+                    });
+                }
+
+                var form = document.getElementById('contactForm');
+                var toast = document.getElementById('toast');
+
+                function showToast(message, opts) {
+                    opts = opts || {};
+                    toast.textContent = message;
+                    toast.classList.add('show');
+                    toast.hidden = false;
+                    if (opts.success) toast.classList.add('success');
+                    setTimeout(function () {
+                        toast.classList.remove('show');
+                        if (opts.success) toast.classList.remove('success');
+                        toast.hidden = true;
+                    }, opts.duration || 3200);
+                }
+
+                if (form) {
+                    form.addEventListener('submit', function (e) {
+                        e.preventDefault();
+                        // basic client-side validation
+                        var name = form.elements['name'].value.trim();
+                        var email = form.elements['email'].value.trim();
+                        if (!name || !email) {
+                            showToast('Please enter your name and email.', {duration: 3000});
+                            return;
+                        }
+                        // In a real app we'd POST this to a server. For demo, show friendly toast.
+                        showToast('Thanks! We received your request. We will contact you soon.', {success: true, duration: 3500});
+                        form.reset();
+                    });
+                }
+
+                var back = document.querySelector('.back-top');
+                function updateBackTop() {
+                    if (window.scrollY > 220) back.classList.add('show'); else back.classList.remove('show');
+                }
+                if (back) {
+                    back.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+                    updateBackTop();
+                    window.addEventListener('scroll', updateBackTop);
+                }
+            });
+        </script>
+
+        <!-- Vendor scripts (kept for compatibility) -->
+        <script src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/vendor/tiny-slider/tiny-slider.js"></script>
+        <script src="assets/vendor/glightbox/js/glightbox.js"></script>
+
+    </body>
+</html>
+
+
