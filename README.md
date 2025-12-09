@@ -19,3 +19,4 @@ Notes & next steps:
 Design inspiration: gainsboroughhardware example provided by the user — this is a clean, responsive single-page prototype matching the same structure (hero, features, product, gallery, CTA).
 
 
+
