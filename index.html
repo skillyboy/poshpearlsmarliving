@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -20,107 +20,40 @@
     
     <title>PoshPearl Smart Living - Premium Smart Door Locks</title>
     
-    <!-- Preload Critical Resources -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" as="style">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
-    
-    <!-- Critical CSS (Inlined) -->
+    <!-- Critical CSS for initial render -->
     <style>
-        /* CSS Variables with fallback */
-        :root {
-            --burgundy: #5F1E2C;
-            --burgundy-rgb: 95, 30, 44;
-            --gold: #F4B000;
-            --gold-rgb: 244, 176, 0;
-            --offwhite: #FEFEFF;
-            --offwhite-rgb: 254, 254, 255;
-            --charcoal: #2A1613;
-            --charcoal-rgb: 42, 22, 19;
-            --chocolate: #311817;
-            --chocolate-rgb: 49, 24, 23;
-            --gray: #CFCFCF;
-            --gray-rgb: 207, 207, 207;
-            
-            /* Fluid typography */
-            --fluid-min: 16;
-            --fluid-max: 20;
-            --fluid-screen-min: 320;
-            --fluid-screen-max: 1200;
-            
-            /* Modern shadows */
-            --shadow-sm: 0 2px 8px rgba(42, 22, 19, 0.08);
-            --shadow-md: 0 4px 16px rgba(42, 22, 19, 0.12);
-            --shadow-lg: 0 8px 32px rgba(42, 22, 19, 0.16);
-            --shadow-gold: 0 4px 20px rgba(244, 176, 0, 0.25);
-            
-            /* Spacing system */
-            --space-xs: 0.5rem;
-            --space-sm: 1rem;
-            --space-md: 2rem;
-            --space-lg: 4rem;
-            --space-xl: 8rem;
-            
-            /* Border radius */
-            --radius-sm: 4px;
-            --radius-md: 8px;
-            --radius-lg: 16px;
-            --radius-full: 9999px;
-            
-            /* Transitions */
-            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        /* Reset & Base Styles */
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html {
-            font-size: clamp(
-                calc(var(--fluid-min) / 16 * 1rem),
-                calc(var(--fluid-min) / 16 * 1rem + (var(--fluid-max) - var(--fluid-min)) * ((100vw - var(--fluid-screen-min) * 1px) / (var(--fluid-screen-max) - var(--fluid-screen-min)))),
-                calc(var(--fluid-max) / 16 * 1rem)
-            );
-            scroll-behavior: smooth;
-            scroll-padding-top: 80px;
+        /* Minimal critical CSS */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
             overflow-x: hidden;
+            background-color: #FEFEFF;
         }
-        
-        body {
-            font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: var(--charcoal);
-            background-color: var(--offwhite);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+        .loading-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: #FEFEFF; 
+            z-index: 9999; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        
-        /* Skip to main content */
-        .skip-to-content {
-            position: absolute;
-            top: -40px;
-            left: 0;
-            background: var(--gold);
-            color: var(--burgundy);
-            padding: 8px 16px;
-            z-index: 9999;
-            text-decoration: none;
-            font-weight: 600;
-            border-radius: var(--radius-sm);
+        .loader-spinner { 
+            width: 50px; 
+            height: 50px; 
+            border: 3px solid #CFCFCF; 
+            border-top-color: #F4B000; 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite; 
         }
-        
-        .skip-to-content:focus {
-            top: 0;
+        @keyframes spin { 
+            to { transform: rotate(360deg); } 
         }
-        
-        /* Utility Classes */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -132,1665 +65,1044 @@
             white-space: nowrap;
             border: 0;
         }
-        
-        .container {
-            width: 100%;
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 var(--space-md);
-        }
-        
-        /* Header */
-        .header-top {
-            background: linear-gradient(90deg, var(--burgundy) 0%, var(--chocolate) 100%);
-            color: var(--offwhite);
-            padding: var(--space-xs) 0;
-            font-size: 0.875rem;
-        }
-        
-        .header-top .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .contact-info {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-        
-        .contact-info i {
-            color: var(--gold);
-        }
-        
-        header {
-            background: var(--offwhite);
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            background-color: rgba(254, 254, 255, 0.95);
-        }
-        
-        .header-main {
-            padding: var(--space-sm) 0;
-        }
-        
-        .header-inner {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-family: 'Montserrat', system-ui, sans-serif;
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: var(--burgundy);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .logo span {
-            color: var(--gold);
-        }
-        
-        .logo-sub {
-            font-size: 0.75rem;
-            font-weight: 400;
-            color: var(--burgundy);
-            font-style: italic;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            opacity: 0.8;
-        }
-        
-        /* Navigation */
-        .desktop-nav ul {
-            display: flex;
-            list-style: none;
-            gap: var(--space-md);
-        }
-        
-        .desktop-nav a {
-            color: var(--burgundy);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            position: relative;
-            padding: 0.5rem 0;
-            transition: color var(--transition-fast);
-        }
-        
-        .desktop-nav a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gold);
-            transition: width var(--transition-base);
-        }
-        
-        .desktop-nav a:hover {
-            color: var(--gold);
-        }
-        
-        .desktop-nav a:hover::after {
-            width: 100%;
-        }
-        
-        /* Mobile Menu Button */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--burgundy);
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: var(--radius-sm);
-            transition: background-color var(--transition-fast);
-        }
-        
-        .mobile-menu-btn:hover {
-            background-color: rgba(95, 30, 44, 0.1);
-        }
-        
-        /* Mobile Navigation */
-        .mobile-nav {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 100%;
-            height: 100vh;
-            background: var(--offwhite);
-            z-index: 9999;
-            transition: right var(--transition-base);
-            display: flex;
-            flex-direction: column;
-            padding: var(--space-xl) var(--space-md);
-        }
-        
-        .mobile-nav.active {
-            right: 0;
-        }
-        
-        .mobile-nav ul {
-            list-style: none;
-        }
-        
-        .mobile-nav li {
-            margin-bottom: var(--space-md);
-        }
-        
-        .mobile-nav a {
-            color: var(--burgundy);
-            text-decoration: none;
-            font-size: 1.25rem;
-            font-weight: 500;
-            display: block;
-            padding: 0.75rem;
-            border-radius: var(--radius-sm);
-            transition: background-color var(--transition-fast);
-        }
-        
-        .mobile-nav a:hover {
-            background-color: rgba(95, 30, 44, 0.1);
-        }
-        
-        .mobile-nav-close {
-            position: absolute;
-            top: var(--space-md);
-            right: var(--space-md);
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--burgundy);
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-        
-        /* Overlay */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 9998;
-            opacity: 0;
-            visibility: hidden;
-            transition: all var(--transition-base);
-        }
-        
-        .overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(95, 30, 44, 0.9), rgba(49, 24, 23, 0.95)),
-                        url('https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: var(--offwhite);
-            padding: var(--space-xl) var(--space-md);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 30% 20%, rgba(244, 176, 0, 0.15) 0%, transparent 50%);
-            pointer-events: none;
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .hero h1 {
-            font-family: 'Montserrat', system-ui, sans-serif;
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: var(--space-md);
-            text-transform: uppercase;
-            letter-spacing: -0.5px;
-        }
-        
-        .hero .tagline {
-            font-size: clamp(1.25rem, 3vw, 1.75rem);
-            font-weight: 300;
-            color: var(--gold);
-            margin-bottom: var(--space-md);
-            font-family: 'Montserrat', system-ui, sans-serif;
-        }
-        
-        .hero p {
-            font-size: clamp(1rem, 2vw, 1.25rem);
-            opacity: 0.9;
-            margin-bottom: var(--space-lg);
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        /* Button Styles */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            background: var(--gold);
-            color: var(--burgundy);
-            border: none;
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            font-family: 'Montserrat', system-ui, sans-serif;
-            text-decoration: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: all var(--transition-base);
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left var(--transition-base);
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-gold);
-        }
-        
-        .btn:hover::before {
-            left: 100%;
-        }
-        
-        .btn:active {
-            transform: translateY(-1px);
-        }
-        
-        .btn-primary {
-            background: var(--gold);
-            color: var(--burgundy);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: var(--gold);
-            border: 2px solid var(--gold);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--gold);
-            color: var(--burgundy);
-        }
-        
-        .btn-large {
-            padding: 1.25rem 2.5rem;
-            font-size: 1.1rem;
-        }
-        
-        /* Loading Animation */
-        .btn-loading .btn-text {
-            opacity: 0;
-        }
-        
-        .btn-loading::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--burgundy);
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 0.8s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Section Titles */
-        .section-title {
-            font-family: 'Montserrat', system-ui, sans-serif;
-            font-size: clamp(2rem, 4vw, 2.5rem);
-            font-weight: 800;
-            color: var(--burgundy);
-            text-align: center;
-            margin-bottom: var(--space-lg);
-            position: relative;
-            text-transform: uppercase;
-        }
-        
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: var(--gold);
-            margin: var(--space-sm) auto;
-            border-radius: 2px;
-        }
-        
-        /* Products Section */
-        .products {
-            padding: var(--space-xl) 0;
-            background: var(--offwhite);
-        }
-        
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
-            gap: var(--space-lg);
-            margin-bottom: var(--space-lg);
-        }
-        
-        .product-card {
-            background: var(--offwhite);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            transition: all var(--transition-base);
-            position: relative;
-            border: 1px solid rgba(207, 207, 207, 0.3);
-        }
-        
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .product-badge {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background: var(--gold);
-            color: var(--burgundy);
-            padding: 0.5rem 1rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            border-radius: var(--radius-full);
-            z-index: 2;
-            font-family: 'Montserrat', system-ui, sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .product-image {
-            width: 100%;
-            height: 250px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #ecf0f1 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform var(--transition-slow);
-        }
-        
-        .product-card:hover .product-image img {
-            transform: scale(1.05);
-        }
-        
-        .product-content {
-            padding: var(--space-lg);
-        }
-        
-        .product-title {
-            font-family: 'Montserrat', system-ui, sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--burgundy);
-            margin-bottom: var(--space-sm);
-        }
-        
-        .product-description {
-            color: var(--chocolate);
-            margin-bottom: var(--space-md);
-            opacity: 0.9;
-        }
-        
-        .product-features {
-            list-style: none;
-            margin-bottom: var(--space-md);
-        }
-        
-        .product-features li {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
-            color: var(--chocolate);
-        }
-        
-        .product-features i {
-            color: var(--gold);
-            flex-shrink: 0;
-        }
-        
-        .color-options {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: var(--space-md);
-        }
-        
-        .color-option {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: all var(--transition-fast);
-            position: relative;
-        }
-        
-        .color-option.active {
-            border-color: var(--gold);
-            transform: scale(1.1);
-        }
-        
-        .color-option::after {
-            content: attr(title);
-            position: absolute;
-            bottom: -1.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.75rem;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity var(--transition-fast);
-        }
-        
-        .color-option:hover::after {
-            opacity: 1;
-        }
-        
-        /* Features Section */
-        .features {
-            padding: var(--space-xl) 0;
-            background: linear-gradient(135deg, rgba(254, 254, 255, 0.9) 0%, rgba(248, 249, 250, 0.9) 100%);
-        }
-        
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-            gap: var(--space-lg);
-        }
-        
-        .feature-card {
-            background: var(--offwhite);
-            padding: var(--space-lg);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            text-align: center;
-            transition: all var(--transition-base);
-            border: 1px solid rgba(207, 207, 207, 0.3);
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--gold);
-        }
-        
-        .feature-icon {
-            font-size: 3rem;
-            color: var(--gold);
-            margin-bottom: var(--space-md);
-            display: inline-block;
-            transition: transform var(--transition-base);
-        }
-        
-        .feature-card:hover .feature-icon {
-            transform: scale(1.1);
-        }
-        
-        .feature-title {
-            font-family: 'Montserrat', system-ui, sans-serif;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--burgundy);
-            margin-bottom: var(--space-sm);
-        }
-        
-        /* Remote Management Section */
-        .remote-management {
-            padding: var(--space-xl) 0;
-            background: var(--offwhite);
-        }
-        
-        .remote-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-xl);
-            align-items: center;
-        }
-        
-        .remote-image {
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-        }
-        
-        .remote-image::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(95, 30, 44, 0.1), rgba(49, 24, 23, 0.1));
-            pointer-events: none;
-        }
-        
-        .remote-image-content {
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--chocolate) 100%);
-            padding: var(--space-xl);
-            text-align: center;
-            color: var(--offwhite);
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .remote-image h3 {
-            font-family: 'Montserrat', system-ui, sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-        
-        .remote-image .highlight {
-            font-size: 3.5rem;
-            color: var(--gold);
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-        
-        .remote-text h2 {
-            font-family: 'Montserrat', system-ui, sans-serif;
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--burgundy);
-            margin-bottom: var(--space-md);
-        }
-        
-        .feature-list {
-            list-style: none;
-            margin-bottom: var(--space-lg);
-        }
-        
-        .feature-list li {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            color: var(--chocolate);
-        }
-        
-        .feature-list i {
-            color: var(--gold);
-            flex-shrink: 0;
-        }
-        
-        .app-badges {
-            display: flex;
-            gap: 1rem;
-            margin-top: var(--space-md);
-        }
-        
-        .app-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all var(--transition-base);
-        }
-        
-        .app-badge-ios {
-            background: #000;
-            color: white;
-        }
-        
-        .app-badge-android {
-            background: #4285F4;
-            color: white;
-        }
-        
-        .app-badge:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        
-        /* Voice Assistant Section */
-        .voice-assistant {
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--chocolate) 100%);
-            color: var(--offwhite);
-            padding: var(--space-xl) 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .voice-assistant::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 70% 30%, rgba(244, 176, 0, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-        }
-        
-        .voice-assistant h2 {
-            font-family: 'Montserrat', system-ui, sans-serif;
-            font-size: clamp(2rem, 4vw, 2.5rem);
-            font-weight: 800;
-            margin-bottom: var(--space-md);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .voice-assistant p {
-            max-width: 800px;
-            margin: 0 auto var(--space-lg);
-            font-size: 1.1rem;
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .voice-icons {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-xl);
-            flex-wrap: wrap;
-            margin-bottom: var(--space-lg);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .voice-icon {
-            text-align: center;
-        }
-        
-        .voice-icon i {
-            font-size: 4rem;
-            color: var(--gold);
-            margin-bottom: 1rem;
-        }
-        
-        /* Installation Section */
-        .installation {
-            padding: var(--space-xl) 0;
-            background: linear-gradient(135deg, rgba(254, 254, 255, 0.9) 0%, rgba(248, 249, 250, 0.9) 100%);
-        }
-        
-        .installation-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
-            gap: var(--space-lg);
-        }
-        
-        .installation-card {
-            background: var(--offwhite);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            transition: all var(--transition-base);
-        }
-        
-        .installation-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .installation-image {
-            height: 200px;
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--chocolate) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .installation-content {
-            padding: var(--space-lg);
-        }
-        
-        .installation-title {
-            font-family: 'Montserrat', system-ui, sans-serif;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--burgundy);
-            margin-bottom: var(--space-sm);
-        }
-        
-        /* Contact Section */
-        .contact {
-            padding: var(--space-xl) 0;
-            background: var(--offwhite);
-        }
-        
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-xl);
-            align-items: start;
-        }
-        
-        .contact-form {
-            background: var(--offwhite);
-            padding: var(--space-lg);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            border: 1px solid rgba(207, 207, 207, 0.3);
-        }
-        
-        .form-group {
-            margin-bottom: var(--space-md);
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--burgundy);
-            font-family: 'Montserrat', system-ui, sans-serif;
-        }
-        
-        .form-input,
-        .form-textarea,
-        .form-select {
-            width: 100%;
-            padding: 1rem;
-            border: 1px solid var(--gray);
-            border-radius: var(--radius-sm);
-            font-family: 'Poppins', system-ui, sans-serif;
-            font-size: 1rem;
-            transition: all var(--transition-fast);
-            background: var(--offwhite);
-            color: var(--chocolate);
-        }
-        
-        .form-input:focus,
-        .form-textarea:focus,
-        .form-select:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(244, 176, 0, 0.1);
-        }
-        
-        .form-textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        
-        .form-check {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .form-check-input {
-            accent-color: var(--gold);
-            width: 1.25rem;
-            height: 1.25rem;
-        }
-        
-        .privacy-note {
-            background: rgba(244, 176, 0, 0.1);
-            padding: 1rem;
-            border-radius: var(--radius-sm);
-            margin-bottom: var(--space-md);
-            font-size: 0.875rem;
-            color: var(--chocolate);
-            border-left: 3px solid var(--gold);
-        }
-        
-        /* Contact Info Card */
-        .contact-info-card {
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--chocolate) 100%);
-            color: var(--offwhite);
-            padding: var(--space-lg);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            position: sticky;
-            top: 100px;
-        }
-        
-        .contact-info-card h3 {
-            font-family: 'Montserrat', system-ui, sans-serif;
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: var(--space-lg);
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .contact-info-list {
-            list-style: none;
-            margin-bottom: var(--space-lg);
-        }
-        
-        .contact-info-list li {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-        
-        .contact-info-list i {
-            color: var(--gold);
-            width: 24px;
-            text-align: center;
-        }
-        
-        /* Footer */
-        footer {
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--chocolate) 100%);
-            color: var(--offwhite);
-            padding: var(--space-xl) 0 0;
-        }
-        
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
-            gap: var(--space-xl);
-            margin-bottom: var(--space-xl);
-        }
-        
-        .footer-column h4 {
-            font-family: 'Montserrat', system-ui, sans-serif;
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: var(--space-md);
-            position: relative;
-            padding-bottom: 0.75rem;
-        }
-        
-        .footer-column h4::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background: var(--gold);
-        }
-        
-        .footer-links {
-            list-style: none;
-        }
-        
-        .footer-links li {
-            margin-bottom: 0.75rem;
-        }
-        
-        .footer-links a {
-            color: rgba(254, 254, 255, 0.8);
-            text-decoration: none;
-            transition: all var(--transition-fast);
-            display: inline-block;
-        }
-        
-        .footer-links a:hover {
-            color: var(--gold);
-            transform: translateX(4px);
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: var(--space-md);
-        }
-        
-        .social-link {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(254, 254, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--offwhite);
-            text-decoration: none;
-            transition: all var(--transition-base);
-        }
-        
-        .social-link:hover {
-            background: var(--gold);
-            color: var(--burgundy);
-            transform: translateY(-2px);
-        }
-        
-        .footer-bottom {
-            border-top: 1px solid rgba(254, 254, 255, 0.1);
-            padding: var(--space-lg) 0;
-            text-align: center;
-            font-size: 0.875rem;
-            color: rgba(254, 254, 255, 0.7);
-        }
-        
-        .footer-bottom p {
-            margin-bottom: 0.5rem;
-        }
-        
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
-        
-        .animate-in {
-            animation: fadeInUp 0.6s ease-out both;
-        }
-        
-        .animate-delay-1 {
-            animation-delay: 0.1s;
-        }
-        
-        .animate-delay-2 {
-            animation-delay: 0.2s;
-        }
-        
-        .animate-delay-3 {
-            animation-delay: 0.3s;
-        }
-        
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            z-index: 9999;
-            animation: slideInRight 0.3s ease-out;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .notification-success {
-            background: #10B981;
-            color: white;
-        }
-        
-        .notification-error {
-            background: #EF4444;
-            color: white;
-        }
-        
-        .notification-info {
-            background: #3B82F6;
-            color: white;
-        }
-        
-        /* Back to Top Button */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: var(--gold);
-            color: var(--burgundy);
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transition: all var(--transition-base);
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            box-shadow: var(--shadow-md);
-        }
-        
-        .back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .back-to-top:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        /* Dark Mode */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --offwhite: #121212;
-                --charcoal: #E0E0E0;
-                --gray: #444;
-            }
-            
-            body {
-                background-color: var(--offwhite);
-                color: var(--charcoal);
-            }
-            
-            .product-card,
-            .feature-card,
-            .contact-form,
-            .installation-card {
-                background: #1E1E1E;
-                border-color: #333;
-            }
-            
-            .form-input,
-            .form-textarea,
-            .form-select {
-                background: #2D2D2D;
-                color: var(--charcoal);
-                border-color: #444;
-            }
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 var(--space-sm);
-            }
-            
-            .header-top .container {
-                flex-direction: column;
-                gap: 0.5rem;
-                text-align: center;
-            }
-            
-            .desktop-nav {
-                display: none;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .hero {
-                background-attachment: scroll;
-                padding: var(--space-lg) var(--space-sm);
-            }
-            
-            .remote-content {
-                grid-template-columns: 1fr;
-                gap: var(--space-lg);
-            }
-            
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: var(--space-lg);
-            }
-            
-            .contact-info-card {
-                position: static;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .product-grid,
-            .feature-grid,
-            .installation-grid {
-                gap: var(--space-md);
-            }
-            
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: var(--space-lg);
-            }
-            
-            .voice-icons {
-                gap: var(--space-lg);
-            }
-            
-            .voice-icon i {
-                font-size: 3rem;
-            }
-            
-            .app-badges {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .logo {
-                font-size: 1.5rem;
-            }
-            
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .btn-large {
-                padding: 1rem 2rem;
-                font-size: 1rem;
-            }
-            
-            .product-content,
-            .feature-card,
-            .installation-content {
-                padding: var(--space-md);
-            }
-        }
-        
-        /* Print Styles */
-        @media print {
-            .header-top,
-            .mobile-menu-btn,
-            .back-to-top,
-            .btn,
-            .social-links {
-                display: none !important;
-            }
-            
-            body {
-                font-size: 12pt;
-                line-height: 1.5;
-            }
-            
-            .container {
-                max-width: 100%;
-                padding: 0;
-            }
-            
-            .hero {
-                background: none !important;
-                color: #000;
-                padding: 1cm 0;
-            }
-            
-            .product-card,
-            .feature-card {
-                break-inside: avoid;
-                box-shadow: none;
-                border: 1px solid #ccc;
-            }
-            
-            a {
-                color: #000;
-                text-decoration: underline;
-            }
-            
-            .contact-form {
-                display: none;
-            }
-        }
     </style>
+    
+    <!-- Preload important images -->
+    <link rel="preload" href="https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" as="image" fetchpriority="high">
+    
+    <!-- Main CSS file -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Skip to Content Link -->
-    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+    <a href="#main-content" class="skip-to-content" aria-label="Skip to main content">
+        <span class="sr-only">Skip to main content</span>
+    </a>
 
-    <!-- Header -->
-    <div class="header-top">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" aria-hidden="true">
+        <div class="loader">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Mobile Overlay -->
+    <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+    <!-- Top Header -->
+    <div class="header-top" role="banner">
         <div class="container">
-            <div class="contact-info">
-                <i class="fas fa-phone"></i> 07041087502
-                <i class="fas fa-map-marker-alt"></i> Abuja, Nigeria
-            </div>
-            <div class="social-links">
-                <a href="#" class="social-link" aria-label="Facebook">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="#" class="social-link" aria-label="Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://wa.me/2347041087502" class="social-link" aria-label="WhatsApp">
-                    <i class="fab fa-whatsapp"></i>
-                </a>
+            <div class="header-top-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone" aria-hidden="true"></i>
+                        <span>07041087502</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        <span>Abuja, Nigeria</span>
+                    </div>
+                </div>
+                <div class="social-links">
+                    <a href="#" class="social-link" aria-label="Facebook">
+                        <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Instagram">
+                        <i class="fab fa-instagram" aria-hidden="true"></i>
+                    </a>
+                    <a href="https://wa.me/2347041087502" class="social-link" aria-label="WhatsApp">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
-    <header>
+    <!-- Main Header -->
+    <header class="main-header" role="banner">
         <div class="container">
             <div class="header-inner">
-                <a href="/" class="logo">
-                    <i class="fas fa-gem"></i>
-                    Posh<span>Pearl</span>
-                    <span class="logo-sub">SMART LIVING</span>
-                </a>
+                <!-- Logo -->
+                <div class="logo-container">
+                    <a href="/" class="logo" aria-label="PoshPearl Home">
+                        <i class="fas fa-gem" aria-hidden="true"></i>
+                        <span class="logo-text">Posh<span class="logo-highlight">Pearl</span></span>
+                        <span class="logo-sub">SMART LIVING</span>
+                    </a>
+                </div>
 
                 <!-- Desktop Navigation -->
-                <nav class="desktop-nav" aria-label="Main Navigation">
-                    <ul>
-                        <li><a href="#products">Products</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#remote">Smart Control</a></li>
-                        <li><a href="#installation">Installation</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                <nav class="main-nav" aria-label="Main Navigation">
+                    <ul class="nav-list">
+                        <!-- Products Dropdown -->
+                        <li class="nav-item dropdown" data-dropdown="products">
+                            <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+                                Products
+                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="dropdown-menu megamenu" role="menu">
+                                <div class="container">
+                                    <div class="megamenu-content">
+                                        <div class="megamenu-section">
+                                            <h3 class="megamenu-title">Lever & Knob Sets</h3>
+                                            <ul class="megamenu-list">
+                                                <li><a href="#levers" role="menuitem">Levers</a></li>
+                                                <li><a href="#knobs" role="menuitem">Knobs</a></li>
+                                                <li><a href="#entrance-hardware" role="menuitem">Entrance Hardware</a></li>
+                                                <li><a href="#electronic-locks" role="menuitem">Electronic Locks</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="megamenu-section">
+                                            <h3 class="megamenu-title">Security Hardware</h3>
+                                            <ul class="megamenu-list">
+                                                <li><a href="#deadbolts" role="menuitem">Deadbolts</a></li>
+                                                <li><a href="#mortice-locks" role="menuitem">Mortice Locks</a></li>
+                                                <li><a href="#flush-security-bolts" role="menuitem">Flush & Security Bolts</a></li>
+                                                <li><a href="#patio-hardware" role="menuitem">Patio Hardware</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="megamenu-section">
+                                            <h3 class="megamenu-title">Pull Handles</h3>
+                                            <ul class="megamenu-list">
+                                                <li><a href="#pull-handles" role="menuitem">Pull Handles</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="megamenu-section">
+                                            <h3 class="megamenu-title">Auxillary</h3>
+                                            <ul class="megamenu-list">
+                                                <li><a href="#accessories" role="menuitem">Accessories</a></li>
+                                                <li><a href="#cavity-sets" role="menuitem">Cavity Sets</a></li>
+                                                <li><a href="#latches" role="menuitem">Latches</a></li>
+                                                <li><a href="#spare-parts" role="menuitem">Spare Parts</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="megamenu-section">
+                                            <h3 class="megamenu-title">Sliding Door Hardware</h3>
+                                            <ul class="megamenu-list">
+                                                <li><a href="#sliding-cavity-sets" role="menuitem">Cavity Sets</a></li>
+                                                <li><a href="#flush-pulls" role="menuitem">Flush Pulls</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Collections Dropdown -->
+                        <li class="nav-item dropdown" data-dropdown="collections">
+                            <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+                                Collections
+                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="dropdown-menu megamenu" role="menu">
+                                <div class="container">
+                                    <div class="megamenu-content">
+                                        <div class="megamenu-section">
+                                            <h3 class="megamenu-title">Ranges</h3>
+                                            <ul class="megamenu-list">
+                                                <li><a href="#avant" role="menuitem">Avant</a></li>
+                                                <li><a href="#neue" role="menuitem">Neue</a></li>
+                                                <li><a href="#choice" role="menuitem">Choice</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="megamenu-section">
+                                            <h3 class="megamenu-title">Finishes</h3>
+                                            <ul class="megamenu-list">
+                                                <li><a href="#satin-brass" role="menuitem">Satin Brass</a></li>
+                                                <li><a href="#matt-black" role="menuitem">Matt Black</a></li>
+                                                <li><a href="#satin-chrome" role="menuitem">Satin Chrome</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="megamenu-section">
+                                            <h3 class="megamenu-title">Endorsed Brands</h3>
+                                            <ul class="megamenu-list">
+                                                <li><a href="#tradepro" role="menuitem">TradePro by Gainsborough</a></li>
+                                                <li><a href="#austral-lock" role="menuitem">Austral Lock</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="megamenu-section">
+                                            <h3 class="megamenu-title">Technologies</h3>
+                                            <ul class="megamenu-list">
+                                                <li><a href="#freestyle" role="menuitem">Gainsborough Freestyle</a></li>
+                                                <li><a href="#mode" role="menuitem">Gainsborough Mode</a></li>
+                                                <li><a href="#liberty" role="menuitem">Gainsborough Liberty</a></li>
+                                                <li><a href="#haven" role="menuitem">Gainsborough Haven</a></li>
+                                                <li><a href="#trilock" role="menuitem">Trilock</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="megamenu-cta">
+                                            <a href="#style-guide" class="cta-link">
+                                                <span>View our Style Guide 2025</span>
+                                                <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- About Us -->
+                        <li class="nav-item">
+                            <a href="#about" class="nav-link">About us</a>
+                        </li>
+
+                        <!-- Style Hub -->
+                        <li class="nav-item">
+                            <a href="#style-hub" class="nav-link">Style Hub</a>
+                        </li>
+
+                        <!-- DIY Hub Dropdown -->
+                        <li class="nav-item dropdown" data-dropdown="diy">
+                            <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+                                DIY Hub
+                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="dropdown-menu megamenu" role="menu">
+                                <div class="container">
+                                    <div class="megamenu-content">
+                                        <div class="megamenu-section">
+                                            <h3 class="megamenu-title">Quick Links</h3>
+                                            <ul class="megamenu-list">
+                                                <li><a href="#hardware-tips" role="menuitem">Hardware Tips</a></li>
+                                                <li><a href="#ultimate-guide" role="menuitem">The Ultimate Guide</a></li>
+                                                <li><a href="#blog" role="menuitem">Blog</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="megamenu-section">
+                                            <h3 class="megamenu-title">Other Hubs</h3>
+                                            <ul class="megamenu-list">
+                                                <li><a href="#style-hub-inner" role="menuitem">Style Hub</a></li>
+                                                <li><a href="#smart-home-hub" role="menuitem">Smart Home Hub</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="megamenu-section">
+                                            <h3 class="megamenu-title">Hardware Essentials</h3>
+                                            <ul class="megamenu-list">
+                                                <li><a href="#hardware-101" role="menuitem">Hardware 101</a></li>
+                                                <li><a href="#glossary" role="menuitem">A - Z Hardware Glossary</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="megamenu-section">
+                                            <h3 class="megamenu-title">Help Centre</h3>
+                                            <ul class="megamenu-list">
+                                                <li><a href="#faq" role="menuitem">FAQ</a></li>
+                                                <li><a href="#document-library" role="menuitem">Document Library</a></li>
+                                                <li><a href="#contact" role="menuitem">Contact Us</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Smart Home Hub -->
+                        <li class="nav-item">
+                            <a href="#smart-home-hub" class="nav-link">Smart Home Hub</a>
+                        </li>
+
+                        <!-- Help Centre -->
+                        <li class="nav-item">
+                            <a href="#help" class="nav-link">Help Centre</a>
+                        </li>
+
+                        <!-- CTA Button -->
+                        <li class="nav-item cta-item">
+                            <a href="#contact" class="nav-cta">
+                                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                                <span>Shop Now</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
 
                 <!-- Mobile Menu Button -->
-                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
-                    <i class="fas fa-bars"></i>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobileNav">
+                    <span class="menu-icon"></span>
+                    <span class="menu-icon"></span>
+                    <span class="menu-icon"></span>
                 </button>
             </div>
         </div>
     </header>
 
     <!-- Mobile Navigation -->
-    <div class="overlay" id="overlay"></div>
     <nav class="mobile-nav" id="mobileNav" aria-label="Mobile Navigation" aria-hidden="true">
-        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
-            <i class="fas fa-times"></i>
-        </button>
-        <ul>
-            <li><a href="#products" class="nav-link">Products</a></li>
-            <li><a href="#features" class="nav-link">Features</a></li>
-            <li><a href="#remote" class="nav-link">Smart Control</a></li>
-            <li><a href="#installation" class="nav-link">Installation</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
-        </ul>
+        <div class="mobile-nav-header">
+            <div class="mobile-logo">
+                <a href="/" class="logo">
+                    <i class="fas fa-gem" aria-hidden="true"></i>
+                    <span>PoshPearl</span>
+                </a>
+            </div>
+            <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close mobile menu">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+        
+        <div class="mobile-nav-content">
+            <ul class="mobile-nav-list">
+                <!-- Products Mobile -->
+                <li class="mobile-nav-item accordion">
+                    <button class="mobile-nav-link accordion-toggle" aria-expanded="false">
+                        Products
+                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="accordion-content" hidden>
+                        <div class="mobile-submenu">
+                            <div class="mobile-submenu-section">
+                                <h4>Lever & Knob Sets</h4>
+                                <ul>
+                                    <li><a href="#levers">Levers</a></li>
+                                    <li><a href="#knobs">Knobs</a></li>
+                                    <li><a href="#entrance-hardware">Entrance Hardware</a></li>
+                                    <li><a href="#electronic-locks">Electronic Locks</a></li>
+                                </ul>
+                            </div>
+                            <div class="mobile-submenu-section">
+                                <h4>Security Hardware</h4>
+                                <ul>
+                                    <li><a href="#deadbolts">Deadbolts</a></li>
+                                    <li><a href="#mortice-locks">Mortice Locks</a></li>
+                                    <li><a href="#flush-security-bolts">Flush & Security Bolts</a></li>
+                                    <li><a href="#patio-hardware">Patio Hardware</a></li>
+                                </ul>
+                            </div>
+                            <div class="mobile-submenu-section">
+                                <h4>Pull Handles</h4>
+                                <ul>
+                                    <li><a href="#pull-handles">Pull Handles</a></li>
+                                </ul>
+                            </div>
+                            <div class="mobile-submenu-section">
+                                <h4>Auxillary</h4>
+                                <ul>
+                                    <li><a href="#accessories">Accessories</a></li>
+                                    <li><a href="#cavity-sets">Cavity Sets</a></li>
+                                    <li><a href="#latches">Latches</a></li>
+                                    <li><a href="#spare-parts">Spare Parts</a></li>
+                                </ul>
+                            </div>
+                            <div class="mobile-submenu-section">
+                                <h4>Sliding Door Hardware</h4>
+                                <ul>
+                                    <li><a href="#sliding-cavity-sets">Cavity Sets</a></li>
+                                    <li><a href="#flush-pulls">Flush Pulls</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Collections Mobile -->
+                <li class="mobile-nav-item accordion">
+                    <button class="mobile-nav-link accordion-toggle" aria-expanded="false">
+                        Collections
+                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="accordion-content" hidden>
+                        <div class="mobile-submenu">
+                            <div class="mobile-submenu-section">
+                                <h4>Ranges</h4>
+                                <ul>
+                                    <li><a href="#avant">Avant</a></li>
+                                    <li><a href="#neue">Neue</a></li>
+                                    <li><a href="#choice">Choice</a></li>
+                                </ul>
+                            </div>
+                            <div class="mobile-submenu-section">
+                                <h4>Finishes</h4>
+                                <ul>
+                                    <li><a href="#satin-brass">Satin Brass</a></li>
+                                    <li><a href="#matt-black">Matt Black</a></li>
+                                    <li><a href="#satin-chrome">Satin Chrome</a></li>
+                                </ul>
+                            </div>
+                            <div class="mobile-submenu-section">
+                                <h4>Endorsed Brands</h4>
+                                <ul>
+                                    <li><a href="#tradepro">TradePro by Gainsborough</a></li>
+                                    <li><a href="#austral-lock">Austral Lock</a></li>
+                                </ul>
+                            </div>
+                            <div class="mobile-submenu-section">
+                                <h4>Technologies</h4>
+                                <ul>
+                                    <li><a href="#freestyle">Gainsborough Freestyle</a></li>
+                                    <li><a href="#mode">Gainsborough Mode</a></li>
+                                    <li><a href="#liberty">Gainsborough Liberty</a></li>
+                                    <li><a href="#haven">Gainsborough Haven</a></li>
+                                    <li><a href="#trilock">Trilock</a></li>
+                                </ul>
+                            </div>
+                            <div class="mobile-submenu-cta">
+                                <a href="#style-guide" class="mobile-cta-link">
+                                    View our Style Guide 2025
+                                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- About Us Mobile -->
+                <li class="mobile-nav-item">
+                    <a href="#about" class="mobile-nav-link">About us</a>
+                </li>
+
+                <!-- Style Hub Mobile -->
+                <li class="mobile-nav-item">
+                    <a href="#style-hub" class="mobile-nav-link">Style Hub</a>
+                </li>
+
+                <!-- DIY Hub Mobile -->
+                <li class="mobile-nav-item accordion">
+                    <button class="mobile-nav-link accordion-toggle" aria-expanded="false">
+                        DIY Hub
+                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="accordion-content" hidden>
+                        <div class="mobile-submenu">
+                            <div class="mobile-submenu-section">
+                                <h4>Quick Links</h4>
+                                <ul>
+                                    <li><a href="#hardware-tips">Hardware Tips</a></li>
+                                    <li><a href="#ultimate-guide">The Ultimate Guide</a></li>
+                                    <li><a href="#blog">Blog</a></li>
+                                </ul>
+                            </div>
+                            <div class="mobile-submenu-section">
+                                <h4>Other Hubs</h4>
+                                <ul>
+                                    <li><a href="#style-hub-inner">Style Hub</a></li>
+                                    <li><a href="#smart-home-hub">Smart Home Hub</a></li>
+                                </ul>
+                            </div>
+                            <div class="mobile-submenu-section">
+                                <h4>Hardware Essentials</h4>
+                                <ul>
+                                    <li><a href="#hardware-101">Hardware 101</a></li>
+                                    <li><a href="#glossary">A - Z Hardware Glossary</a></li>
+                                </ul>
+                            </div>
+                            <div class="mobile-submenu-section">
+                                <h4>Help Centre</h4>
+                                <ul>
+                                    <li><a href="#faq">FAQ</a></li>
+                                    <li><a href="#document-library">Document Library</a></li>
+                                    <li><a href="#contact">Contact Us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Smart Home Hub Mobile -->
+                <li class="mobile-nav-item">
+                    <a href="#smart-home-hub" class="mobile-nav-link">Smart Home Hub</a>
+                </li>
+
+                <!-- Help Centre Mobile -->
+                <li class="mobile-nav-item">
+                    <a href="#help" class="mobile-nav-link">Help Centre</a>
+                </li>
+            </ul>
+            
+            <div class="mobile-nav-footer">
+                <div class="mobile-contact">
+                    <a href="tel:07041087502" class="mobile-contact-link">
+                        <i class="fas fa-phone" aria-hidden="true"></i>
+                        <span>07041087502</span>
+                    </a>
+                    <a href="mailto:info@poshpearl.com" class="mobile-contact-link">
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                        <span>info@poshpearl.com</span>
+                    </a>
+                </div>
+                <div class="mobile-social">
+                    <a href="#" class="mobile-social-link" aria-label="Facebook">
+                        <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" class="mobile-social-link" aria-label="Instagram">
+                        <i class="fab fa-instagram" aria-hidden="true"></i>
+                    </a>
+                    <a href="https://wa.me/2347041087502" class="mobile-social-link" aria-label="WhatsApp">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero" aria-label="Hero Section">
+    <section class="hero" aria-label="Hero section">
+        <div class="hero-background" role="presentation">
+            <div class="hero-overlay"></div>
+            <div class="hero-pattern"></div>
+        </div>
         <div class="container">
             <div class="hero-content">
-                <h1>Say Goodbye to Fumbling for Keys</h1>
-                <p class="tagline">Enter with Elegance & Security</p>
-                <p>Our smart door lock gives you effortless access to your home. Experience the future of home security with PoshPearl Smart Living.</p>
-                <a href="#contact" class="btn btn-large btn-primary">
-                    Contact Us Now
-                    <i class="fas fa-arrow-right"></i>
-                </a>
+                <div class="hero-badge">
+                    <span>Premium Security</span>
+                </div>
+                <h1 class="hero-title">
+                    <span class="hero-line">Say Goodbye to</span>
+                    <span class="hero-line highlight">Fumbling for Keys</span>
+                </h1>
+                <p class="hero-subtitle">Enter with Elegance & Security</p>
+                <p class="hero-description">Our smart door lock gives you effortless access to your home. Experience the future of home security with PoshPearl Smart Living.</p>
+                <div class="hero-actions">
+                    <a href="#products" class="btn btn-primary btn-large">
+                        <span>Explore Products</span>
+                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                    </a>
+                    <a href="#contact" class="btn btn-secondary">
+                        <span>Contact Us</span>
+                        <i class="fas fa-phone" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="hero-features">
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                        <span>Advanced Security</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-bolt" aria-hidden="true"></i>
+                        <span>Smart Technology</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-award" aria-hidden="true"></i>
+                        <span>Premium Quality</span>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="hero-scroll" aria-hidden="true">
+            <span>Scroll to explore</span>
+            <i class="fas fa-chevron-down" aria-hidden="true"></i>
         </div>
     </section>
 
     <!-- Main Content -->
-    <main id="main-content">
+    <main id="main-content" role="main">
         <!-- Products Section -->
-        <section class="products" id="products" aria-labelledby="products-title">
+        <section class="products-section" id="products" aria-labelledby="products-title">
             <div class="container">
-                <h2 class="section-title" id="products-title">Premium Smart Lock Collection</h2>
+                <div class="section-header">
+                    <div class="section-badge">
+                        <span>Our Collection</span>
+                    </div>
+                    <h2 id="products-title" class="section-title">Premium Smart Lock Collection</h2>
+                    <p class="section-description">Discover our range of intelligent security solutions designed for modern living</p>
+                </div>
                 
-                <div class="product-grid">
+                <div class="products-grid">
                     <!-- Product 1 -->
-                    <article class="product-card animate-in">
+                    <article class="product-card" data-category="smart-locks">
                         <div class="product-badge">Most Popular</div>
                         <div class="product-image">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%235F1E2C'/%3E%3Cpath d='M200 150 L250 100 L300 150 L250 200 Z' fill='%23F4B000'/%3E%3Ccircle cx='200' cy='150' r='40' fill='%23FEFEFF' opacity='0.1'/%3E%3C/svg%3E" 
+                            <img src="https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
                                  alt="PoshPearl Smart Deadbolt - Premium smart lock with fingerprint reader"
-                                 loading="lazy">
+                                 loading="lazy"
+                                 width="800"
+                                 height="600">
+                            <div class="product-overlay">
+                                <button class="product-quick-view" aria-label="Quick view Smart Deadbolt">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="product-content">
-                            <h3 class="product-title">Smart Deadbolt</h3>
+                            <div class="product-category">Smart Deadbolt</div>
+                            <h3 class="product-title">Smart Deadbolt Pro</h3>
                             <p class="product-description">The perfect balance of security and convenience for your main entrance. Featuring multiple access methods and remote management capabilities.</p>
-                            <ul class="product-features">
-                                <li><i class="fas fa-fingerprint"></i> Fingerprint reader</li>
-                                <li><i class="fas fa-keyboard"></i> Backlit keypad</li>
-                                <li><i class="fas fa-id-card"></i> RFID tag access</li>
-                                <li><i class="fas fa-key"></i> Key override</li>
-                            </ul>
-                            <div class="color-options">
-                                <div class="color-option active" style="background-color: #5F1E2C;" title="Burgundy"></div>
-                                <div class="color-option" style="background-color: #2A1613;" title="Charcoal"></div>
-                                <div class="color-option" style="background-color: #311817;" title="Chocolate"></div>
+                            <div class="product-features">
+                                <span class="feature-tag">
+                                    <i class="fas fa-fingerprint" aria-hidden="true"></i>
+                                    Fingerprint
+                                </span>
+                                <span class="feature-tag">
+                                    <i class="fas fa-wifi" aria-hidden="true"></i>
+                                    Wi-Fi
+                                </span>
+                                <span class="feature-tag">
+                                    <i class="fas fa-mobile-alt" aria-hidden="true"></i>
+                                    App Control
+                                </span>
                             </div>
-                            <a href="#contact" class="btn btn-primary" style="width: 100%;">
-                                Inquire Now
-                                <i class="fas fa-shopping-cart"></i>
-                            </a>
+                            <div class="product-footer">
+                                <div class="product-price">
+                                    <span class="price">₦85,000</span>
+                                    <span class="price-note">Including VAT</span>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="btn btn-outline" aria-label="Add to wishlist">
+                                        <i class="far fa-heart" aria-hidden="true"></i>
+                                    </button>
+                                    <a href="#contact" class="btn btn-primary">
+                                        <span>Inquire Now</span>
+                                        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </article>
 
                     <!-- Product 2 -->
-                    <article class="product-card animate-in animate-delay-1">
-                        <div class="product-badge">Premium Edition</div>
+                    <article class="product-card" data-category="smart-locks">
+                        <div class="product-badge">New Arrival</div>
                         <div class="product-image">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%235F1E2C'/%3E%3Crect x='150' y='100' width='100' height='150' rx='10' fill='%23F4B000'/%3E%3Ccircle cx='200' cy='125' r='15' fill='%23FEFEFF'/%3E%3C/svg%3E" 
+                            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
                                  alt="PoshPearl Smart Entrance Lock - Sleek modern design"
-                                 loading="lazy">
+                                 loading="lazy"
+                                 width="800"
+                                 height="600">
+                            <div class="product-overlay">
+                                <button class="product-quick-view" aria-label="Quick view Smart Entrance Lock">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="product-content">
-                            <h3 class="product-title">Smart Entrance Lock</h3>
+                            <div class="product-category">Smart Entrance Lock</div>
+                            <h3 class="product-title">Elegance Series</h3>
                             <p class="product-description">A sleek and modern entrance lock offering flexibility to match your personal style. Perfect for homes requiring sophisticated entry.</p>
-                            <ul class="product-features">
-                                <li><i class="fas fa-exchange-alt"></i> Passage mode</li>
-                                <li><i class="fas fa-lock"></i> Auto-lock mode</li>
-                                <li><i class="fas fa-users"></i> Multiple access methods</li>
-                                <li><i class="fas fa-bell"></i> Tamper alerts</li>
-                            </ul>
-                            <div class="color-options">
-                                <div class="color-option active" style="background-color: #5F1E2C;" title="Burgundy"></div>
-                                <div class="color-option" style="background-color: #2A1613;" title="Charcoal"></div>
-                                <div class="color-option" style="background-color: #311817;" title="Chocolate"></div>
+                            <div class="product-features">
+                                <span class="feature-tag">
+                                    <i class="fas fa-keypad" aria-hidden="true"></i>
+                                    Keypad
+                                </span>
+                                <span class="feature-tag">
+                                    <i class="fas fa-id-card" aria-hidden="true"></i>
+                                    RFID
+                                </span>
+                                <span class="feature-tag">
+                                    <i class="fas fa-bell" aria-hidden="true"></i>
+                                    Alerts
+                                </span>
                             </div>
-                            <a href="#contact" class="btn btn-primary" style="width: 100%;">
-                                Inquire Now
-                                <i class="fas fa-shopping-cart"></i>
-                            </a>
+                            <div class="product-footer">
+                                <div class="product-price">
+                                    <span class="price">₦95,000</span>
+                                    <span class="price-note">Including VAT</span>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="btn btn-outline" aria-label="Add to wishlist">
+                                        <i class="far fa-heart" aria-hidden="true"></i>
+                                    </button>
+                                    <a href="#contact" class="btn btn-primary">
+                                        <span>Inquire Now</span>
+                                        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </article>
 
                     <!-- Product 3 -->
-                    <article class="product-card animate-in animate-delay-2">
-                        <div class="product-badge">Luxury Design</div>
+                    <article class="product-card" data-category="smart-locks">
+                        <div class="product-badge">Premium</div>
                         <div class="product-image">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%235F1E2C'/%3E%3Cpath d='M200 100 L250 200 L150 200 Z' fill='%23F4B000'/%3E%3Crect x='175' y='200' width='50' height='50' fill='%23FEFEFF' opacity='0.1'/%3E%3C/svg%3E" 
+                            <img src="https://images.unsplash.com/photo-1572021331468-dd4eb034e7e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
                                  alt="PoshPearl Smart Lever Lock - Luxury interior lock"
-                                 loading="lazy">
+                                 loading="lazy"
+                                 width="800"
+                                 height="600">
+                            <div class="product-overlay">
+                                <button class="product-quick-view" aria-label="Quick view Smart Lever Lock">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="product-content">
-                            <h3 class="product-title">Smart Lever Lock</h3>
+                            <div class="product-category">Smart Lever Lock</div>
+                            <h3 class="product-title">Luxury Edition</h3>
                             <p class="product-description">Secure your home, inside and out. Suitable for doors that require locking within the home, such as home offices or personal rooms.</p>
-                            <ul class="product-features">
-                                <li><i class="fas fa-swatchbook"></i> Slim modern design</li>
-                                <li><i class="fas fa-mobile-alt"></i> Remote access management</li>
-                                <li><i class="fas fa-user-shield"></i> User access control</li>
-                                <li><i class="fas fa-tools"></i> Easy installation</li>
-                            </ul>
-                            <div class="color-options">
-                                <div class="color-option" style="background-color: #5F1E2C;" title="Burgundy"></div>
-                                <div class="color-option active" style="background-color: #2A1613;" title="Charcoal"></div>
-                                <div class="color-option" style="background-color: #311817;" title="Chocolate"></div>
+                            <div class="product-features">
+                                <span class="feature-tag">
+                                    <i class="fas fa-voice" aria-hidden="true"></i>
+                                    Voice Control
+                                </span>
+                                <span class="feature-tag">
+                                    <i class="fas fa-history" aria-hidden="true"></i>
+                                    Access History
+                                </span>
+                                <span class="feature-tag">
+                                    <i class="fas fa-battery-full" aria-hidden="true"></i>
+                                    Long Battery
+                                </span>
                             </div>
-                            <a href="#contact" class="btn btn-primary" style="width: 100%;">
-                                Inquire Now
-                                <i class="fas fa-shopping-cart"></i>
-                            </a>
+                            <div class="product-footer">
+                                <div class="product-price">
+                                    <span class="price">₦120,000</span>
+                                    <span class="price-note">Including VAT</span>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="btn btn-outline" aria-label="Add to wishlist">
+                                        <i class="far fa-heart" aria-hidden="true"></i>
+                                    </button>
+                                    <a href="#contact" class="btn btn-primary">
+                                        <span>Inquire Now</span>
+                                        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </article>
+                </div>
+                
+                <div class="section-cta">
+                    <a href="#all-products" class="btn btn-secondary btn-large">
+                        <span>View All Products</span>
+                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                    </a>
                 </div>
             </div>
         </section>
 
         <!-- Features Section -->
-        <section class="features" id="features" aria-labelledby="features-title">
+        <section class="features-section" id="features" aria-labelledby="features-title">
             <div class="container">
-                <h2 class="section-title" id="features-title">Built with Premium Features</h2>
+                <div class="section-header">
+                    <div class="section-badge">
+                        <span>Why Choose Us</span>
+                    </div>
+                    <h2 id="features-title" class="section-title">Built with Premium Features</h2>
+                    <p class="section-description">Experience the ultimate in security and convenience with our advanced features</p>
+                </div>
                 
-                <div class="feature-grid">
-                    <div class="feature-card animate-in">
+                <div class="features-grid">
+                    <div class="feature-card">
                         <div class="feature-icon">
-                            <i class="fas fa-fingerprint"></i>
+                            <i class="fas fa-fingerprint" aria-hidden="true"></i>
                         </div>
                         <h3 class="feature-title">Biometric Access</h3>
-                        <p class="product-description">Quick and secure access with fingerprint authentication. Register up to 100 fingerprints for family and trusted guests.</p>
+                        <p class="feature-description">Quick and secure access with fingerprint authentication. Register up to 100 fingerprints for family and trusted guests.</p>
+                        <ul class="feature-list">
+                            <li>Instant recognition</li>
+                            <li>Multiple profiles</li>
+                            <li>Backup options</li>
+                        </ul>
                     </div>
                     
-                    <div class="feature-card animate-in animate-delay-1">
+                    <div class="feature-card">
                         <div class="feature-icon">
-                            <i class="fas fa-keyboard"></i>
+                            <i class="fas fa-keyboard" aria-hidden="true"></i>
                         </div>
                         <h3 class="feature-title">Illuminated Keypad</h3>
-                        <p class="product-description">Backlit keypad for easy access in low-light conditions. Create temporary or permanent PIN codes for guests.</p>
+                        <p class="feature-description">Backlit keypad for easy access in low-light conditions. Create temporary or permanent PIN codes for guests.</p>
+                        <ul class="feature-list">
+                            <li>LED backlight</li>
+                            <li>Custom PINs</li>
+                            <li>One-time codes</li>
+                        </ul>
                     </div>
                     
-                    <div class="feature-card animate-in animate-delay-2">
+                    <div class="feature-card">
                         <div class="feature-icon">
-                            <i class="fas fa-id-card"></i>
+                            <i class="fas fa-id-card" aria-hidden="true"></i>
                         </div>
                         <h3 class="feature-title">RFID Tag Access</h3>
-                        <p class="product-description">Convenient entry with RFID tags. Perfect for family members who prefer not to use PIN codes or fingerprints.</p>
+                        <p class="feature-description">Convenient entry with RFID tags. Perfect for family members who prefer not to use PIN codes or fingerprints.</p>
+                        <ul class="feature-list">
+                            <li>Contactless entry</li>
+                            <li>Multiple tags</li>
+                            <li>Easy to carry</li>
+                        </ul>
                     </div>
                     
-                    <div class="feature-card animate-in">
+                    <div class="feature-card">
                         <div class="feature-icon">
-                            <i class="fas fa-key"></i>
+                            <i class="fas fa-key" aria-hidden="true"></i>
                         </div>
                         <h3 class="feature-title">Key Override</h3>
-                        <p class="product-description">Traditional key access for backup in case of electronic failure. Peace of mind with mechanical override.</p>
+                        <p class="feature-description">Traditional key access for backup in case of electronic failure. Peace of mind with mechanical override.</p>
+                        <ul class="feature-list">
+                            <li>Emergency access</li>
+                            <li>Standard key</li>
+                            <li>Reliable backup</li>
+                        </ul>
                     </div>
                     
-                    <div class="feature-card animate-in animate-delay-1">
+                    <div class="feature-card">
                         <div class="feature-icon">
-                            <i class="fas fa-user-clock"></i>
+                            <i class="fas fa-user-clock" aria-hidden="true"></i>
                         </div>
                         <h3 class="feature-title">Auto-Lock</h3>
-                        <p class="product-description">Automatically lock your door after a set period. Never worry again if you forgot to lock the door.</p>
+                        <p class="feature-description">Automatically lock your door after a set period. Never worry again if you forgot to lock the door.</p>
+                        <ul class="feature-list">
+                            <li>Customizable timer</li>
+                            <li>Manual override</li>
+                            <li>Status indicator</li>
+                        </ul>
                     </div>
                     
-                    <div class="feature-card animate-in animate-delay-2">
+                    <div class="feature-card">
                         <div class="feature-icon">
-                            <i class="fas fa-bell"></i>
+                            <i class="fas fa-bell" aria-hidden="true"></i>
                         </div>
                         <h3 class="feature-title">Security Alerts</h3>
-                        <p class="product-description">Receive instant notifications if someone tries to tamper with your lock. Enhanced security for peace of mind.</p>
+                        <p class="feature-description">Receive instant notifications if someone tries to tamper with your lock. Enhanced security for peace of mind.</p>
+                        <ul class="feature-list">
+                            <li>Real-time alerts</li>
+                            <li>Tamper detection</li>
+                            <li>Activity logs</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Remote Management Section -->
-        <section class="remote-management" id="remote" aria-labelledby="remote-title">
+        <!-- Smart Control Section -->
+        <section class="smart-control-section" id="smart-control" aria-labelledby="smart-control-title">
             <div class="container">
-                <h2 class="section-title" id="remote-title">Smart Control & Management</h2>
-                
-                <div class="remote-content">
-                    <div class="remote-image animate-in">
-                        <div class="remote-image-content">
-                            <h3>POSHPEARL</h3>
-                            <div class="highlight">SMART</div>
-                            <p>Wi-Fi Bridge & App</p>
-                            <p style="margin-top: 1rem; font-size: 1rem; opacity: 0.9;">Complete Remote Control</p>
+                <div class="smart-control-grid">
+                    <div class="smart-control-content">
+                        <div class="section-badge">
+                            <span>Smart Living</span>
                         </div>
-                    </div>
-                    
-                    <div class="remote-text animate-in animate-delay-1">
-                        <h2>Control Your Home From Anywhere</h2>
-                        <p>The <strong style="color: var(--gold);">PoshPearl Wi-Fi Bridge</strong> pairs your smart locks to your home Wi-Fi. This enables the following remote access features:</p>
+                        <h2 id="smart-control-title" class="section-title">Control Your Home From Anywhere</h2>
+                        <p class="section-description">The <strong>PoshPearl Wi-Fi Bridge</strong> pairs your smart locks to your home Wi-Fi for complete remote access control.</p>
                         
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check-circle"></i> Receive smartphone notifications</li>
-                            <li><i class="fas fa-check-circle"></i> Get tamper alerts instantly</li>
-                            <li><i class="fas fa-check-circle"></i> Manage user access remotely</li>
-                            <li><i class="fas fa-check-circle"></i> Compatible with 2.4GHz Wi-Fi</li>
-                            <li><i class="fas fa-check-circle"></i> Create temporary access for guests</li>
-                            <li><i class="fas fa-check-circle"></i> Monitor entry history in real-time</li>
-                        </ul>
-                        
-                        <p>Pair with the PoshPearl Smart App for complete control of your smart locks from anywhere.</p>
+                        <div class="features-list">
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                                </div>
+                                <div class="feature-text">
+                                    <h3>Smartphone Notifications</h3>
+                                    <p>Receive instant alerts on your phone for every access event</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                                </div>
+                                <div class="feature-text">
+                                    <h3>Remote Access Management</h3>
+                                    <p>Grant or revoke access to family members and guests remotely</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                                </div>
+                                <div class="feature-text">
+                                    <h3>Real-time Monitoring</h3>
+                                    <p>Monitor who enters and leaves your home with detailed activity logs</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                                </div>
+                                <div class="feature-text">
+                                    <h3>Voice Assistant Integration</h3>
+                                    <p>Control your locks with Google Assistant or Amazon Alexa</p>
+                                </div>
+                            </div>
+                        </div>
                         
                         <div class="app-badges">
                             <a href="#" class="app-badge app-badge-ios" aria-label="Download on App Store">
-                                <i class="fab fa-apple"></i>
-                                <span>App Store</span>
+                                <i class="fab fa-apple" aria-hidden="true"></i>
+                                <div class="app-badge-text">
+                                    <span>Download on the</span>
+                                    <strong>App Store</strong>
+                                </div>
                             </a>
                             <a href="#" class="app-badge app-badge-android" aria-label="Get it on Google Play">
-                                <i class="fab fa-google-play"></i>
-                                <span>Google Play</span>
+                                <i class="fab fa-google-play" aria-hidden="true"></i>
+                                <div class="app-badge-text">
+                                    <span>Get it on</span>
+                                    <strong>Google Play</strong>
+                                </div>
                             </a>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Voice Assistant Section -->
-        <section class="voice-assistant" aria-labelledby="voice-title">
-            <div class="container">
-                <h2 id="voice-title">Connect With Your Smart Home Ecosystem</h2>
-                <p>Control your PoshPearl Smart locks via Google Assistant and Amazon Alexa. Hands-free control for ultimate convenience.</p>
-                
-                <div class="voice-icons">
-                    <div class="voice-icon">
-                        <i class="fab fa-google"></i>
-                        <p>Google Assistant</p>
+                    
+                    <div class="smart-control-image">
+                        <div class="image-container">
+                            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                                 alt="Smartphone controlling PoshPearl smart lock"
+                                 loading="lazy"
+                                 width="800"
+                                 height="1000">
+                            <div class="image-overlay">
+                                <div class="app-preview">
+                                    <div class="app-screen">
+                                        <div class="app-header">
+                                            <i class="fas fa-lock" aria-hidden="true"></i>
+                                            <span>PoshPearl Smart</span>
+                                        </div>
+                                        <div class="app-content">
+                                            <div class="app-status">
+                                                <span class="status-label">Front Door</span>
+                                                <span class="status-indicator locked">
+                                                    <i class="fas fa-lock" aria-hidden="true"></i>
+                                                    Locked
+                                                </span>
+                                            </div>
+                                            <div class="app-actions">
+                                                <button class="app-btn unlock" aria-label="Unlock door">
+                                                    <i class="fas fa-unlock" aria-hidden="true"></i>
+                                                    <span>Unlock</span>
+                                                </button>
+                                                <button class="app-btn lock" aria-label="Lock door">
+                                                    <i class="fas fa-lock" aria-hidden="true"></i>
+                                                    <span>Lock</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="voice-icon">
-                        <i class="fab fa-amazon"></i>
-                        <p>Amazon Alexa</p>
-                    </div>
                 </div>
-                
-                <p>Just say, "Hey Google, is the front door locked?" Use your voice to check and secure your locks for peace of mind.</p>
             </div>
         </section>
 
         <!-- Installation Section -->
-        <section class="installation" id="installation" aria-labelledby="installation-title">
+        <section class="installation-section" id="installation" aria-labelledby="installation-title">
             <div class="container">
-                <h2 class="section-title" id="installation-title">Installation & Support</h2>
+                <div class="section-header">
+                    <div class="section-badge">
+                        <span>Easy Setup</span>
+                    </div>
+                    <h2 id="installation-title" class="section-title">Professional Installation & Support</h2>
+                    <p class="section-description">Our team ensures seamless installation and ongoing support for your smart lock system</p>
+                </div>
                 
-                <div class="installation-grid">
-                    <div class="installation-card animate-in">
-                        <div class="installation-image">
-                            <i class="fas fa-lock" style="font-size: 4rem; color: var(--gold);"></i>
-                        </div>
-                        <div class="installation-content">
-                            <h3 class="installation-title">Smart Deadbolt Installation</h3>
-                            <p class="product-description">Step-by-step guide to installing your PoshPearl Smart Deadbolt. Suitable for standard doors with pre-drilled holes.</p>
-                            <a href="#contact" class="btn btn-primary" style="width: 100%;">
-                                Get Professional Installation
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="installation-card animate-in animate-delay-1">
-                        <div class="installation-image">
-                            <i class="fas fa-door-closed" style="font-size: 4rem; color: var(--gold);"></i>
-                        </div>
-                        <div class="installation-content">
-                            <h3 class="installation-title">Smart Entrance Lock Setup</h3>
-                            <p class="product-description">Comprehensive guide for installing the PoshPearl Smart Entrance Lock on your main entry door.</p>
-                            <a href="#contact" class="btn btn-primary" style="width: 100%;">
-                                Request Setup Assistance
-                            </a>
+                <div class="installation-steps">
+                    <div class="step">
+                        <div class="step-number">01</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Consultation</h3>
+                            <p class="step-description">We assess your needs and recommend the perfect smart lock solution for your home</p>
+                            <ul class="step-features">
+                                <li>Free consultation</li>
+                                <li>Site assessment</li>
+                                <li>Custom solution</li>
+                            </ul>
                         </div>
                     </div>
                     
-                    <div class="installation-card animate-in animate-delay-2">
-                        <div class="installation-image">
-                            <i class="fas fa-tools" style="font-size: 4rem; color: var(--gold);"></i>
+                    <div class="step">
+                        <div class="step-number">02</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Professional Installation</h3>
+                            <p class="step-description">Our certified technicians install your smart lock with precision and care</p>
+                            <ul class="step-features">
+                                <li>Expert installation</li>
+                                <li>Clean workmanship</li>
+                                <li>Full testing</li>
+                            </ul>
                         </div>
-                        <div class="installation-content">
-                            <h3 class="installation-title">Professional Support</h3>
-                            <p class="product-description">Our team provides professional installation and support services. Contact us for expert assistance.</p>
-                            <a href="#contact" class="btn btn-primary" style="width: 100%;">
-                                Contact Support
-                            </a>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">03</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Setup & Configuration</h3>
+                            <p class="step-description">We configure your smart lock and connect it to your home network and smartphone</p>
+                            <ul class="step-features">
+                                <li>Wi-Fi setup</li>
+                                <li>App configuration</li>
+                                <li>User training</li>
+                            </ul>
                         </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">04</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Ongoing Support</h3>
+                            <p class="step-description">24/7 support and regular maintenance to ensure your system works perfectly</p>
+                            <ul class="step-features">
+                                <li>24/7 support</li>
+                                <li>Regular updates</li>
+                                <li>Warranty coverage</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="installation-cta">
+                    <div class="cta-content">
+                        <h3>Ready for Professional Installation?</h3>
+                        <p>Contact us today to schedule your smart lock installation</p>
+                    </div>
+                    <div class="cta-actions">
+                        <a href="tel:07041087502" class="btn btn-primary btn-large">
+                            <i class="fas fa-phone" aria-hidden="true"></i>
+                            <span>Call Now: 07041087502</span>
+                        </a>
+                        <a href="#contact" class="btn btn-secondary">
+                            <i class="fas fa-calendar" aria-hidden="true"></i>
+                            <span>Schedule Consultation</span>
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Contact Section -->
-        <section class="contact" id="contact" aria-labelledby="contact-title">
+        <section class="contact-section" id="contact" aria-labelledby="contact-title">
             <div class="container">
-                <h2 class="section-title" id="contact-title">Contact PoshPearl Smart Living</h2>
-                <p style="text-align: center; margin-bottom: var(--space-lg); max-width: 800px; margin-left: auto; margin-right: auto; color: var(--chocolate);">Ready to upgrade your home security? Our team will happily answer your questions about our smart lock collection.</p>
+                <div class="section-header">
+                    <div class="section-badge">
+                        <span>Get In Touch</span>
+                    </div>
+                    <h2 id="contact-title" class="section-title">Contact PoshPearl Smart Living</h2>
+                    <p class="section-description">Ready to upgrade your home security? Our team will happily answer your questions</p>
+                </div>
                 
                 <div class="contact-grid">
-                    <div class="contact-form animate-in">
-                        <form id="contactForm" novalidate>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="name" class="form-label">Name *</label>
-                                    <input type="text" id="name" name="name" class="form-input" required placeholder="Your full name">
-                                    <div class="error-message" id="name-error"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="email" class="form-label">Email *</label>
-                                    <input type="email" id="email" name="email" class="form-input" required placeholder="your.email@example.com">
-                                    <div class="error-message" id="email-error"></div>
-                                </div>
+                    <div class="contact-form-container">
+                        <form id="contactForm" class="contact-form" novalidate>
+                            <div class="form-header">
+                                <h3>Send us a message</h3>
+                                <p>Fill out the form below and we'll get back to you within 24 hours</p>
                             </div>
                             
                             <div class="form-group">
-                                <label for="phone" class="form-label">Phone Number *</label>
-                                <input type="tel" id="phone" name="phone" class="form-input" required placeholder="0704 108 7502">
-                                <div class="error-message" id="phone-error"></div>
+                                <label for="name" class="form-label">Full Name *</label>
+                                <input type="text" id="name" name="name" class="form-input" required placeholder="Your full name">
+                                <div class="error-message" id="name-error"></div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email Address *</label>
+                                    <input type="email" id="email" name="email" class="form-input" required placeholder="your.email@example.com">
+                                    <div class="error-message" id="email-error"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone" class="form-label">Phone Number *</label>
+                                    <input type="tel" id="phone" name="phone" class="form-input" required placeholder="0704 108 7502">
+                                    <div class="error-message" id="phone-error"></div>
+                                </div>
                             </div>
                             
                             <div class="form-group">
                                 <label for="product" class="form-label">Product Interest</label>
                                 <select id="product" name="product" class="form-select">
                                     <option value="">Select a product</option>
-                                    <option value="deadbolt">Smart Deadbolt</option>
-                                    <option value="entrance">Smart Entrance Lock</option>
-                                    <option value="lever">Smart Lever Lock</option>
+                                    <option value="deadbolt">Smart Deadbolt Pro</option>
+                                    <option value="entrance">Elegance Series</option>
+                                    <option value="lever">Luxury Edition</option>
                                     <option value="all">All Products</option>
+                                    <option value="consultation">Professional Consultation</option>
                                 </select>
                             </div>
                             
@@ -1799,61 +1111,110 @@
                                 <textarea id="message" name="message" class="form-textarea" placeholder="Tell us about your requirements or ask any questions..."></textarea>
                             </div>
                             
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input type="checkbox" id="newsletter" name="newsletter" class="form-check-input">
+                                    <label for="newsletter" class="form-check-label">
+                                        Subscribe to our newsletter for updates and promotions
+                                    </label>
+                                </div>
+                            </div>
+                            
                             <div class="privacy-note">
-                                <i class="fas fa-shield-alt"></i> By submitting this form, you agree to our Privacy Policy and consent to be contacted by PoshPearl.
+                                <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                                <span>By submitting this form, you agree to our Privacy Policy and consent to be contacted by PoshPearl.</span>
                             </div>
                             
                             <div class="form-group">
                                 <div class="form-check">
                                     <input type="checkbox" id="humanVerify" class="form-check-input" required>
-                                    <label for="humanVerify" class="form-label" style="margin: 0;">I verify that I am a human and not a robot</label>
+                                    <label for="humanVerify" class="form-check-label">
+                                        I verify that I am a human and not a robot
+                                    </label>
                                 </div>
                                 <div class="error-message" id="verify-error"></div>
                             </div>
                             
-                            <button type="submit" class="btn btn-primary" style="width: 100%;" id="submitBtn">
+                            <button type="submit" class="btn btn-primary btn-submit" id="submitBtn">
                                 <span class="btn-text">Send Message</span>
+                                <i class="fas fa-paper-plane" aria-hidden="true"></i>
                             </button>
                         </form>
                     </div>
                     
-                    <div class="contact-info-card animate-in animate-delay-1">
-                        <h3>Contact Us Now</h3>
-                        <ul class="contact-info-list">
-                            <li>
-                                <i class="fas fa-map-marker-alt"></i>
-                                <div>
-                                    <strong>Address</strong><br>
-                                    CAF95 Kaura Market,<br>
-                                    Opposite Prince and Princess Estate,<br>
-                                    Abuja, Nigeria
+                    <div class="contact-info-container">
+                        <div class="contact-info-card">
+                            <div class="contact-info-header">
+                                <h3>Contact Information</h3>
+                                <p>We're here to help you with all your smart lock needs</p>
+                            </div>
+                            
+                            <div class="contact-info-list">
+                                <div class="contact-info-item">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h4>Visit Our Showroom</h4>
+                                        <address>
+                                            CAF95 Kaura Market,<br>
+                                            Opposite Prince and Princess Estate,<br>
+                                            Abuja, Nigeria
+                                        </address>
+                                        <a href="https://maps.google.com/?q=CAF95+Kaura+Market+Abuja" class="contact-link" target="_blank">
+                                            <i class="fas fa-directions" aria-hidden="true"></i>
+                                            <span>Get Directions</span>
+                                        </a>
+                                    </div>
                                 </div>
-                            </li>
-                            <li>
-                                <i class="fas fa-phone"></i>
-                                <div>
-                                    <strong>Phone</strong><br>
-                                    07041087502
+                                
+                                <div class="contact-info-item">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-phone" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h4>Call Us Now</h4>
+                                        <a href="tel:07041087502" class="contact-phone">07041087502</a>
+                                        <p class="contact-hours">Monday - Friday: 9AM - 6PM<br>Saturday: 10AM - 4PM</p>
+                                    </div>
                                 </div>
-                            </li>
-                            <li>
-                                <i class="fas fa-envelope"></i>
-                                <div>
-                                    <strong>Email</strong><br>
-                                    info@poshpearl.com
+                                
+                                <div class="contact-info-item">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h4>Email Us</h4>
+                                        <a href="mailto:info@poshpearl.com" class="contact-email">info@poshpearl.com</a>
+                                        <p class="contact-response">We respond within 24 hours</p>
+                                    </div>
                                 </div>
-                            </li>
-                            <li>
-                                <i class="fab fa-instagram"></i>
-                                <div>
-                                    <strong>Instagram</strong><br>
-                                    @poshpearl_smartliving
+                                
+                                <div class="contact-info-item">
+                                    <div class="contact-icon">
+                                        <i class="fab fa-instagram" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h4>Follow Us</h4>
+                                        <a href="https://instagram.com/poshpearl_smartliving" class="contact-social" target="_blank">
+                                            @poshpearl_smartliving
+                                        </a>
+                                        <p class="contact-social-desc">Latest updates and inspiration</p>
+                                    </div>
                                 </div>
-                            </li>
-                        </ul>
-                        <a href="tel:07041087502" class="btn btn-large" style="width: 100%; background: var(--offwhite); color: var(--burgundy);">
-                            <i class="fas fa-phone"></i> Call Now
-                        </a>
+                            </div>
+                            
+                            <div class="contact-actions">
+                                <a href="tel:07041087502" class="btn btn-primary btn-block">
+                                    <i class="fas fa-phone" aria-hidden="true"></i>
+                                    <span>Call Now</span>
+                                </a>
+                                <a href="https://wa.me/2347041087502" class="btn btn-secondary btn-block" target="_blank">
+                                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                                    <span>WhatsApp Us</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1861,488 +1222,123 @@
     </main>
 
     <!-- Footer -->
-    <footer>
+    <footer class="main-footer" role="contentinfo">
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-column">
-                    <h4>Products</h4>
-                    <ul class="footer-links">
-                        <li><a href="#products">Smart Deadbolt</a></li>
-                        <li><a href="#products">Smart Entrance Lock</a></li>
-                        <li><a href="#products">Smart Lever Lock</a></li>
-                        <li><a href="#remote">Wi-Fi Bridge</a></li>
-                        <li><a href="#products">Accessories</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h4>Support</h4>
-                    <ul class="footer-links">
-                        <li><a href="#installation">Installation Guides</a></li>
-                        <li><a href="#installation">Product Manuals</a></li>
-                        <li><a href="#contact">FAQs</a></li>
-                        <li><a href="#contact">Warranty</a></li>
-                        <li><a href="#contact">Contact Support</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h4>Company</h4>
-                    <ul class="footer-links">
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#contact">Find a Retailer</a></li>
-                        <li><a href="#contact">Professional Installers</a></li>
-                        <li><a href="#contact">Become a Dealer</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h4>Policies</h4>
-                    <ul class="footer-links">
-                        <li><a href="#privacy">Privacy Policy</a></li>
-                        <li><a href="#terms">Terms of Use</a></li>
-                        <li><a href="#shipping">Shipping Policy</a></li>
-                        <li><a href="#returns">Returns & Refunds</a></li>
-                    </ul>
+            <div class="footer-content">
+                <div class="footer-grid">
+                    <div class="footer-column">
+                        <div class="footer-logo">
+                            <a href="/" class="logo">
+                                <i class="fas fa-gem" aria-hidden="true"></i>
+                                <span class="logo-text">Posh<span class="logo-highlight">Pearl</span></span>
+                            </a>
+                            <p class="footer-description">Redefining Home Security with Premium Smart Living Solutions</p>
+                            <div class="footer-social">
+                                <a href="#" class="social-link" aria-label="Facebook">
+                                    <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                                </a>
+                                <a href="#" class="social-link" aria-label="Instagram">
+                                    <i class="fab fa-instagram" aria-hidden="true"></i>
+                                </a>
+                                <a href="#" class="social-link" aria-label="Twitter">
+                                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                                </a>
+                                <a href="https://wa.me/2347041087502" class="social-link" aria-label="WhatsApp">
+                                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     
-                    <div class="social-links">
-                        <a href="#" class="social-link" aria-label="Facebook">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="social-link" aria-label="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="social-link" aria-label="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="https://wa.me/2347041087502" class="social-link" aria-label="WhatsApp">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
+                    <div class="footer-column">
+                        <h4 class="footer-title">Products</h4>
+                        <ul class="footer-links">
+                            <li><a href="#products">Smart Deadbolt</a></li>
+                            <li><a href="#products">Smart Entrance Lock</a></li>
+                            <li><a href="#products">Smart Lever Lock</a></li>
+                            <li><a href="#smart-control">Wi-Fi Bridge</a></li>
+                            <li><a href="#products">Accessories</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4 class="footer-title">Support</h4>
+                        <ul class="footer-links">
+                            <li><a href="#installation">Installation Guides</a></li>
+                            <li><a href="#help">Product Manuals</a></li>
+                            <li><a href="#help">FAQs</a></li>
+                            <li><a href="#contact">Warranty</a></li>
+                            <li><a href="#contact">Contact Support</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4 class="footer-title">Company</h4>
+                        <ul class="footer-links">
+                            <li><a href="#about">About Us</a></li>
+                            <li><a href="#contact">Find a Retailer</a></li>
+                            <li><a href="#contact">Professional Installers</a></li>
+                            <li><a href="#contact">Become a Dealer</a></li>
+                            <li><a href="#careers">Careers</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4 class="footer-title">Newsletter</h4>
+                        <div class="newsletter">
+                            <p>Subscribe to get updates on new products and exclusive offers</p>
+                            <form class="newsletter-form">
+                                <div class="newsletter-input">
+                                    <input type="email" placeholder="Your email address" required>
+                                    <button type="submit" aria-label="Subscribe">
+                                        <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <p class="newsletter-note">We respect your privacy. Unsubscribe at any time.</p>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p><i class="fas fa-gem"></i> <strong>PoshPearl Smart Living</strong> - Redefining Home Security with Premium Design</p>
-                <p>CAF95 Kaura Market, Opposite Prince and Princess Estate, Abuja, Nigeria</p>
-                <p>Phone: 07041087502 | Email: info@poshpearl.com | Instagram: @poshpearl_smartliving</p>
-                <p style="margin-top: 1rem;">© 2025 PoshPearl Smart Living. All rights reserved.</p>
+                
+                <div class="footer-bottom">
+                    <div class="footer-bottom-content">
+                        <div class="copyright">
+                            <p>&copy; 2025 PoshPearl Smart Living. All rights reserved.</p>
+                            <p>CAF95 Kaura Market, Opposite Prince and Princess Estate, Abuja, Nigeria</p>
+                        </div>
+                        <div class="footer-legal">
+                            <a href="#privacy">Privacy Policy</a>
+                            <a href="#terms">Terms of Use</a>
+                            <a href="#shipping">Shipping Policy</a>
+                            <a href="#returns">Returns & Refunds</a>
+                            <a href="#sitemap">Sitemap</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
 
     <!-- Back to Top Button -->
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
-        <i class="fas fa-chevron-up"></i>
+        <i class="fas fa-chevron-up" aria-hidden="true"></i>
     </button>
 
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--offwhite); display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.3s;">
-        <div class="loader" style="width: 50px; height: 50px; border: 3px solid var(--gray); border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite;"></div>
-    </div>
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
 
-    <!-- Non-critical CSS (Deferred) -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap">
-    </noscript>
+    <!-- JavaScript Files -->
+    <script src="assets/js/functions.js" defer></script>
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-    <noscript>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    </noscript>
-
-    <!-- Modern JavaScript -->
-    <script type="module">
-        class PoshPearlApp {
-            constructor() {
-                this.init();
-            }
-
-            async init() {
-                // Hide loading screen
-                this.hideLoadingScreen();
-                
-                // Setup components
-                this.setupMobileMenu();
-                this.setupSmoothScroll();
-                this.setupBackToTop();
-                this.setupFormValidation();
-                this.setupAnimations();
-                this.setupServiceWorker();
-                this.setupPerformanceMonitoring();
-            }
-
-            hideLoadingScreen() {
-                const loadingScreen = document.getElementById('loadingScreen');
-                if (loadingScreen) {
-                    // Ensure page is loaded
-                    if (document.readyState === 'complete') {
-                        setTimeout(() => {
-                            loadingScreen.style.opacity = '0';
-                            setTimeout(() => {
-                                loadingScreen.style.display = 'none';
-                            }, 300);
-                        }, 500);
-                    } else {
-                        window.addEventListener('load', () => {
-                            setTimeout(() => {
-                                loadingScreen.style.opacity = '0';
-                                setTimeout(() => {
-                                    loadingScreen.style.display = 'none';
-                                }, 300);
-                            }, 500);
-                        });
-                    }
-                }
-            }
-
-            setupMobileMenu() {
-                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-                const mobileNav = document.getElementById('mobileNav');
-                const mobileNavClose = document.getElementById('mobileNavClose');
-                const overlay = document.getElementById('overlay');
-                const navLinks = document.querySelectorAll('.nav-link');
-
-                const toggleMenu = () => {
-                    const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
-                    mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
-                    mobileNav.setAttribute('aria-hidden', isExpanded);
-                    mobileNav.classList.toggle('active');
-                    overlay.classList.toggle('active');
-                    document.body.style.overflow = isExpanded ? '' : 'hidden';
-                };
-
-                mobileMenuBtn.addEventListener('click', toggleMenu);
-                mobileNavClose.addEventListener('click', toggleMenu);
-                overlay.addEventListener('click', toggleMenu);
-
-                navLinks.forEach(link => {
-                    link.addEventListener('click', toggleMenu);
-                });
-
-                // Close menu with Escape key
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
-                        toggleMenu();
-                    }
-                });
-            }
-
-            setupSmoothScroll() {
-                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                    anchor.addEventListener('click', (e) => {
-                        const href = anchor.getAttribute('href');
-                        if (href === '#') return;
-
-                        e.preventDefault();
-                        const target = document.querySelector(href);
-                        if (target) {
-                            const headerHeight = document.querySelector('header').offsetHeight;
-                            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
-                            const offsetPosition = targetPosition - headerHeight;
-
-                            window.scrollTo({
-                                top: offsetPosition,
-                                behavior: 'smooth'
-                            });
-
-                            // Update URL without jumping
-                            history.pushState(null, null, href);
-                        }
-                    });
-                });
-            }
-
-            setupBackToTop() {
-                const backToTop = document.getElementById('backToTop');
-                
-                const toggleBackToTop = () => {
-                    if (window.pageYOffset > 300) {
-                        backToTop.classList.add('visible');
-                    } else {
-                        backToTop.classList.remove('visible');
-                    }
-                };
-
-                window.addEventListener('scroll', toggleBackToTop);
-                toggleBackToTop(); // Initial check
-
-                backToTop.addEventListener('click', () => {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                });
-            }
-
-            setupFormValidation() {
-                const form = document.getElementById('contactForm');
-                const submitBtn = document.getElementById('submitBtn');
-                const btnText = submitBtn.querySelector('.btn-text');
-
-                if (!form) return;
-
-                // Form validation
-                const validateField = (field) => {
-                    const value = field.value.trim();
-                    const errorElement = document.getElementById(`${field.id}-error`);
-                    
-                    // Clear previous error
-                    if (errorElement) {
-                        errorElement.textContent = '';
-                        field.classList.remove('error');
-                    }
-
-                    // Required validation
-                    if (field.hasAttribute('required') && !value) {
-                        this.showFieldError(field, 'This field is required');
-                        return false;
-                    }
-
-                    // Email validation
-                    if (field.type === 'email' && value) {
-                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                        if (!emailRegex.test(value)) {
-                            this.showFieldError(field, 'Please enter a valid email address');
-                            return false;
-                        }
-                    }
-
-                    // Phone validation
-                    if (field.type === 'tel' && value) {
-                        const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
-                        if (!phoneRegex.test(value)) {
-                            this.showFieldError(field, 'Please enter a valid phone number');
-                            return false;
-                        }
-                    }
-
-                    return true;
-                };
-
-                // Show field error
-                this.showFieldError = (field, message) => {
-                    const errorElement = document.getElementById(`${field.id}-error`);
-                    if (errorElement) {
-                        errorElement.textContent = message;
-                        field.classList.add('error');
-                    }
-                };
-
-                // Real-time validation
-                form.querySelectorAll('input, textarea, select').forEach(field => {
-                    field.addEventListener('blur', () => validateField(field));
-                    field.addEventListener('input', () => {
-                        const errorElement = document.getElementById(`${field.id}-error`);
-                        if (errorElement) {
-                            errorElement.textContent = '';
-                            field.classList.remove('error');
-                        }
-                    });
-                });
-
-                // Form submission
-                form.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-
-                    // Validate all fields
-                    let isValid = true;
-                    form.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
-                        if (!validateField(field)) {
-                            isValid = false;
-                        }
-                    });
-
-                    if (!isValid) {
-                        this.showNotification('Please fill in all required fields correctly', 'error');
-                        return;
-                    }
-
-                    // Show loading state
-                    const originalText = btnText.textContent;
-                    btnText.textContent = 'Sending...';
-                    submitBtn.classList.add('btn-loading');
-                    submitBtn.disabled = true;
-
-                    try {
-                        // Simulate API call
-                        await new Promise(resolve => setTimeout(resolve, 1500));
-
-                        // Success
-                        this.showNotification('Message sent successfully! We\'ll contact you within 24 hours.', 'success');
-                        form.reset();
-                        
-                        // Send data to analytics (in a real app)
-                        const formData = new FormData(form);
-                        const data = Object.fromEntries(formData);
-                        
-                        // You would send this to your backend
-                        console.log('Form submitted:', data);
-                        
-                    } catch (error) {
-                        this.showNotification('Something went wrong. Please try again.', 'error');
-                        console.error('Form submission error:', error);
-                    } finally {
-                        // Reset button state
-                        btnText.textContent = originalText;
-                        submitBtn.classList.remove('btn-loading');
-                        submitBtn.disabled = false;
-                    }
-                });
-            }
-
-            showNotification(message, type = 'info') {
-                // Remove existing notifications
-                document.querySelectorAll('.notification').forEach(n => n.remove());
-
-                const notification = document.createElement('div');
-                notification.className = `notification notification-${type}`;
-                notification.innerHTML = `
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-                    <span>${message}</span>
-                `;
-                
-                document.body.appendChild(notification);
-
-                // Auto-remove after 5 seconds
-                setTimeout(() => {
-                    notification.style.animation = 'slideInRight 0.3s ease-out reverse';
-                    setTimeout(() => notification.remove(), 300);
-                }, 5000);
-            }
-
-            setupAnimations() {
-                // Intersection Observer for animations
-                const observerOptions = {
-                    threshold: 0.1,
-                    rootMargin: '50px'
-                };
-
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('animate-in');
-                        }
-                    });
-                }, observerOptions);
-
-                // Observe elements
-                document.querySelectorAll('.product-card, .feature-card, .installation-card, .contact-form, .contact-info-card').forEach(el => {
-                    observer.observe(el);
-                });
-            }
-
-            async setupServiceWorker() {
-                if ('serviceWorker' in navigator) {
-                    try {
-                        const registration = await navigator.serviceWorker.register('/sw.js');
-                        console.log('ServiceWorker registered:', registration);
-                    } catch (error) {
-                        console.log('ServiceWorker registration failed:', error);
-                    }
-                }
-            }
-
-            setupPerformanceMonitoring() {
-                // Monitor Core Web Vitals
-                if ('PerformanceObserver' in window) {
-                    const observer = new PerformanceObserver((list) => {
-                        for (const entry of list.getEntries()) {
-                            // Log to console (in production, send to analytics)
-                            console.log(`Web Vital - ${entry.name}:`, entry.value);
-                        }
-                    });
-
-                    observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] });
-                }
-
-                // Log page load performance
-                window.addEventListener('load', () => {
-                    setTimeout(() => {
-                        const perfData = performance.getEntriesByType('navigation')[0];
-                        if (perfData) {
-                            console.log('Page loaded in:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
-                        }
-                    }, 0);
-                });
-            }
-        }
-
-        // Initialize app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            window.app = new PoshPearlApp();
-        });
-
-        // Handle offline/online status
-        window.addEventListener('online', () => {
-            console.log('App is online');
-            window.app?.showNotification('You are back online', 'success');
-        });
-
-        window.addEventListener('offline', () => {
-            console.log('App is offline');
-            window.app?.showNotification('You are offline. Some features may be limited.', 'error');
-        });
-
-        // Handle beforeinstallprompt for PWA
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Show install button if user hasn't installed yet
-            const installBtn = document.createElement('button');
-            installBtn.className = 'btn btn-primary';
-            installBtn.innerHTML = '<i class="fas fa-download"></i> Install App';
-            installBtn.style.cssText = 'position: fixed; bottom: 100px; right: 30px; z-index: 999;';
-            installBtn.addEventListener('click', () => {
-                installBtn.style.display = 'none';
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted install');
-                    }
-                    deferredPrompt = null;
-                });
-            });
-            
-            document.body.appendChild(installBtn);
-        });
-    </script>
-
     <!-- Service Worker Registration -->
     <script>
-        // Create a simple service worker for PWA
         if ('serviceWorker' in navigator) {
-            const swCode = `
-                self.addEventListener('install', (event) => {
-                    event.waitUntil(
-                        caches.open('poshpearl-v1').then((cache) => {
-                            return cache.addAll([
-                                '/',
-                                '/index.html',
-                                '/icons/icon-192.png',
-                                '/icons/icon-512.png'
-                            ]);
-                        })
-                    );
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
                 });
-
-                self.addEventListener('fetch', (event) => {
-                    event.respondWith(
-                        caches.match(event.request).then((response) => {
-                            return response || fetch(event.request);
-                        })
-                    );
-                });
-            `;
-
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            const swURL = URL.createObjectURL(blob);
-            
-            navigator.serviceWorker.register(swURL).then(() => {
-                console.log('Service Worker registered');
             });
         }
     </script>
