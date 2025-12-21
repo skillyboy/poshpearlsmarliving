@@ -60,75 +60,31 @@
         </div>
 
         <div class="products-grid" id="productsGrid">
-          <!-- Example product cards -->
-          <article class="product" data-cat="locks">
-            <img src="assets/placeholder-1.svg" alt="Mode Smart Lock — Classic" loading="lazy">
-            <h4>Mode Smart Lock — Classic</h4>
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div class="price">$249</div>
-              <div style="color:#6b6b6b;font-size:.95rem">In stock</div>
-            </div>
-            <p style="color:#6b6b6b;margin:8px 0;font-size:.95rem">Refined hardware, Bluetooth & optional Wi‑Fi hub.</p>
-            <div class="cta"><a class="btn primary" href="#">Buy</a> <a class="btn ghost" href="#" style="margin-left:8px">Details</a></div>
-          </article>
+          <!-- Products will be rendered here dynamically -->
+        </div>
 
-          <article class="product" data-cat="locks">
-            <img src="assets/placeholder-2.svg" alt="Mode Smart Lock — Modern" loading="lazy">
-            <h4>Mode Smart Lock — Modern</h4>
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div class="price">$269</div>
-              <div style="color:#6b6b6b;font-size:.95rem">Pre-order</div>
-            </div>
-            <p style="color:#6b6b6b;margin:8px 0;font-size:.95rem">Thin profile for flush doors, guest codes and audit trail.</p>
-            <div class="cta"><a class="btn primary" href="#">Buy</a> <a class="btn ghost" href="#" style="margin-left:8px">Details</a></div>
-          </article>
+        <!-- Floating mini-cart -->
+        <div id="miniCart" aria-live="polite" aria-atomic="true">
+          <button id="cartToggle" class="btn primary" style="position:fixed;right:18px;bottom:18px;border-radius:9999px;display:flex;align-items:center;gap:8px;z-index:2000">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="cartCount">0</span>
+          </button>
 
-          <article class="product" data-cat="accessories">
-            <img src="assets/placeholder-3.svg" alt="Keypad accessory" loading="lazy">
-            <h4>Outdoor Keypad</h4>
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div class="price">$89</div>
-              <div style="color:#6b6b6b;font-size:.95rem">In stock</div>
+          <aside id="cartDrawer" style="position:fixed;right:18px;bottom:84px;width:320px;max-width:calc(100% - 40px);background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12);padding:12px;display:none;z-index:2000">
+            <h4 style="margin:0 0 8px">Your Cart</h4>
+            <div id="cartItems" style="max-height:320px;overflow:auto;gap:8px;display:flex;flex-direction:column"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+              <strong id="cartTotal">₦0</strong>
+              <div>
+                <button id="checkoutWa" class="btn primary">Checkout (WhatsApp)</button>
+                <button id="clearCart" class="btn ghost" style="margin-left:8px">Clear</button>
+              </div>
             </div>
-            <p style="color:#6b6b6b;margin:8px 0;font-size:.95rem">Weatherproof keypad for guest codes and one-time pins.</p>
-            <div class="cta"><a class="btn primary" href="#">Buy</a> <a class="btn ghost" href="#" style="margin-left:8px">Details</a></div>
-          </article>
-
-          <article class="product" data-cat="accessories">
-            <img src="assets/placeholder-1.svg" alt="Spare battery pack" loading="lazy">
-            <h4>Battery Pack — 4x AA</h4>
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div class="price">$12</div>
-              <div style="color:#6b6b6b;font-size:.95rem">In stock</div>
-            </div>
-            <p style="color:#6b6b6b;margin:8px 0;font-size:.95rem">Long-life alkaline batteries and low-battery alerts.</p>
-            <div class="cta"><a class="btn primary" href="#">Buy</a> <a class="btn ghost" href="#" style="margin-left:8px">Details</a></div>
-          </article>
-
+          </aside>
         </div>
       </section>
     </main>
 
-    <script>
-      (function(){
-        var search=document.getElementById('search');
-        var filter=document.getElementById('filter');
-        var clear=document.getElementById('clear');
-        var grid=document.getElementById('productsGrid');
-        function filterProducts(){
-          var q=search.value.trim().toLowerCase();
-          var cat=filter.value;
-          Array.from(grid.children).forEach(function(card){
-            var title=card.querySelector('h4').textContent.toLowerCase();
-            var matchQ=!q||title.indexOf(q)!==-1;
-            var matchCat=cat==='all'||card.getAttribute('data-cat')===cat;
-            card.style.display=(matchQ && matchCat)?'block':'none';
-          });
-        }
-        search.addEventListener('input',filterProducts);
-        filter.addEventListener('change',filterProducts);
-        clear.addEventListener('click',function(){search.value='';filter.value='all';filterProducts()});
-      })();
-    </script>
+    <script src="assets/js/shop.js" defer></script>
   </body>
 </html>

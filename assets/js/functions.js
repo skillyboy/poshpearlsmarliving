@@ -25,21 +25,34 @@ function setupMobileMenu() {
 
     if (mobileMenuBtn && mobileNav) {
         mobileMenuBtn.addEventListener('click', () => {
-            mobileNav.classList.add('active');
-            overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            const opening = !mobileNav.classList.contains('active');
+            mobileNav.classList.toggle('active');
+            overlay.classList.toggle('active');
+            mobileMenuBtn.classList.toggle('active');
+            document.body.style.overflow = opening ? 'hidden' : '';
+            if (opening) {
+                // focus first focusable element inside mobile nav for accessibility
+                const first = mobileNav.querySelector('button, a, input, [tabindex]');
+                first?.focus();
+            } else {
+                mobileMenuBtn.focus();
+            }
         });
 
         mobileCloseBtn?.addEventListener('click', () => {
             mobileNav.classList.remove('active');
             overlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
             document.body.style.overflow = '';
+            mobileMenuBtn.focus();
         });
 
         overlay?.addEventListener('click', () => {
             mobileNav.classList.remove('active');
             overlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
             document.body.style.overflow = '';
+            mobileMenuBtn.focus();
         });
 
         // Accordion functionality for mobile submenus
@@ -60,46 +73,133 @@ function setupMobileMenu() {
                     content.style.maxHeight = content.scrollHeight + 'px';
                     toggle.setAttribute('aria-expanded', 'true');
                 }
+                // Ensure mobile nav remains scrollable to newly expanded content
+                parent.closest('.mobile-nav-content')?.scrollTo({ top: parent.offsetTop - 20, behavior: 'smooth' });
             });
         });
     }
 }
 
+// Header scroll behavior
+function setupHeaderScroll() {
+    const header = document.querySelector('.main-header');
+    if (!header) return;
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 40) header.classList.add('scrolled');
+        else header.classList.remove('scrolled');
+    });
+}
+
 // Desktop dropdown functionality
 function setupDropdowns() {
-    const dropdowns = document.querySelectorAll('.dropdown');
-    
+    const dropdowns = Array.from(document.querySelectorAll('.dropdown'));
+
+    function closeAllDropdowns() {
+        dropdowns.forEach(dd => {
+            dd.classList.remove('active');
+            const t = dd.querySelector('.dropdown-toggle');
+            const m = dd.querySelector('.dropdown-menu');
+            if (t) t.setAttribute('aria-expanded', 'false');
+            if (m) {
+                m.style.left = '';
+                m.style.right = '';
+                m.style.top = '';
+                m.style.position = '';
+            }
+        });
+    }
+
     dropdowns.forEach(dropdown => {
         const toggle = dropdown.querySelector('.dropdown-toggle');
         const menu = dropdown.querySelector('.dropdown-menu');
-        
-        if (toggle && menu) {
-            toggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                
-                // Close other dropdowns
-                dropdowns.forEach(other => {
-                    if (other !== dropdown && other.classList.contains('active')) {
-                        other.classList.remove('active');
-                        other.querySelector('.dropdown-toggle')?.setAttribute('aria-expanded', 'false');
-                    }
-                });
-                
-                // Toggle current dropdown
-                const isActive = dropdown.classList.contains('active');
-                dropdown.classList.toggle('active', !isActive);
-                toggle.setAttribute('aria-expanded', !isActive);
-            });
-        }
-    });
-    
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', () => {
-        dropdowns.forEach(dropdown => {
-            dropdown.classList.remove('active');
-            dropdown.querySelector('.dropdown-toggle')?.setAttribute('aria-expanded', 'false');
+
+        if (!toggle || !menu) return;
+
+        // Ensure menu will be drawn above other content
+        menu.style.zIndex = 9999;
+
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = dropdown.classList.contains('active');
+            if (isOpen) {
+                // close this
+                dropdown.classList.remove('active');
+                toggle.setAttribute('aria-expanded', 'false');
+                menu.style.position = '';
+            } else {
+                // close others then open
+                closeAllDropdowns();
+                dropdown.classList.add('active');
+                toggle.setAttribute('aria-expanded', 'true');
+                alignDropdownToToggle(toggle, menu);
+            }
         });
     });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.dropdown')) closeAllDropdowns();
+    });
+
+    // Close with Escape
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllDropdowns(); });
+
+    // reposition visible dropdowns on resize/scroll
+    let repositionTimer;
+    ['resize','scroll'].forEach(ev => window.addEventListener(ev, () => {
+        clearTimeout(repositionTimer);
+        repositionTimer = setTimeout(() => {
+            document.querySelectorAll('.dropdown.active').forEach(dd => {
+                const toggle = dd.querySelector('.dropdown-toggle');
+                const menu = dd.querySelector('.dropdown-menu');
+                if (toggle && menu) alignDropdownToToggle(toggle, menu);
+            });
+        }, 120);
+    }));
+}
+
+/**
+ * Align dropdown menu so its left edge matches the toggle's left edge.
+ * If it would overflow to the right, flip it so right edges align instead.
+ */
+function alignDropdownToToggle(toggle, menu) {
+    // reset
+    menu.style.left = '';
+    menu.style.right = '';
+    menu.style.transform = '';
+    // Position the menu using fixed coordinates so it's relative to the viewport.
+    menu.style.position = 'fixed';
+
+    const rect = toggle.getBoundingClientRect();
+    const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    const pad = 12; // small gutter from edges
+
+    // Place menu below the toggle, aligned to its left edge initially
+    const top = Math.round(rect.bottom + 8); // 8px gap
+    const left = Math.round(rect.left);
+    menu.style.top = top + 'px';
+    menu.style.left = left + 'px';
+    menu.style.right = 'auto';
+    menu.style.transformOrigin = 'left top';
+
+    // Allow the browser to layout and then measure
+    const mRect = menu.getBoundingClientRect();
+
+    // If menu overflows to the right, flip it so its right edge aligns to the toggle's right edge
+    if (mRect.right > viewportWidth - pad) {
+        const rightOffset = Math.max(pad, viewportWidth - Math.round(rect.right));
+        menu.style.left = 'auto';
+        menu.style.right = rightOffset + 'px';
+        menu.style.transformOrigin = 'right top';
+    }
+
+    // Ensure menu width doesn't overflow viewport
+    const finalRect = menu.getBoundingClientRect();
+    const maxW = Math.max(200, viewportWidth - (pad * 2));
+    if (finalRect.width > maxW) {
+        menu.style.maxWidth = maxW + 'px';
+        menu.style.overflow = 'auto';
+    }
 }
 
 // Back to top button
@@ -209,6 +309,89 @@ function setupFormValidation() {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
     }
+}
+
+// Quick view modal for product cards
+function setupQuickView() {
+    const buttons = document.querySelectorAll('.product-quick-view');
+    if (!buttons.length) return;
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const card = btn.closest('.product-card');
+            if (!card) return;
+
+            // Gather product data
+            const img = card.querySelector('.product-image img')?.src || '';
+            const title = card.querySelector('.product-title')?.textContent || '';
+            const desc = card.querySelector('.product-description')?.textContent || '';
+            const price = card.querySelector('.price')?.textContent || '';
+
+            openQuickView({ img, title, desc, price }, btn);
+        });
+    });
+}
+
+function openQuickView(data, opener) {
+    // Create backdrop + modal
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.tabIndex = -1;
+
+    const modal = document.createElement('div');
+    modal.className = 'modal animate-in';
+
+    modal.innerHTML = `
+        <div class="modal-media"><img src="${data.img}" alt="${escapeHtml(data.title)}"></div>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close quick view">&times;</button>
+            <h3 class="product-title">${escapeHtml(data.title)}</h3>
+            <p class="product-description">${escapeHtml(data.desc)}</p>
+            <div class="product-footer" style="margin-top:1rem;">
+                <div class="product-price"><span class="price">${escapeHtml(data.price)}</span></div>
+                <div class="product-actions">
+                    <button class="btn btn-outline" aria-label="Add to wishlist"><i class="far fa-heart"></i></button>
+                    <a href="#contact" class="btn btn-primary">Inquire Now</a>
+                </div>
+            </div>
+        </div>
+    `;
+
+    backdrop.appendChild(modal);
+    document.body.appendChild(backdrop);
+    document.body.style.overflow = 'hidden';
+
+    // Focus management
+    const closeBtn = modal.querySelector('.modal-close');
+    closeBtn?.focus();
+
+    function close() {
+        backdrop.remove();
+        document.body.style.overflow = '';
+        opener?.focus();
+    }
+
+    backdrop.addEventListener('click', (ev) => {
+        if (ev.target === backdrop) close();
+    });
+
+    closeBtn?.addEventListener('click', close);
+
+    // Close on Escape
+    const escHandler = (e) => { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', escHandler); } };
+    document.addEventListener('keydown', escHandler);
+}
+
+function escapeHtml(unsafe) {
+    return (unsafe || '').replace(/[&<>"']/g, function(m) {
+        return ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        })[m];
+    });
 }
 
 // Smooth scroll for anchor links
@@ -321,6 +504,34 @@ function setupAnimations() {
 
 // Initialize animations
 setupAnimations();
+
+// Initialize additional UI behaviors
+setupQuickView();
+setupHeaderScroll();
+
+// Product hover and click interactions
+function setupProductInteractions() {
+    const cards = document.querySelectorAll('.product-card, .product');
+    if (!cards.length) return;
+
+    cards.forEach(card => {
+        // Hover effect (desktop)
+        card.addEventListener('mouseenter', () => card.classList.add('hovered'));
+        card.addEventListener('mouseleave', () => card.classList.remove('hovered'));
+
+        // Click opens quick view if not clicking a link or button
+        card.addEventListener('click', (e) => {
+            const target = e.target;
+            // if a link or button was clicked, ignore here
+            if (target.closest('a') || target.closest('button')) return;
+            // prefer to find the quick view button inside
+            const quick = card.querySelector('.product-quick-view');
+            if (quick) { quick.click(); }
+        });
+    });
+}
+
+setupProductInteractions();
 
 // Export for global access if needed
 window.PoshPearlApp = {
