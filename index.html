@@ -1328,7 +1328,60 @@
     <div class="notification-container" id="notificationContainer"></div>
 
     <!-- JavaScript Files -->
-    <script src="assets/js/functions.js" defer></script>
+        <!-- Site product sync: export products (from megamenu and product cards) to localStorage so shop imports them -->
+        <script>
+        (function(){
+            function slugify(s){ return String(s||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+            const items = [];
+
+            // Collect product cards on the page
+            document.querySelectorAll('.product-card').forEach(card => {
+                try{
+                    const title = card.querySelector('.product-title')?.textContent.trim();
+                    const price = card.querySelector('.product-price .price')?.textContent.trim() || '';
+                    const desc = card.querySelector('.product-description')?.textContent.trim() || '';
+                    const img = card.querySelector('.product-image img')?.src || 'assets/placeholder-1.svg';
+                    const category = card.getAttribute('data-category') || card.querySelector('.product-category')?.textContent.trim() || 'products';
+                    const id = slugify(title || category);
+                    if(title){
+                        items.push({ id, title, price: 0, priceLabel: price || 'Request price', category, stock: 'In stock', img, desc });
+                    }
+                }catch(e){ }
+            });
+
+            // Collect megamenu items (product dropdown)
+            document.querySelectorAll('#megamenu-products .megamenu-list a').forEach(a => {
+                try{
+                    const title = a.textContent.trim();
+                    const section = a.closest('.megamenu-section')?.querySelector('.megamenu-title')?.textContent.trim() || 'products';
+                    const id = slugify(title || section);
+                    const exists = items.find(x=>x.id===id);
+                    if(!exists && title){
+                        items.push({ id, title, price: 0, priceLabel: 'Request price', category: section, stock: 'Contact for price', img: 'assets/placeholder-2.svg', desc: section + ' — ' + title });
+                    }
+                    // make the menu link navigate to shop detail
+                    a.addEventListener('click', function(e){ e.preventDefault(); window.location = 'shop.html?product=' + encodeURIComponent(id); });
+                }catch(e){ }
+            });
+
+            // Ensure Buy/Inquire links in product cards point to shop detail via slug id
+            document.querySelectorAll('.product-card').forEach(card => {
+                const title = card.querySelector('.product-title')?.textContent.trim();
+                if(!title) return;
+                const id = slugify(title);
+                const buy = card.querySelector('.product-actions a.btn-primary');
+                if(buy){
+                    buy.setAttribute('href', 'shop.html?product=' + encodeURIComponent(id));
+                }
+            });
+
+            // store to localStorage for shop import
+            try{ localStorage.setItem('site_products_v1', JSON.stringify(items)); }catch(e){ console.warn('Could not save site products', e); }
+            // expose for debug
+            window.SiteProducts = items;
+        })();
+        </script>
+        <script src="assets/js/functions.js" defer></script>
     
     <!-- Service Worker Registration -->
     <script>

@@ -68,6 +68,26 @@
   // load at startup
   loadProducts();
 
+  // If the main site exported additional products into localStorage (from index), merge them here
+  try{
+    const siteRaw = localStorage.getItem('site_products_v1');
+    if(siteRaw){
+      const siteItems = JSON.parse(siteRaw) || [];
+      siteItems.forEach(sp => {
+        if(!sp || !sp.id) return;
+        const exists = products.find(p=>p.id === sp.id);
+        if(exists) {
+          // merge shallowly
+          Object.assign(exists, sp);
+        } else {
+          products.push(sp);
+        }
+      });
+      // persist merged set so shop reflects site additions
+      saveProducts();
+    }
+  }catch(e){ /* ignore parse errors */ }
+
   const root = document.getElementById('productsGrid');
   const searchInput = document.getElementById('search');
   const filterSelect = document.getElementById('filter');
@@ -302,6 +322,27 @@
   searchInput.addEventListener('input', debounce(applyFilters, 200));
   filterSelect.addEventListener('change', applyFilters);
   clearBtn.addEventListener('click', ()=>{ searchInput.value=''; filterSelect.value='all'; applyFilters(); });
+
+  // If a product id was supplied in the URL, open its detail modal
+  (function openFromQuery(){
+    try{
+      const params = new URLSearchParams(window.location.search);
+      const pid = params.get('product');
+      if(!pid) return;
+      // try exact id match first
+      let found = products.find(p => p.id === pid);
+      if(!found){
+        // fallback: decode and match by title
+        const decoded = decodeURIComponent(pid).toLowerCase();
+        found = products.find(p => (p.title||'').toLowerCase() === decoded || (p.title||'').toLowerCase().includes(decoded));
+      }
+      if(found){
+        // ensure it's visible in the grid (applyFilters may have filtered it out)
+        applyFilters();
+        setTimeout(()=>openProductModal(found), 300);
+      }
+    }catch(e){ /* ignore */ }
+  })();
 
   /**
    * Add a new product to the in-memory product list and re-render.
