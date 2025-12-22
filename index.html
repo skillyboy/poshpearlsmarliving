@@ -30,6 +30,16 @@
             overflow-x: hidden;
             background-color: #FEFEFF;
         }
+        /* Visible skip link on focus for accessibility */
+        .skip-to-content:focus .sr-only{ 
+            position: static;
+            width: auto;
+            height: auto;
+            margin: 0;
+            overflow: visible;
+            clip: auto;
+            white-space: normal;
+        }
         .loading-overlay { 
             position: fixed; 
             top: 0; 
@@ -69,15 +79,46 @@
     
     <!-- Preload important images -->
     <link rel="preload" href="https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" as="image" fetchpriority="high">
+    <!-- Resource hints -->
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     
-    <!-- Main CSS file -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Main CSS file (non-blocking): preload then apply to avoid render-blocking while preserving critical inline CSS -->
+    <!-- Bootstrap 5 (bundle) - modernized, no jQuery required -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
+
+    <link rel="preload" href="assets/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="assets/css/style.css"></noscript>
     
     <!-- Google Fonts -->
+    <!-- Improve font loading: preconnect then load -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap">
     
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <!-- Font Awesome (non-blocking) -->
+        <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
+        <!-- SEO: canonical & robots -->
+        <link rel="canonical" href="https://poshpearl.com">
+        <meta name="robots" content="index, follow">
+
+        <!-- Structured data: Organization + Website -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "PoshPearl Smart Living",
+            "url": "https://poshpearl.com",
+            "logo": "https://poshpearl.com/icons/icon-192.png",
+            "sameAs": [
+                "https://www.facebook.com/",
+                "https://www.instagram.com/poshpearl_smartliving",
+                "https://wa.me/2347041087502"
+            ]
+        }
+        </script>
 </head>
 <body>
     <!-- Skip to Content Link -->
@@ -223,17 +264,17 @@
                                         <div class="megamenu-section">
                                             <h3 class="megamenu-title">Endorsed Brands</h3>
                                             <ul class="megamenu-list">
-                                                <li><a href="#tradepro" role="menuitem">TradePro by Gainsborough</a></li>
+                                                <li><a href="#tradepro" role="menuitem">TradePro</a></li>
                                                 <li><a href="#austral-lock" role="menuitem">Austral Lock</a></li>
                                             </ul>
                                         </div>
                                         <div class="megamenu-section">
                                             <h3 class="megamenu-title">Technologies</h3>
                                             <ul class="megamenu-list">
-                                                <li><a href="#freestyle" role="menuitem">Gainsborough Freestyle</a></li>
-                                                <li><a href="#mode" role="menuitem">Gainsborough Mode</a></li>
-                                                <li><a href="#liberty" role="menuitem">Gainsborough Liberty</a></li>
-                                                <li><a href="#haven" role="menuitem">Gainsborough Haven</a></li>
+                                                <li><a href="#freestyle" role="menuitem">Freestyle</a></li>
+                                                <li><a href="#mode" role="menuitem">Mode</a></li>
+                                                <li><a href="#liberty" role="menuitem">Liberty</a></li>
+                                                <li><a href="#haven" role="menuitem">Haven</a></li>
                                                 <li><a href="#trilock" role="menuitem">Trilock</a></li>
                                             </ul>
                                         </div>
@@ -314,7 +355,7 @@
 
                         <!-- CTA Button -->
                         <li class="nav-item cta-item">
-                            <a href="#contact" class="nav-cta">
+                            <a href="shop.html" class="nav-cta">
                                 <i class="fas fa-shopping-cart" aria-hidden="true"></i>
                                 <span>Shop Now</span>
                             </a>
@@ -426,18 +467,18 @@
                             </div>
                             <div class="mobile-submenu-section">
                                 <h4>Endorsed Brands</h4>
-                                <ul>
-                                    <li><a href="#tradepro">TradePro by Gainsborough</a></li>
+                                    <ul>
+                                    <li><a href="#tradepro">TradePro</a></li>
                                     <li><a href="#austral-lock">Austral Lock</a></li>
                                 </ul>
                             </div>
                             <div class="mobile-submenu-section">
                                 <h4>Technologies</h4>
                                 <ul>
-                                    <li><a href="#freestyle">Gainsborough Freestyle</a></li>
-                                    <li><a href="#mode">Gainsborough Mode</a></li>
-                                    <li><a href="#liberty">Gainsborough Liberty</a></li>
-                                    <li><a href="#haven">Gainsborough Haven</a></li>
+                                    <li><a href="#freestyle">Freestyle</a></li>
+                                    <li><a href="#mode">Mode</a></li>
+                                    <li><a href="#liberty">Liberty</a></li>
+                                    <li><a href="#haven">Haven</a></li>
                                     <li><a href="#trilock">Trilock</a></li>
                                 </ul>
                             </div>
@@ -545,18 +586,29 @@
         <div class="hero-background" role="presentation">
             <div class="hero-overlay"></div>
             <div class="hero-pattern"></div>
+            <!-- Hero carousel: subtle images sliding under content (visual only) -->
+            <div class="hero-carousel" aria-hidden="true">
+                <div class="hero-carousel-track">
+                    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80');"></div>
+                    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80');"></div>
+                    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80');"></div>
+                </div>
+            </div>
         </div>
         <div class="container">
-            <div class="hero-content">
+                <div class="hero-content animate-fast">
                 <div class="hero-badge">
                     <span>Premium Security</span>
+                </div>
+                <div class="hero-logo" aria-hidden="true">
+                    <img src="assets/logo.jpeg" alt="PoshPearl logo">
                 </div>
                 <h1 class="hero-title">
                     <span class="hero-line">Say Goodbye to</span>
                     <span class="hero-line highlight">Fumbling for Keys</span>
                 </h1>
-                <p class="hero-subtitle">Enter with Elegance & Security</p>
-                <p class="hero-description">Our smart door lock gives you effortless access to your home. Experience the future of home security with PoshPearl Smart Living.</p>
+                <p class="hero-subtitle">Seamless entry. Exceptional style.</p>
+                <p class="hero-description">Unlock a smarter, safer home — elegant hardware engineered for daily life. Browse our curated collections to find the model that matches your door and style.</p>
                 <div class="hero-actions">
                     <a href="#products" class="btn btn-primary btn-large">
                         <span>Explore Products</span>
@@ -599,19 +651,21 @@
                         <span>Our Collection</span>
                     </div>
                     <h2 id="products-title" class="section-title">Premium Smart Lock Collection</h2>
-                    <p class="section-description">Discover our range of intelligent security solutions designed for modern living</p>
+                    <p class="section-description">Discover intelligent locks designed for modern living — secure, stylish, and easy to use. Not sure which to pick? Visit our Shop to compare features, pricing, and request a personalised quote.</p>
                 </div>
                 
-                <div class="products-grid">
+                <div class="products-grid animate-slow">
                     <!-- Product 1 -->
                     <article class="product-card" data-category="smart-locks">
                         <div class="product-badge">Most Popular</div>
                         <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                                 alt="PoshPearl Smart Deadbolt - Premium smart lock with fingerprint reader"
-                                 loading="lazy"
-                                 width="800"
-                                 height="600">
+                               <img src="https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                   srcset="https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=60 400w, https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80 800w, https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80 1200w"
+                                   sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                   alt="PoshPearl Smart Deadbolt - Premium smart lock with fingerprint reader"
+                                   loading="lazy"
+                                   width="800"
+                                   height="600">
                             <div class="product-overlay">
                                 <button class="product-quick-view" aria-label="Quick view Smart Deadbolt">
                                     <i class="fas fa-eye" aria-hidden="true"></i>
@@ -645,10 +699,10 @@
                                     <button class="btn btn-outline" aria-label="Add to wishlist">
                                         <i class="far fa-heart" aria-hidden="true"></i>
                                     </button>
-                                    <a href="shop.html?product=Smart%20Deadbolt%20Pro&price=%E2%82%A685%2C000&desc=Smart%20Deadbolt%20Pro%20-%20The%20perfect%20balance%20of%20security%20and%20convenience" class="btn btn-primary">
-                                        <span>Buy / Inquire</span>
-                                        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
-                                    </a>
+                                                    <a href="shop.html?product=Smart%20Deadbolt%20Pro&price=%E2%82%A685%2C000&desc=Smart%20Deadbolt%20Pro%20-%20The%20perfect%20balance%20of%20security%20and%20convenience" class="btn btn-primary">
+                                                        <span>See on Shop</span>
+                                                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -658,11 +712,13 @@
                     <article class="product-card" data-category="smart-locks">
                         <div class="product-badge">New Arrival</div>
                         <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                                 alt="PoshPearl Smart Entrance Lock - Sleek modern design"
-                                 loading="lazy"
-                                 width="800"
-                                 height="600">
+                               <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                   srcset="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=60 400w, https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80 800w, https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80 1200w"
+                                   sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                   alt="PoshPearl Smart Entrance Lock - Sleek modern design"
+                                   loading="lazy"
+                                   width="800"
+                                   height="600">
                             <div class="product-overlay">
                                 <button class="product-quick-view" aria-label="Quick view Smart Entrance Lock">
                                     <i class="fas fa-eye" aria-hidden="true"></i>
@@ -697,8 +753,8 @@
                                         <i class="far fa-heart" aria-hidden="true"></i>
                                     </button>
                                     <a href="shop.html?product=Elegance%20Series&price=%E2%82%A695%2C000&desc=Elegance%20Series%20-%20A%20sleek%20and%20modern%20entrance%20lock" class="btn btn-primary">
-                                        <span>Buy / Inquire</span>
-                                        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                                        <span>See on Shop</span>
+                                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
                                     </a>
                                 </div>
                             </div>
@@ -709,11 +765,13 @@
                     <article class="product-card" data-category="smart-locks">
                         <div class="product-badge">Premium</div>
                         <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1572021331468-dd4eb034e7e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                                 alt="PoshPearl Smart Lever Lock - Luxury interior lock"
-                                 loading="lazy"
-                                 width="800"
-                                 height="600">
+                               <img src="https://images.unsplash.com/photo-1572021331468-dd4eb034e7e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                   srcset="https://images.unsplash.com/photo-1572021331468-dd4eb034e7e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=60 400w, https://images.unsplash.com/photo-1572021331468-dd4eb034e7e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80 800w, https://images.unsplash.com/photo-1572021331468-dd4eb034e7e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80 1200w"
+                                   sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                   alt="PoshPearl Smart Lever Lock - Luxury interior lock"
+                                   loading="lazy"
+                                   width="800"
+                                   height="600">
                             <div class="product-overlay">
                                 <button class="product-quick-view" aria-label="Quick view Smart Lever Lock">
                                     <i class="fas fa-eye" aria-hidden="true"></i>
@@ -748,8 +806,8 @@
                                         <i class="far fa-heart" aria-hidden="true"></i>
                                     </button>
                                     <a href="shop.html?product=Luxury%20Edition&price=%E2%82%A6120%2C000&desc=Luxury%20Edition%20-%20Secure%20your%20home%20with%20a%20luxury%20lever%20lock" class="btn btn-primary">
-                                        <span>Buy / Inquire</span>
-                                        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                                        <span>See on Shop</span>
+                                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
                                     </a>
                                 </div>
                             </div>
@@ -758,7 +816,7 @@
                 </div>
                 
                 <div class="section-cta">
-                    <a href="#all-products" class="btn btn-secondary btn-large">
+                    <a href="shop.html" class="btn btn-secondary btn-large">
                         <span>View All Products</span>
                         <i class="fas fa-arrow-right" aria-hidden="true"></i>
                     </a>
@@ -1161,7 +1219,7 @@
                                             Opposite Prince and Princess Estate,<br>
                                             Abuja, Nigeria
                                         </address>
-                                        <a href="https://maps.google.com/?q=CAF95+Kaura+Market+Abuja" class="contact-link" target="_blank">
+                                        <a href="https://maps.google.com/?q=CAF95+Kaura+Market+Abuja" class="contact-link" target="_blank" rel="noopener noreferrer">
                                             <i class="fas fa-directions" aria-hidden="true"></i>
                                             <span>Get Directions</span>
                                         </a>
@@ -1196,7 +1254,7 @@
                                     </div>
                                     <div class="contact-details">
                                         <h4>Follow Us</h4>
-                                        <a href="https://instagram.com/poshpearl_smartliving" class="contact-social" target="_blank">
+                                        <a href="https://instagram.com/poshpearl_smartliving" class="contact-social" target="_blank" rel="noopener noreferrer">
                                             @poshpearl_smartliving
                                         </a>
                                         <p class="contact-social-desc">Latest updates and inspiration</p>
@@ -1325,75 +1383,36 @@
     </button>
 
     <!-- Notification Container -->
-    <div class="notification-container" id="notificationContainer"></div>
+    <div class="notification-container" id="notificationContainer" aria-live="polite" aria-atomic="false"></div>
 
     <!-- JavaScript Files -->
-        <!-- Site product sync: export products (from megamenu and product cards) to localStorage so shop imports them -->
-        <script>
-        (function(){
-            function slugify(s){ return String(s||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
-            const items = [];
-
-            // Collect product cards on the page
-            document.querySelectorAll('.product-card').forEach(card => {
-                try{
-                    const title = card.querySelector('.product-title')?.textContent.trim();
-                    const price = card.querySelector('.product-price .price')?.textContent.trim() || '';
-                    const desc = card.querySelector('.product-description')?.textContent.trim() || '';
-                    const img = card.querySelector('.product-image img')?.src || 'assets/placeholder-1.svg';
-                    const category = card.getAttribute('data-category') || card.querySelector('.product-category')?.textContent.trim() || 'products';
-                    const id = slugify(title || category);
-                    if(title){
-                        items.push({ id, title, price: 0, priceLabel: price || 'Request price', category, stock: 'In stock', img, desc });
-                    }
-                }catch(e){ }
-            });
-
-            // Collect megamenu items (product dropdown)
-            document.querySelectorAll('#megamenu-products .megamenu-list a').forEach(a => {
-                try{
-                    const title = a.textContent.trim();
-                    const section = a.closest('.megamenu-section')?.querySelector('.megamenu-title')?.textContent.trim() || 'products';
-                    const id = slugify(title || section);
-                    const exists = items.find(x=>x.id===id);
-                    if(!exists && title){
-                        items.push({ id, title, price: 0, priceLabel: 'Request price', category: section, stock: 'Contact for price', img: 'assets/placeholder-2.svg', desc: section + ' — ' + title });
-                    }
-                    // make the menu link navigate to shop detail
-                    a.addEventListener('click', function(e){ e.preventDefault(); window.location = 'shop.html?product=' + encodeURIComponent(id); });
-                }catch(e){ }
-            });
-
-            // Ensure Buy/Inquire links in product cards point to shop detail via slug id
-            document.querySelectorAll('.product-card').forEach(card => {
-                const title = card.querySelector('.product-title')?.textContent.trim();
-                if(!title) return;
-                const id = slugify(title);
-                const buy = card.querySelector('.product-actions a.btn-primary');
-                if(buy){
-                    buy.setAttribute('href', 'shop.html?product=' + encodeURIComponent(id));
-                }
-            });
-
-            // store to localStorage for shop import
-            try{ localStorage.setItem('site_products_v1', JSON.stringify(items)); }catch(e){ console.warn('Could not save site products', e); }
-            // expose for debug
-            window.SiteProducts = items;
-        })();
-        </script>
+        <!-- Site product sync (externalized for maintainability) -->
+        <script src="assets/js/site-products.js" defer></script>
+        <!-- Client-side contact form validation -->
+        <script src="assets/js/contact.js" defer></script>
         <script src="assets/js/functions.js" defer></script>
+        <!-- Load Bootstrap 4.4.1 dependencies and JS (jQuery, Popper, Bootstrap) before our scripts -->
+        <!-- Bootstrap 5 bundle (includes Popper) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer crossorigin="anonymous"></script>
+
+        <script src="assets/js/animations.js" defer></script>
+        <script src="assets/js/hero-carousel.js" defer></script>
     
     <!-- Service Worker Registration -->
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, function(err) {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
+        // Improved service worker registration with async/await and relative path
+        (function(){
+            if(!('serviceWorker' in navigator)) return;
+            window.addEventListener('load', async function(){
+                try{
+                    // Use relative path so registration works on subpaths and during dev
+                    const reg = await navigator.serviceWorker.register('sw.js');
+                    console.log('ServiceWorker registered. Scope:', reg.scope);
+                }catch(err){
+                    console.warn('ServiceWorker registration failed:', err);
+                }
             });
-        }
+        })();
     </script>
 </body>
 </html>

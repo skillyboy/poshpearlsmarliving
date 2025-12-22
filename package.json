@@ -1,0 +1,9 @@
+{
+  "name": "poshpearl-smartliving",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npx http-server -p 3000 -c-1 .",
+    "audit": "npx -y lighthouse http://localhost:3000 --only-categories=performance,accessibility,best-practices,seo --output html --output-path ./lighthouse-report.html --chrome-flags='--no-sandbox --headless'"
+  }
+}

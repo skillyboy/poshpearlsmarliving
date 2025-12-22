@@ -7,11 +7,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/vendor/bootstrap-icons/bootstrap-icons.css">
+    <!-- Bootstrap 4.4.1 (required for responsive components used below) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOENV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link id="style-switch" rel="stylesheet" href="assets/css/style.css">
 
     
     <style>
-      body{font-family:'Nunito Sans',Rubik,system-ui,Segoe UI,Arial,sans-serif;color:#222;margin:0;background:#fff}
+    /* Page background and modern spacing - use same off-white as index for visual continuity */
+    body{font-family:'Nunito Sans',Rubik,system-ui,Segoe UI,Arial,sans-serif;color:#222;margin:0;background-color:#FEFEFF;min-height:100vh}
+    .container{width:92%;max-width:1100px;margin:0 auto;padding:22px 0}
       .container{width:92%;max-width:1100px;margin:0 auto;padding:22px 0}
       .site-header{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
       .site-header .logo img{height:64px}
@@ -25,9 +29,26 @@
       .product .cta{margin-top:10px}
       @media(max-width:900px){.products-grid{grid-template-columns:repeat(2,1fr)}}
       @media(max-width:520px){.products-grid{grid-template-columns:1fr}.product img{height:220px}}
+
+      /* Cart drawer visibility handled by JS via .open class; visible as a sidebar on desktop */
+      #cartDrawer{display:block;opacity:0;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease;pointer-events:none}
+      #cartDrawer.open{opacity:1;transform:translateY(0);pointer-events:auto}
+
+      /* Button 'added' state */
+      .btn.added{background:linear-gradient(90deg,#2ecc71,#27ae60);color:#fff;border-color:transparent}
+
+      /* Desktop: show cart as persistent right sidebar */
+      @media (min-width:900px){
+        #miniCart #cartToggle{display:none}
+        #cartDrawer{right:24px;top:80px;bottom:24px;width:360px;max-width:360px;opacity:1;transform:none;pointer-events:auto;display:flex;flex-direction:column}
+        #cartItems{max-height:calc(100% - 200px);overflow:auto}
+      }
+
+      /* Custom modal backdrop (namespaced to avoid colliding with Bootstrap) */
+      .posh-modal-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:99998}
     </style>
   </head>
-  <body>
+  <body class="shop-page">
     <header class="site-header container">
       <a class="logo" href="index.html"><img src="assets/logo.jpeg" alt="PoshPearl logo"></a>
       <nav class="nav" aria-label="Main navigation">
@@ -45,7 +66,7 @@
       </section>
 
       <section class="products">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
           <div style="flex:1;min-width:220px">
             <input id="search" placeholder="Search products" style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6">
           </div>
@@ -59,25 +80,50 @@
           </div>
         </div>
 
+        <div class="d-flex justify-content-between align-items-center mt-3 gap-3 flex-wrap">
+          <div class="btn-group" role="group" aria-label="Categories">
+            <button class="btn btn-outline-secondary btn-sm chip" data-cat="all">All</button>
+            <button class="btn btn-outline-secondary btn-sm chip" data-cat="locks">Locks</button>
+            <button class="btn btn-outline-secondary btn-sm chip" data-cat="accessories">Accessories</button>
+            <button class="btn btn-outline-secondary btn-sm chip" data-cat="sensors">Sensors</button>
+          </div>
+          <div class="text-muted small">Showing <span id="resultsCount">0</span> products</div>
+        </div>
+
         <div class="products-grid" id="productsGrid">
           <!-- Products will be rendered here dynamically -->
         </div>
 
         <!-- Floating mini-cart -->
         <div id="miniCart" aria-live="polite" aria-atomic="true">
-          <button id="cartToggle" class="btn primary" style="position:fixed;right:18px;bottom:18px;border-radius:9999px;display:flex;align-items:center;gap:8px;z-index:2000">
-            <i class="fas fa-shopping-cart"></i>
-            <span id="cartCount">0</span>
+          <!-- Dramatic bold cart toggle (prominent on mobile) -->
+          <button id="cartToggle" class="btn btn-danger btn-lg shadow-lg d-flex align-items-center" style="position:fixed;right:18px;bottom:18px;border-radius:9999px;gap:10px;padding:14px 18px;z-index:2000" aria-controls="cartDrawer" aria-expanded="false">
+            <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+            <strong style="font-weight:800;letter-spacing:.6px">OPEN CART</strong>
+            <span class="badge badge-light" id="cartCount" style="min-width:28px;text-align:center">0</span>
           </button>
 
-          <aside id="cartDrawer" style="position:fixed;right:18px;bottom:84px;width:320px;max-width:calc(100% - 40px);background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12);padding:12px;display:none;z-index:2000">
-            <h4 style="margin:0 0 8px">Your Cart</h4>
-            <div id="cartItems" style="max-height:320px;overflow:auto;gap:8px;display:flex;flex-direction:column"></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
-              <strong id="cartTotal">₦0</strong>
+          <aside id="cartDrawer" role="dialog" aria-label="Shopping cart" style="position:fixed;right:18px;bottom:84px;width:360px;max-width:calc(100% - 40px);background:#fff;border-radius:12px;box-shadow:0 18px 40px rgba(0,0,0,.12);padding:14px;z-index:2000">
+            <div class="d-flex justify-content-between align-items-center">
+              <h4 class="mb-0">Your Cart</h4>
+              <div class="btn-group" role="group" aria-label="Cart actions">
+                <button id="clearCart" class="btn btn-outline-secondary" title="Clear cart">
+                  <i class="fas fa-trash"></i>
+                </button>
+                <button id="closeCartSmall" class="btn btn-outline-secondary d-md-none" title="Close cart"><i class="fas fa-times"></i></button>
+              </div>
+            </div>
+            <div id="cartItems" style="max-height:320px;overflow:auto;gap:8px;display:flex;flex-direction:column;margin-top:10px"></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
               <div>
-                <button id="checkoutWa" class="btn primary">Checkout (WhatsApp)</button>
-                <button id="clearCart" class="btn ghost" style="margin-left:8px">Clear</button>
+                <div style="font-size:.95rem;color:#666">Subtotal</div>
+                <strong id="cartTotal" style="font-size:1.05rem;display:block;margin-top:4px">₦0</strong>
+              </div>
+              <div class="d-flex flex-column gap-2">
+                <button id="checkoutWa" class="btn btn-success">Send (WhatsApp)</button>
+                <button id="checkoutCard" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal">Pay by Card</button>
+                <button id="sendClearWa" class="btn btn-outline-primary">Send & Clear</button>
+                <button id="exportJson" class="btn btn-light">Export JSON</button>
               </div>
             </div>
           </aside>
@@ -85,6 +131,62 @@
       </section>
     </main>
 
+    <!-- Payment Modal (Bootstrap) -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="paymentModalLabel">Checkout — Payment Options</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted">Provide your name and phone. Email is optional. Choose a payment method below.</p>
+            <form id="paymentForm">
+              <div class="form-group">
+                <label for="custName">Full name</label>
+                <input id="custName" name="name" type="text" class="form-control" required placeholder="Jane Doe">
+              </div>
+              <div class="form-group">
+                <label for="custPhone">Phone number</label>
+                <input id="custPhone" name="phone" type="tel" class="form-control" required placeholder="+2348012345678">
+              </div>
+              <div class="form-group">
+                <label for="custEmail">Email (optional)</label>
+                <input id="custEmail" name="email" type="email" class="form-control" placeholder="you@example.com">
+              </div>
+              <div class="form-group">
+                <label for="accountNumber">Account number (optional)</label>
+                <input id="accountNumber" name="account" type="text" class="form-control" placeholder="0123456789">
+              </div>
+
+              <div class="btn-group btn-group-toggle d-flex" data-toggle="buttons">
+                <label class="btn btn-outline-primary active flex-fill" id="payCardOpt">
+                  <input type="radio" name="method" value="card" autocomplete="off" checked> Pay by Card
+                </label>
+                <label class="btn btn-outline-primary flex-fill" id="payOpayOpt">
+                  <input type="radio" name="method" value="opay" autocomplete="off"> Opay
+                </label>
+                <label class="btn btn-outline-primary flex-fill" id="payPaystackOpt">
+                  <input type="radio" name="method" value="paystack" autocomplete="off"> Paystack
+                </label>
+              </div>
+            </form>
+            <div id="paymentHelp" class="mt-3 text-muted small">Card payments use a secure provider. Paystack/Opay options will open their flows (public key required).</div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button id="submitPayment" type="button" class="btn btn-primary">Proceed to Pay</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery, Popper and Bootstrap JS (for modal and responsive helpers) -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldvP0nT9e+VQZ6jIW3UksdQRVvoxMfooAo0ieG7" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-6gVR8G+gkY2GZ3cT0Wz5PZ0Nx4S3Dl9mZ6E2Qm5mY5Wg5Y6mJg1Q1Q1Q1Q1Q1Q" crossorigin="anonymous"></script>
     <script src="assets/js/shop.js" defer></script>
   </body>
 </html>

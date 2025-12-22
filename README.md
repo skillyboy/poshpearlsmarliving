@@ -16,7 +16,26 @@ Notes & next steps:
 - Hook the contact form to your backend or a service like Formspree / Netlify forms.
 - Add analytics, accessibility audit, and any SEO metadata for production.
 
-Design inspiration: gainsboroughhardware example provided by the user — this is a clean, responsive single-page prototype matching the same structure (hero, features, product, gallery, CTA).
+Lighthouse audit (recommended)
+-------------------------------
+To run a Lighthouse audit locally and produce a report:
+
+1. Start a local static server (uses `npx http-server`):
+
+```powershell
+npm run start
+```
+
+2. In a separate terminal run the Lighthouse audit script:
+
+```powershell
+npm run audit
+```
+
+This generates `lighthouse-report.html` in the repository root. See `Lighthouse_CHECKLIST.md` for remediation guidance and CI suggestions.
+
+
+Design inspiration: modern smart-home UI patterns and premium ecommerce landing pages — this is a clean, responsive single-page prototype matching the same structure (hero, features, product, gallery, CTA).
 
 
 

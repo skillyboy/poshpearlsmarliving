@@ -326,60 +326,89 @@ function setupQuickView() {
             const title = card.querySelector('.product-title')?.textContent || '';
             const desc = card.querySelector('.product-description')?.textContent || '';
             const price = card.querySelector('.price')?.textContent || '';
+            const specs = Array.from(card.querySelectorAll('.product-features .feature-tag')).map(el => el.textContent.trim());
 
-            openQuickView({ img, title, desc, price }, btn);
+            openQuickView({ img, title, desc, price, specs }, btn);
         });
     });
 }
 
 function openQuickView(data, opener) {
-    // Create backdrop + modal
-    const backdrop = document.createElement('div');
-    backdrop.className = 'modal-backdrop';
-    backdrop.tabIndex = -1;
+        // Build accessible modal with focus trap and more details
+        const backdrop = document.createElement('div');
+        backdrop.className = 'modal-backdrop';
+        backdrop.tabIndex = -1;
 
-    const modal = document.createElement('div');
-    modal.className = 'modal animate-in';
+        const modal = document.createElement('div');
+        modal.className = 'modal animate-in';
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-label', data.title || 'Product quick view');
 
-    modal.innerHTML = `
-        <div class="modal-media"><img src="${data.img}" alt="${escapeHtml(data.title)}"></div>
-        <div class="modal-content">
-            <button class="modal-close" aria-label="Close quick view">&times;</button>
-            <h3 class="product-title">${escapeHtml(data.title)}</h3>
-            <p class="product-description">${escapeHtml(data.desc)}</p>
-            <div class="product-footer" style="margin-top:1rem;">
-                <div class="product-price"><span class="price">${escapeHtml(data.price)}</span></div>
-                <div class="product-actions">
-                    <button class="btn btn-outline" aria-label="Add to wishlist"><i class="far fa-heart"></i></button>
-                    <a href="#contact" class="btn btn-primary">Inquire Now</a>
+        // More detailed specs placeholder — if data.specs provided, render list
+        const specsHtml = (data.specs && data.specs.length) ? (`<ul class="product-specs">` + data.specs.map(s => `<li>${escapeHtml(s)}</li>`).join('') + `</ul>`) : '';
+
+        // build shop link with query params for product deep-link
+        const shopUrl = 'shop.html?product=' + encodeURIComponent(data.title || '') + '&price=' + encodeURIComponent(data.price || '') + '&desc=' + encodeURIComponent(data.desc || '');
+
+        modal.innerHTML = `
+                <div class="modal-grid">
+                    <div class="modal-media"><img src="${data.img}" alt="${escapeHtml(data.title)}"></div>
+                    <div class="modal-content">
+                        <button class="modal-close" aria-label="Close quick view">&times;</button>
+                        <h3 class="product-title">${escapeHtml(data.title)}</h3>
+                        <div class="product-meta"><span class="product-price">${escapeHtml(data.price)}</span></div>
+                        <p class="product-description">${escapeHtml(data.desc)}</p>
+                        ${specsHtml}
+                        <div class="product-actions" style="margin-top:1rem;display:flex;gap:8px;align-items:center;">
+                            <a href="${shopUrl}" class="btn btn-primary">See on Shop</a>
+                            <button class="btn btn-outline" aria-label="Add to wishlist"><i class="far fa-heart"></i></button>
+                            <button class="btn ghost modal-close-alt" aria-label="Close">Close</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    `;
+        `;
 
-    backdrop.appendChild(modal);
-    document.body.appendChild(backdrop);
-    document.body.style.overflow = 'hidden';
+        backdrop.appendChild(modal);
+        document.body.appendChild(backdrop);
+        // restrict background scrolling
+        const prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
 
-    // Focus management
-    const closeBtn = modal.querySelector('.modal-close');
-    closeBtn?.focus();
+        // Focus trap
+        const focusableSelector = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+        const focusable = Array.from(modal.querySelectorAll(focusableSelector));
+        const firstFocusable = focusable[0];
+        const lastFocusable = focusable[focusable.length - 1];
+        const previouslyFocused = document.activeElement;
 
-    function close() {
-        backdrop.remove();
-        document.body.style.overflow = '';
-        opener?.focus();
-    }
+        function trap(e) {
+            if (e.key === 'Tab') {
+                if (focusable.length === 0) { e.preventDefault(); return; }
+                if (e.shiftKey) {
+                    if (document.activeElement === firstFocusable) { e.preventDefault(); lastFocusable.focus(); }
+                } else {
+                    if (document.activeElement === lastFocusable) { e.preventDefault(); firstFocusable.focus(); }
+                }
+            } else if (e.key === 'Escape') {
+                e.preventDefault(); close();
+            }
+        }
 
-    backdrop.addEventListener('click', (ev) => {
-        if (ev.target === backdrop) close();
-    });
+        function close() {
+            document.removeEventListener('keydown', trap);
+            backdrop.remove();
+            document.body.style.overflow = prevOverflow;
+            previouslyFocused?.focus?.();
+        }
 
-    closeBtn?.addEventListener('click', close);
+        // event handlers
+        backdrop.addEventListener('click', (ev) => { if (ev.target === backdrop) close(); });
+        modal.querySelectorAll('.modal-close, .modal-close-alt').forEach(btn => btn.addEventListener('click', close));
+        document.addEventListener('keydown', trap);
 
-    // Close on Escape
-    const escHandler = (e) => { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', escHandler); } };
-    document.addEventListener('keydown', escHandler);
+        // focus the first focusable element if present
+        (firstFocusable || modal.querySelector('.modal-close'))?.focus();
 }
 
 function escapeHtml(unsafe) {
