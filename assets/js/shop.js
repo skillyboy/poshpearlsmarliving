@@ -332,6 +332,41 @@
       updateCartUI();
     });
   }
+
+  // Header cart button (desktop): toggle same cartDrawer
+  const headerCartBtn = document.getElementById('headerCartBtn');
+  const headerCartCount = document.getElementById('headerCartCount');
+  if(headerCartBtn){
+    headerCartBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      cartDrawer.classList.toggle('open');
+      const isOpen = cartDrawer.classList.contains('open');
+      headerCartBtn.setAttribute('aria-expanded', String(isOpen));
+      // sync floating toggle aria as well
+      if(cartToggle) cartToggle.setAttribute('aria-expanded', String(isOpen));
+      updateCartUI();
+    });
+  }
+
+  // Keep header count in sync
+  function syncHeaderCount(){
+    try{ if(headerCartCount){ headerCartCount.textContent = document.getElementById('cartCount')?.textContent || '0'; } }catch(e){}
+  }
+  // Observe cartCount changes via a small interval (lightweight) and on cart updates
+  const _origSaveCart = saveCart;
+  saveCart = function(){ _origSaveCart(); syncHeaderCount(); };
+  // run once now
+  syncHeaderCount();
+
+  // Close cart when clicking outside the drawer (for dropdown behaviour)
+  document.addEventListener('click', function(e){
+    if(!cartDrawer.classList.contains('open')) return;
+    const target = e.target;
+    if(target.closest && (target.closest('#cartDrawer') || target.closest('#cartToggle') || target.closest('#headerCartBtn'))) return; // click inside
+    cartDrawer.classList.remove('open');
+    if(cartToggle) cartToggle.setAttribute('aria-expanded','false');
+    if(headerCartBtn) headerCartBtn.setAttribute('aria-expanded','false');
+  });
   // small-screen close button
   const closeCartSmallBtn = document.getElementById('closeCartSmall');
   if(closeCartSmallBtn){ closeCartSmallBtn.addEventListener('click', ()=>{ cartDrawer.classList.remove('open'); cartToggle.setAttribute('aria-expanded','false'); }); }
