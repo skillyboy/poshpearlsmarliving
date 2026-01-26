@@ -161,6 +161,12 @@
                     <a href="https://wa.me/2347041087502" class="social-link" aria-label="WhatsApp">
                         <i class="fab fa-whatsapp" aria-hidden="true"></i>
                     </a>
+                    <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">
+                        <span class="theme-toggle-icon" aria-hidden="true">
+                            <i class="fas fa-moon"></i>
+                        </span>
+                        <span class="theme-toggle-text">Dark mode</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -643,6 +649,11 @@
 
     <!-- Main Content -->
     <main id="main-content" role="main">
+        <div id="about" class="section-anchor" aria-hidden="true"></div>
+        <div id="style-hub" class="section-anchor" aria-hidden="true"></div>
+        <div id="style-hub-inner" class="section-anchor" aria-hidden="true"></div>
+        <div id="smart-home-hub" class="section-anchor" aria-hidden="true"></div>
+        <div id="help" class="section-anchor" aria-hidden="true"></div>
         <!-- Products Section -->
         <section class="products-section" id="products" aria-labelledby="products-title">
             <div class="container">
@@ -654,7 +665,7 @@
                     <p class="section-description">Discover intelligent locks designed for modern living — secure, stylish, and easy to use. Not sure which to pick? Visit our Shop to compare features, pricing, and request a personalised quote.</p>
                 </div>
                 
-                <div class="products-grid animate-slow">
+                <div class="products-grid animate-slow" data-skeleton>
                     <!-- Product 1 -->
                     <article class="product-card" data-category="smart-locks">
                         <div class="product-badge">Most Popular</div>
@@ -835,7 +846,7 @@
                     <p class="section-description">Experience the ultimate in security and convenience with our advanced features</p>
                 </div>
                 
-                <div class="features-grid">
+                <div class="features-grid" data-skeleton>
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-fingerprint" aria-hidden="true"></i>
