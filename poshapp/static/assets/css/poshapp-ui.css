@@ -247,10 +247,12 @@ body.nav-open .nav-overlay {
     background: var(--pp-surface);
     border-radius: var(--pp-radius-lg);
     padding: var(--pp-space-4);
-    max-width: 560px;
+    max-width: min(920px, 92vw);
     width: 100%;
     position: relative;
     box-shadow: var(--pp-shadow);
+    max-height: 88vh;
+    overflow: auto;
 }
 
 .pp-modal__close {
@@ -261,6 +263,24 @@ body.nav-open .nav-overlay {
     background: transparent;
     font-size: 1.2rem;
     color: var(--pp-text);
+}
+
+.pp-modal__content {
+    display: grid;
+    gap: var(--pp-space-2);
+}
+
+.pp-modal__content figure {
+    margin: 0;
+}
+
+.pp-modal__content img {
+    width: 100%;
+    height: auto;
+    max-height: 75vh;
+    object-fit: contain;
+    border-radius: var(--pp-radius-md);
+    background: var(--pp-surface-alt);
 }
 
 .pp-toast-root {

@@ -206,6 +206,27 @@
             "'": '&#039;'
         }[match]));
 
+    qsa('[data-gallery]').forEach((gallery) => {
+        const mainButton = qs('[data-gallery-main]', gallery);
+        const mainImage = mainButton?.querySelector('img');
+        const thumbs = qsa('[data-gallery-thumb]', gallery);
+        if (!mainButton || !mainImage || !thumbs.length) return;
+
+        thumbs.forEach((thumb) => {
+            thumb.addEventListener('click', () => {
+                const src = thumb.getAttribute('data-preview-src');
+                if (!src) return;
+                const alt = thumb.getAttribute('data-preview-alt') || mainImage.alt;
+                mainImage.src = src;
+                mainImage.alt = alt;
+                mainButton.setAttribute('data-modal-image', src);
+                mainButton.setAttribute('data-modal-alt', alt);
+                thumbs.forEach((item) => item.classList.remove('is-active'));
+                thumb.classList.add('is-active');
+            });
+        });
+    });
+
     const validateField = (field) => {
         const errorEl = field.closest('.pp-field')?.querySelector('.pp-field__error');
         if (!errorEl) return true;

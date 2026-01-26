@@ -47,16 +47,33 @@
         <div class="pp-section__header">
             <h2>Product gallery</h2>
         </div>
-        <div class="pp-gallery">
-            {% for image in product.images.all %}
-                <button class="pp-gallery__item pp-skeleton" type="button" data-modal-image="{{ image.image.url }}" data-modal-alt="{{ image.alt_text|default:product.name }}">
-                    <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" loading="lazy" decoding="async" width="720" height="720">
-                </button>
-            {% empty %}
-                <div class="pp-gallery__item pp-skeleton">
-                    <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="{{ product.name }}" loading="lazy" decoding="async" width="720" height="720">
+        <div class="pp-gallery" data-gallery>
+            {% if product.images.all %}
+                {% for image in product.images.all %}
+                    {% if forloop.first %}
+                        <div class="pp-gallery__stage">
+                            <button class="pp-gallery__main pp-skeleton" type="button" data-gallery-main data-modal-image="{{ image.image.url }}" data-modal-alt="{{ image.alt_text|default:product.name }}" aria-label="Open image preview">
+                                <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" loading="eager" decoding="async" width="880" height="1100">
+                            </button>
+                            <span class="pp-gallery__hint">Tap to zoom</span>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="pp-gallery__thumbs">
+                    {% for image in product.images.all %}
+                        <button class="pp-gallery__thumb{% if forloop.first %} is-active{% endif %}" type="button" data-gallery-thumb data-preview-src="{{ image.image.url }}" data-preview-alt="{{ image.alt_text|default:product.name }}">
+                            <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" loading="lazy" decoding="async" width="240" height="320">
+                        </button>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+            {% else %}
+                <div class="pp-gallery__stage">
+                    <button class="pp-gallery__main pp-skeleton" type="button" data-gallery-main data-modal-image="{% static 'assets/images/products/d2pro1.jpeg' %}" data-modal-alt="{{ product.name }}" aria-label="Open image preview">
+                        <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="{{ product.name }}" loading="eager" decoding="async" width="880" height="1100">
+                    </button>
+                    <span class="pp-gallery__hint">Tap to zoom</span>
+                </div>
+            {% endif %}
         </div>
     </div>
 </section>
