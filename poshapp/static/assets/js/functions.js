@@ -14,6 +14,13 @@ function initializeApp() {
     setupFormValidation();
     setupSmoothScroll();
     setupLoadingScreen();
+    setupHeaderScroll();
+    setupQuickView();
+    setupProductInteractions();
+    setupAnimations();
+    setupActiveNavigation();
+    setupThemeToggle();
+    setupSkeletons();
 }
 
 // Mobile menu functionality
@@ -24,35 +31,50 @@ function setupMobileMenu() {
     const overlay = document.getElementById('overlay');
 
     if (mobileMenuBtn && mobileNav) {
+        const closeMenu = () => {
+            mobileNav.classList.remove('active');
+            overlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            mobileNav.setAttribute('aria-hidden', 'true');
+            overlay.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            mobileMenuBtn.focus();
+        };
+
+        const openMenu = () => {
+            mobileNav.classList.add('active');
+            overlay.classList.add('active');
+            mobileMenuBtn.classList.add('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            mobileNav.setAttribute('aria-hidden', 'false');
+            overlay.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            const first = mobileNav.querySelector('button, a, input, [tabindex]');
+            first?.focus();
+        };
+
         mobileMenuBtn.addEventListener('click', () => {
             const opening = !mobileNav.classList.contains('active');
-            mobileNav.classList.toggle('active');
-            overlay.classList.toggle('active');
-            mobileMenuBtn.classList.toggle('active');
-            document.body.style.overflow = opening ? 'hidden' : '';
             if (opening) {
-                // focus first focusable element inside mobile nav for accessibility
-                const first = mobileNav.querySelector('button, a, input, [tabindex]');
-                first?.focus();
+                openMenu();
             } else {
-                mobileMenuBtn.focus();
+                closeMenu();
             }
         });
 
         mobileCloseBtn?.addEventListener('click', () => {
-            mobileNav.classList.remove('active');
-            overlay.classList.remove('active');
-            mobileMenuBtn.classList.remove('active');
-            document.body.style.overflow = '';
-            mobileMenuBtn.focus();
+            closeMenu();
         });
 
         overlay?.addEventListener('click', () => {
-            mobileNav.classList.remove('active');
-            overlay.classList.remove('active');
-            mobileMenuBtn.classList.remove('active');
-            document.body.style.overflow = '';
-            mobileMenuBtn.focus();
+            closeMenu();
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && mobileNav.classList.contains('active')) {
+                closeMenu();
+            }
         });
 
         // Accordion functionality for mobile submenus
@@ -77,6 +99,9 @@ function setupMobileMenu() {
                 parent.closest('.mobile-nav-content')?.scrollTo({ top: parent.offsetTop - 20, behavior: 'smooth' });
             });
         });
+
+        mobileNav.dataset.closeMenuBound = 'true';
+        mobileNav.closeMenu = closeMenu;
     }
 }
 
@@ -334,81 +359,33 @@ function setupQuickView() {
 }
 
 function openQuickView(data, opener) {
-        // Build accessible modal with focus trap and more details
-        const backdrop = document.createElement('div');
-        backdrop.className = 'modal-backdrop';
-        backdrop.tabIndex = -1;
-
-        const modal = document.createElement('div');
-        modal.className = 'modal animate-in';
-        modal.setAttribute('role', 'dialog');
-        modal.setAttribute('aria-modal', 'true');
-        modal.setAttribute('aria-label', data.title || 'Product quick view');
-
         // More detailed specs placeholder — if data.specs provided, render list
         const specsHtml = (data.specs && data.specs.length) ? (`<ul class="product-specs">` + data.specs.map(s => `<li>${escapeHtml(s)}</li>`).join('') + `</ul>`) : '';
 
         // build shop link with query params for product deep-link
         const shopUrl = 'shop.html?product=' + encodeURIComponent(data.title || '') + '&price=' + encodeURIComponent(data.price || '') + '&desc=' + encodeURIComponent(data.desc || '');
 
-        modal.innerHTML = `
-                <div class="modal-grid">
-                    <div class="modal-media"><img src="${data.img}" alt="${escapeHtml(data.title)}"></div>
-                    <div class="modal-content">
-                        <button class="modal-close" aria-label="Close quick view">&times;</button>
-                        <h3 class="product-title">${escapeHtml(data.title)}</h3>
-                        <div class="product-meta"><span class="product-price">${escapeHtml(data.price)}</span></div>
-                        <p class="product-description">${escapeHtml(data.desc)}</p>
-                        ${specsHtml}
-                        <div class="product-actions" style="margin-top:1rem;display:flex;gap:8px;align-items:center;">
-                            <a href="${shopUrl}" class="btn btn-primary">See on Shop</a>
-                            <button class="btn btn-outline" aria-label="Add to wishlist"><i class="far fa-heart"></i></button>
-                            <button class="btn ghost modal-close-alt" aria-label="Close">Close</button>
-                        </div>
-                    </div>
+        const content = `
+            <div class="modal-media"><img src="${data.img}" alt="${escapeHtml(data.title)}"></div>
+            <div class="modal-content">
+                <h3 class="product-title">${escapeHtml(data.title)}</h3>
+                <div class="product-meta"><span class="product-price">${escapeHtml(data.price)}</span></div>
+                <p class="product-description">${escapeHtml(data.desc)}</p>
+                ${specsHtml}
+                <div class="product-actions" style="margin-top:1rem;display:flex;gap:8px;align-items:center;">
+                    <a href="${shopUrl}" class="btn btn-primary">See on Shop</a>
+                    <button class="btn btn-outline" aria-label="Add to wishlist"><i class="far fa-heart"></i></button>
+                    <button class="btn ghost modal-close-alt" aria-label="Close">Close</button>
                 </div>
+            </div>
         `;
 
-        backdrop.appendChild(modal);
-        document.body.appendChild(backdrop);
-        // restrict background scrolling
-        const prevOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
-
-        // Focus trap
-        const focusableSelector = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
-        const focusable = Array.from(modal.querySelectorAll(focusableSelector));
-        const firstFocusable = focusable[0];
-        const lastFocusable = focusable[focusable.length - 1];
-        const previouslyFocused = document.activeElement;
-
-        function trap(e) {
-            if (e.key === 'Tab') {
-                if (focusable.length === 0) { e.preventDefault(); return; }
-                if (e.shiftKey) {
-                    if (document.activeElement === firstFocusable) { e.preventDefault(); lastFocusable.focus(); }
-                } else {
-                    if (document.activeElement === lastFocusable) { e.preventDefault(); firstFocusable.focus(); }
-                }
-            } else if (e.key === 'Escape') {
-                e.preventDefault(); close();
-            }
-        }
-
-        function close() {
-            document.removeEventListener('keydown', trap);
-            backdrop.remove();
-            document.body.style.overflow = prevOverflow;
-            previouslyFocused?.focus?.();
-        }
-
-        // event handlers
-        backdrop.addEventListener('click', (ev) => { if (ev.target === backdrop) close(); });
-        modal.querySelectorAll('.modal-close, .modal-close-alt').forEach(btn => btn.addEventListener('click', close));
-        document.addEventListener('keydown', trap);
-
-        // focus the first focusable element if present
-        (firstFocusable || modal.querySelector('.modal-close'))?.focus();
+        openModal({
+            title: data.title || 'Product quick view',
+            content,
+            opener,
+            className: 'modal-quick-view'
+        });
 }
 
 function escapeHtml(unsafe) {
@@ -446,6 +423,11 @@ function setupSmoothScroll() {
                 
                 // Update URL
                 history.pushState(null, null, href);
+
+                const mobileNav = document.getElementById('mobileNav');
+                if (mobileNav?.classList.contains('active') && typeof mobileNav.closeMenu === 'function') {
+                    mobileNav.closeMenu();
+                }
             }
         });
     });
@@ -531,13 +513,6 @@ function setupAnimations() {
     });
 }
 
-// Initialize animations
-setupAnimations();
-
-// Initialize additional UI behaviors
-setupQuickView();
-setupHeaderScroll();
-
 // Product hover and click interactions
 function setupProductInteractions() {
     const cards = document.querySelectorAll('.product-card, .product');
@@ -560,10 +535,175 @@ function setupProductInteractions() {
     });
 }
 
-setupProductInteractions();
-
 // Export for global access if needed
 window.PoshPearlApp = {
     showNotification,
     initializeApp
 };
+
+function setupActiveNavigation() {
+    const navLinks = Array.from(document.querySelectorAll('a.nav-link[href^="#"], a.mobile-nav-link[href^="#"]'));
+    if (!navLinks.length) return;
+
+    const sectionMap = new Map();
+    navLinks.forEach(link => {
+        const targetId = link.getAttribute('href');
+        if (!targetId || targetId === '#') return;
+        const section = document.querySelector(targetId);
+        if (!section) return;
+        if (!sectionMap.has(section)) sectionMap.set(section, []);
+        sectionMap.get(section).push(link);
+    });
+
+    if (!sectionMap.size) return;
+
+    const clearActive = () => {
+        navLinks.forEach(link => link.classList.remove('active'));
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            clearActive();
+            const links = sectionMap.get(entry.target) || [];
+            links.forEach(link => link.classList.add('active'));
+        });
+    }, {
+        threshold: 0.4,
+        rootMargin: '-20% 0px -55% 0px'
+    });
+
+    sectionMap.forEach((_links, section) => observer.observe(section));
+
+    if (window.location.hash) {
+        const active = navLinks.find(link => link.getAttribute('href') === window.location.hash);
+        active?.classList.add('active');
+    }
+}
+
+function setupThemeToggle() {
+    const toggle = document.getElementById('themeToggle');
+    if (!toggle) return;
+
+    const root = document.documentElement;
+    const text = toggle.querySelector('.theme-toggle-text');
+    const icon = toggle.querySelector('i');
+    const stored = localStorage.getItem('pp-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initial = stored || (prefersDark ? 'dark' : 'light');
+
+    const applyTheme = (mode, persist = true) => {
+        if (mode === 'dark') {
+            root.setAttribute('data-theme', 'dark');
+        } else {
+            root.removeAttribute('data-theme');
+        }
+        toggle.setAttribute('aria-pressed', mode === 'dark' ? 'true' : 'false');
+        if (text) text.textContent = mode === 'dark' ? 'Light mode' : 'Dark mode';
+        if (icon) icon.className = mode === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        if (persist) localStorage.setItem('pp-theme', mode);
+    };
+
+    applyTheme(initial, false);
+
+    toggle.addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        applyTheme(next);
+    });
+}
+
+function setupSkeletons() {
+    const containers = document.querySelectorAll('[data-skeleton]');
+    if (!containers.length) return;
+
+    containers.forEach(container => {
+        container.classList.add('is-loading');
+        const images = Array.from(container.querySelectorAll('img'));
+        if (!images.length) {
+            container.classList.remove('is-loading');
+            return;
+        }
+
+        let loaded = 0;
+        const onDone = () => {
+            loaded += 1;
+            if (loaded >= images.length) {
+                container.classList.remove('is-loading');
+            }
+        };
+
+        images.forEach(img => {
+            if (img.complete) {
+                onDone();
+            } else {
+                img.addEventListener('load', onDone, { once: true });
+                img.addEventListener('error', onDone, { once: true });
+            }
+        });
+
+        setTimeout(() => container.classList.remove('is-loading'), 4000);
+    });
+}
+
+function openModal({ title, content, opener, className }) {
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.tabIndex = -1;
+
+    const modal = document.createElement('div');
+    modal.className = `modal animate-in ${className || ''}`.trim();
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', title || 'Dialog');
+
+    modal.innerHTML = `
+        <button class="modal-close" aria-label="Close dialog">&times;</button>
+        ${content}
+    `;
+
+    backdrop.appendChild(modal);
+    document.body.appendChild(backdrop);
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const focusableSelector = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+    const focusable = Array.from(modal.querySelectorAll(focusableSelector));
+    const firstFocusable = focusable[0];
+    const lastFocusable = focusable[focusable.length - 1];
+    const previouslyFocused = opener || document.activeElement;
+
+    function trap(e) {
+        if (e.key === 'Tab') {
+            if (focusable.length === 0) {
+                e.preventDefault();
+                return;
+            }
+            if (e.shiftKey) {
+                if (document.activeElement === firstFocusable) {
+                    e.preventDefault();
+                    lastFocusable.focus();
+                }
+            } else if (document.activeElement === lastFocusable) {
+                e.preventDefault();
+                firstFocusable.focus();
+            }
+        } else if (e.key === 'Escape') {
+            e.preventDefault();
+            close();
+        }
+    }
+
+    function close() {
+        document.removeEventListener('keydown', trap);
+        backdrop.remove();
+        document.body.style.overflow = prevOverflow;
+        previouslyFocused?.focus?.();
+    }
+
+    backdrop.addEventListener('click', (ev) => { if (ev.target === backdrop) close(); });
+    modal.querySelectorAll('.modal-close, .modal-close-alt').forEach(btn => btn.addEventListener('click', close));
+    document.addEventListener('keydown', trap);
+
+    (firstFocusable || modal.querySelector('.modal-close'))?.focus();
+}
