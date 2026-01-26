@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}PoshPearl{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/poshapp-ui.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/font-awesome/css/all.min.css' %}">
+    {% block head_extra %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header" data-sticky-header>
+        <div class="container header-inner">
+            <a class="logo" href="/" aria-label="PoshPearl home">
+                <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="PoshPearl" height="48" loading="lazy" decoding="async">
+            </a>
+            <nav class="main-nav" id="siteNav" data-nav aria-label="Primary">
+                <a href="/">Home</a>
+                <a href="/shop/">Shop</a>
+                <a href="/contact/">Contact</a>
+            </nav>
+            <div class="header-actions">
+                <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Toggle dark mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="nav-toggle" type="button" data-nav-toggle aria-controls="siteNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="nav-toggle__bar"></span>
+                    <span class="nav-toggle__bar"></span>
+                    <span class="nav-toggle__bar"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-overlay" data-nav-overlay hidden></div>
+
+    <main id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>© PoshPearl. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div class="pp-modal" data-modal aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="pp-modal__dialog" role="document">
+            <button class="pp-modal__close" type="button" data-modal-close aria-label="Close modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="pp-modal__content" data-modal-content></div>
+        </div>
+    </div>
+    <div class="pp-toast-root" id="toast-root" aria-live="polite"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{% static 'assets/js/functions.js' %}" defer></script>
+    <script src="{% static 'assets/js/poshapp-ui.js' %}" defer></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

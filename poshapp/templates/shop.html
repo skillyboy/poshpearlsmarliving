@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{% if product %}Shop - {{ product.name }}{% else %}Shop{% endif %}{% endblock %}
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'assets/css/poshapp-shop.css' %}">
+{% endblock %}
+{% block body_class %}pp-shop{% endblock %}
+
+{% block content %}
+<section class="pp-hero" id="overview" data-section data-animate>
+    <div class="container pp-hero__grid">
+        <div>
+            {% if product %}
+            <span class="pp-badge">Distributor price</span>
+            <h1 class="pp-hero__title">{{ product.name }}</h1>
+            {% if product.short_description %}
+                <p class="pp-hero__lead">{{ product.short_description }}</p>
+            {% elif product.description %}
+                <p class="pp-hero__lead">{{ product.description }}</p>
+            {% endif %}
+            <div class="pp-hero__actions">
+                <button class="pp-btn primary" type="button" data-modal-target="quote">Request quote</button>
+                <a class="pp-btn ghost" href="/support/">Ask support</a>
+            </div>
+            {% else %}
+            <span class="pp-badge">Distributor price</span>
+            <h1 class="pp-hero__title">No products yet</h1>
+            <p class="pp-hero__lead">Add a product in the admin to publish your listing.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% if product %}
+<nav class="pp-section-nav" aria-label="On this page">
+    <div class="container">
+        <a href="#gallery" data-scroll data-section-link>Gallery</a>
+        <a href="#pricing" data-scroll data-section-link>Pricing</a>
+        <a href="#request" data-scroll data-section-link>Request</a>
+    </div>
+</nav>
+
+<section class="pp-section" id="gallery" data-section data-animate>
+    <div class="container">
+        <div class="pp-section__header">
+            <h2>Product gallery</h2>
+        </div>
+        <div class="pp-gallery">
+            {% for image in product.images.all %}
+                <button class="pp-gallery__item pp-skeleton" type="button" data-modal-image="{{ image.image.url }}" data-modal-alt="{{ image.alt_text|default:product.name }}">
+                    <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" loading="lazy" decoding="async" width="720" height="720">
+                </button>
+            {% empty %}
+                <div class="pp-gallery__item pp-skeleton">
+                    <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="{{ product.name }}" loading="lazy" decoding="async" width="720" height="720">
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="pp-section" id="pricing" data-section data-animate>
+    <div class="container">
+        <div class="pp-section__header">
+            <h2>Wholesale tiers</h2>
+        </div>
+        <div class="pp-price-card">
+            <table class="pp-table">
+                <thead>
+                    <tr>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if product.price_tiers.exists %}
+                        {% for tier in product.price_tiers.all %}
+                            <tr>
+                                <td>{{ tier.min_quantity }} pieces</td>
+                                <td>{{ tier.currency }} {{ tier.price|intcomma }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% elif product.price %}
+                        <tr>
+                            <td>Single unit</td>
+                            <td>{{ product.currency }} {{ product.price|intcomma }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2">Pricing not available.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<section class="pp-section" id="request" data-section data-animate>
+    <div class="container">
+        <div class="pp-request">
+            <div>
+                <h2>Request a distributor quote</h2>
+            </div>
+            <div>
+                <button class="pp-btn primary" type="button" data-modal-target="quote">Request quote</button>
+                <a class="pp-btn ghost" href="/contact/">Contact</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<template id="quote-form-template">
+    <form class="pp-form" data-validate>
+        <div class="pp-field">
+            <label for="quote-name">Full name</label>
+            <input id="quote-name" name="name" type="text" required aria-describedby="quote-name-error">
+            <div class="pp-field__error" id="quote-name-error" role="status"></div>
+        </div>
+        <div class="pp-field">
+            <label for="quote-email">Email address</label>
+            <input id="quote-email" name="email" type="email" required aria-describedby="quote-email-error">
+            <div class="pp-field__error" id="quote-email-error" role="status"></div>
+        </div>
+        <div class="pp-field">
+            <label for="quote-qty">Estimated quantity</label>
+            <input id="quote-qty" name="quantity" type="number" min="1" placeholder="e.g. 100" required aria-describedby="quote-qty-error">
+            <div class="pp-field__error" id="quote-qty-error" role="status"></div>
+        </div>
+        <div class="pp-field">
+            <label for="quote-notes">Delivery location</label>
+            <input id="quote-notes" name="location" type="text" placeholder="City, Country" aria-describedby="quote-notes-error">
+            <div class="pp-field__error" id="quote-notes-error" role="status"></div>
+        </div>
+        <div class="pp-field">
+            <label for="quote-message">Message</label>
+            <textarea id="quote-message" name="message" rows="4" placeholder="Any special requirements?" aria-describedby="quote-message-error"></textarea>
+            <div class="pp-field__error" id="quote-message-error" role="status"></div>
+        </div>
+        <button class="pp-btn primary" type="submit">Send request</button>
+    </form>
+</template>
+{% endblock %}
