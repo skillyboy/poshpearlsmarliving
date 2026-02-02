@@ -1,5 +1,16 @@
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.text import slugify
+
+
+class User(AbstractUser):
+    phone_number = models.CharField(max_length=32, blank=True)
+    company_name = models.CharField(max_length=120, blank=True)
+    is_distributor = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.get_full_name() or self.username
 
 
 class Category(models.Model):
@@ -88,3 +99,103 @@ class ProductPriceTier(models.Model):
 
     def __str__(self):
         return f"{self.product.name} {self.min_quantity}+"
+
+
+class Cart(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        related_name="cart",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    session_key = models.CharField(max_length=40, blank=True, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-updated_at"]
+
+    def __str__(self):
+        if self.user_id:
+            return f"Cart for {self.user}"
+        return f"Cart {self.pk}"
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(
+        Cart, related_name="items", on_delete=models.CASCADE
+    )
+    product = models.ForeignKey(
+        Product, related_name="cart_items", on_delete=models.CASCADE
+    )
+    quantity = models.PositiveIntegerField(default=1)
+    unit_price = models.DecimalField(max_digits=12, decimal_places=0)
+    currency = models.CharField(max_length=3, default="NGN")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-updated_at"]
+        unique_together = ("cart", "product")
+
+    def __str__(self):
+        return f"{self.product.name} x {self.quantity}"
+
+    @property
+    def line_total(self):
+        return self.quantity * self.unit_price
+
+
+class Order(models.Model):
+    STATUS_CHOICES = [
+        ("new", "New"),
+        ("processing", "Processing"),
+        ("fulfilled", "Fulfilled"),
+        ("cancelled", "Cancelled"),
+    ]
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="orders",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    full_name = models.CharField(max_length=120)
+    email = models.EmailField()
+    phone = models.CharField(max_length=32)
+    address = models.TextField()
+    notes = models.TextField(blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="new")
+    subtotal = models.DecimalField(max_digits=12, decimal_places=0, default=0)
+    currency = models.CharField(max_length=3, default="NGN")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Order {self.id}"
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(
+        Order, related_name="items", on_delete=models.CASCADE
+    )
+    product = models.ForeignKey(
+        Product, related_name="order_items", on_delete=models.SET_NULL, null=True
+    )
+    quantity = models.PositiveIntegerField(default=1)
+    unit_price = models.DecimalField(max_digits=12, decimal_places=0)
+    currency = models.CharField(max_length=3, default="NGN")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["id"]
+
+    def __str__(self):
+        return f"{self.product} x {self.quantity}"
+
+    @property
+    def line_total(self):
+        return self.quantity * self.unit_price

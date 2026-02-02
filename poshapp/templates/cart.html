@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}Cart{% endblock %}
+{% block body_class %}pp-cart{% endblock %}
+
+{% block content %}
+{% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
+<section class="pp-section pp-cart-page" data-cart-page>
+    <div class="container">
+        <div class="pp-section__header">
+            <h1>Your cart</h1>
+            <p>Review items before checking out.</p>
+        </div>
+
+        {% if cart.items %}
+        <div class="pp-cart-layout">
+            <div class="pp-cart-list">
+                {% for item in cart.items %}
+                <article class="pp-cart-item" data-cart-item data-item-id="{{ item.id }}">
+                    <div class="pp-cart-item__media">
+                        <img src="{{ item.image|default:product_fallback }}" alt="{{ item.name }}" loading="lazy" decoding="async">
+                    </div>
+                    <div class="pp-cart-item__details">
+                        <h3>{{ item.name }}</h3>
+                        <span class="pp-cart-item__price" data-unit-price="{{ item.unit_price }}">{{ item.currency }} {{ item.unit_price|intcomma }}</span>
+                        <div class="pp-cart-item__controls">
+                            <div class="pp-qty-control" data-qty-control>
+                                <button type="button" data-qty-dec aria-label="Decrease quantity">-</button>
+                                <input type="number" min="1" value="{{ item.quantity }}" data-qty-input>
+                                <button type="button" data-qty-inc aria-label="Increase quantity">+</button>
+                            </div>
+                            <button class="pp-cart-remove" type="button" data-cart-remove>Remove</button>
+                        </div>
+                    </div>
+                    <div class="pp-cart-item__total">
+                        <span>Total</span>
+                        <strong data-line-total>{{ item.currency }} {{ item.line_total|intcomma }}</strong>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            <aside class="pp-cart-summary">
+                <h2>Order summary</h2>
+                <div class="pp-summary-row">
+                    <span>Subtotal</span>
+                    <strong data-cart-page-subtotal>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong>
+                </div>
+                <a class="pp-btn primary" href="{% url 'checkout' %}">Proceed to checkout</a>
+                <a class="pp-btn ghost" href="{% url 'shop' %}">Continue shopping</a>
+            </aside>
+        </div>
+        {% else %}
+        <div class="pp-empty-state">
+            <p>Your cart is empty.</p>
+            <a class="pp-btn primary" href="{% url 'shop' %}">Browse products</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

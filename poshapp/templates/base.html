@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}PoshPearl{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/poshapp-ui.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendor/font-awesome/css/all.min.css' %}">
@@ -18,11 +21,15 @@
                 <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="PoshPearl" height="48" loading="lazy" decoding="async">
             </a>
             <nav class="main-nav" id="siteNav" data-nav aria-label="Primary">
-                <a href="/">Home</a>
-                <a href="/shop/">Shop</a>
-                <a href="/contact/">Contact</a>
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'shop' %}">Shop</a>
+                <a href="{% url 'contact' %}">Contact</a>
             </nav>
             <div class="header-actions">
+                <button class="pp-cart-toggle" type="button" data-cart-toggle aria-label="Open cart">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="pp-cart-count" data-cart-count>0</span>
+                </button>
                 <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Toggle dark mode">
                     <i class="fa-solid fa-moon"></i>
                 </button>
@@ -35,6 +42,28 @@
         </div>
     </header>
     <div class="nav-overlay" data-nav-overlay hidden></div>
+    <div class="pp-cart-backdrop" data-cart-backdrop hidden></div>
+    <aside class="pp-cart-drawer" data-cart-drawer aria-hidden="true">
+        <div class="pp-cart-drawer__panel" role="dialog" aria-label="Cart">
+            <div class="pp-cart-drawer__header">
+                <h2>Your cart</h2>
+                <button class="pp-cart-close" type="button" data-cart-close aria-label="Close cart">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="pp-cart-drawer__items" data-cart-items></div>
+            <div class="pp-cart-drawer__footer">
+                <div class="pp-summary-row total">
+                    <span>Subtotal</span>
+                    <strong data-cart-subtotal>NGN 0</strong>
+                </div>
+                <div class="pp-cart-drawer__actions">
+                    <a class="pp-btn ghost" href="{% url 'cart' %}">View cart</a>
+                    <a class="pp-btn primary" href="{% url 'checkout' %}">Checkout</a>
+                </div>
+            </div>
+        </div>
+    </aside>
 
     <main id="main-content">
         {% block content %}{% endblock %}

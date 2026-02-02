@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
@@ -75,6 +76,27 @@
             white-space: nowrap;
             border: 0;
         }
+        /* Enhanced styles for better look */
+        .hero-actions .btn {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .hero-actions .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        .product-card {
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .ratio {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
     </style>
     
     <!-- Preload important images -->
@@ -87,8 +109,8 @@
     <!-- Bootstrap 5 (bundle) - modernized, no jQuery required -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
 
-    <link rel="preload" href="assets/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="assets/css/style.css"></noscript>
+    <link rel="preload" href="{% static 'assets/css/style.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{% static 'assets/css/style.css' %}"></noscript>
     
     <!-- Google Fonts -->
     <!-- Improve font loading: preconnect then load -->
@@ -179,9 +201,7 @@
                 <!-- Logo -->
                 <div class="logo-container">
                     <a href="/" class="logo" aria-label="PoshPearl Home">
-                        <i class="fas fa-gem" aria-hidden="true"></i>
-                        <span class="logo-text">Posh<span class="logo-highlight">Pearl</span></span>
-                        <span class="logo-sub">SMART LIVING</span>
+                        <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="PoshPearl" height="50">
                     </a>
                 </div>
 
@@ -361,7 +381,7 @@
 
                         <!-- CTA Button -->
                         <li class="nav-item cta-item">
-                            <a href="shop.html" class="nav-cta">
+                            <a href="/shop/" class="nav-cta">
                                 <i class="fas fa-shopping-cart" aria-hidden="true"></i>
                                 <span>Shop Now</span>
                             </a>
@@ -384,8 +404,7 @@
         <div class="mobile-nav-header">
             <div class="mobile-logo">
                 <a href="/" class="logo">
-                    <i class="fas fa-gem" aria-hidden="true"></i>
-                    <span>PoshPearl</span>
+                    <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="PoshPearl" height="40">
                 </a>
             </div>
             <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close mobile menu">
@@ -590,7 +609,7 @@
     <!-- Hero Section -->
     <section class="hero" aria-label="Hero section">
         <div class="hero-background" role="presentation">
-            <div class="hero-overlay"></div>
+            <div class="hero-overlay" style="background: linear-gradient(135deg, rgba(95,30,44,0.8) 0%, rgba(244,176,0,0.4) 100%);"></div>
             <div class="hero-pattern"></div>
             <!-- Hero carousel: subtle images sliding under content (visual only) -->
             <div class="hero-carousel" aria-hidden="true">
@@ -607,7 +626,7 @@
                     <span>Premium Security</span>
                 </div>
                 <div class="hero-logo" aria-hidden="true">
-                    <img src="assets/logo.jpeg" alt="PoshPearl logo">
+                    <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="PoshPearl logo">
                 </div>
                 <h1 class="hero-title">
                     <span class="hero-line">Say Goodbye to</span>
@@ -666,39 +685,37 @@
                 </div>
                 
                 <div class="products-grid animate-slow" data-skeleton>
-                    <!-- Product 1 -->
+                    <!-- D2pro Product -->
                     <article class="product-card" data-category="smart-locks">
-                        <div class="product-badge">Most Popular</div>
+                        <div class="product-badge">Featured</div>
                         <div class="product-image">
-                               <img src="https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                                   srcset="https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=60 400w, https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80 800w, https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80 1200w"
-                                   sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                   alt="PoshPearl Smart Deadbolt - Premium smart lock with fingerprint reader"
+                               <img src="{% static 'assets/images/products/d2pro1.jpeg' %}"
+                                   alt="D2pro Smart Lock - Premium smart lock with advanced features"
                                    loading="lazy"
                                    width="800"
                                    height="600">
                             <div class="product-overlay">
-                                <button class="product-quick-view" aria-label="Quick view Smart Deadbolt">
+                                <button class="product-quick-view" aria-label="Quick view D2pro">
                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
                         <div class="product-content">
-                            <div class="product-category">Smart Deadbolt</div>
-                            <h3 class="product-title">Smart Deadbolt Pro</h3>
-                            <p class="product-description">The perfect balance of security and convenience for your main entrance. Featuring multiple access methods and remote management capabilities.</p>
+                            <div class="product-category">Smart Lock</div>
+                            <h3 class="product-title">D2pro Smart Lock</h3>
+                            <p class="product-description">Premium smart lock with fingerprint recognition, keypad entry, and Wi-Fi connectivity for remote access and control.</p>
                             <div class="product-features">
                                 <span class="feature-tag">
                                     <i class="fas fa-fingerprint" aria-hidden="true"></i>
                                     Fingerprint
                                 </span>
                                 <span class="feature-tag">
-                                    <i class="fas fa-wifi" aria-hidden="true"></i>
-                                    Wi-Fi
+                                    <i class="fas fa-keypad" aria-hidden="true"></i>
+                                    Keypad
                                 </span>
                                 <span class="feature-tag">
-                                    <i class="fas fa-mobile-alt" aria-hidden="true"></i>
-                                    App Control
+                                    <i class="fas fa-wifi" aria-hidden="true"></i>
+                                    Wi-Fi
                                 </span>
                             </div>
                             <div class="product-footer">
@@ -710,7 +727,7 @@
                                     <button class="btn btn-outline" aria-label="Add to wishlist">
                                         <i class="far fa-heart" aria-hidden="true"></i>
                                     </button>
-                                                    <a href="shop.html?product=Smart%20Deadbolt%20Pro&price=%E2%82%A685%2C000&desc=Smart%20Deadbolt%20Pro%20-%20The%20perfect%20balance%20of%20security%20and%20convenience" class="btn btn-primary">
+                                                    <a href="/shop/?product=D2pro&price=%E2%82%A685%2C000&desc=D2pro%20-%20Premium%20smart%20lock%20with%20advanced%20features" class="btn btn-primary">
                                                         <span>See on Shop</span>
                                                         <i class="fas fa-arrow-right" aria-hidden="true"></i>
                                                     </a>
@@ -718,116 +735,10 @@
                             </div>
                         </div>
                     </article>
-
-                    <!-- Product 2 -->
-                    <article class="product-card" data-category="smart-locks">
-                        <div class="product-badge">New Arrival</div>
-                        <div class="product-image">
-                               <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                                   srcset="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=60 400w, https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80 800w, https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80 1200w"
-                                   sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                   alt="PoshPearl Smart Entrance Lock - Sleek modern design"
-                                   loading="lazy"
-                                   width="800"
-                                   height="600">
-                            <div class="product-overlay">
-                                <button class="product-quick-view" aria-label="Quick view Smart Entrance Lock">
-                                    <i class="fas fa-eye" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="product-content">
-                            <div class="product-category">Smart Entrance Lock</div>
-                            <h3 class="product-title">Elegance Series</h3>
-                            <p class="product-description">A sleek and modern entrance lock offering flexibility to match your personal style. Perfect for homes requiring sophisticated entry.</p>
-                            <div class="product-features">
-                                <span class="feature-tag">
-                                    <i class="fas fa-keypad" aria-hidden="true"></i>
-                                    Keypad
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="fas fa-id-card" aria-hidden="true"></i>
-                                    RFID
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="fas fa-bell" aria-hidden="true"></i>
-                                    Alerts
-                                </span>
-                            </div>
-                            <div class="product-footer">
-                                <div class="product-price">
-                                    <span class="price">₦95,000</span>
-                                    <span class="price-note">Including VAT</span>
-                                </div>
-                                <div class="product-actions">
-                                    <button class="btn btn-outline" aria-label="Add to wishlist">
-                                        <i class="far fa-heart" aria-hidden="true"></i>
-                                    </button>
-                                    <a href="shop.html?product=Elegance%20Series&price=%E2%82%A695%2C000&desc=Elegance%20Series%20-%20A%20sleek%20and%20modern%20entrance%20lock" class="btn btn-primary">
-                                        <span>See on Shop</span>
-                                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Product 3 -->
-                    <article class="product-card" data-category="smart-locks">
-                        <div class="product-badge">Premium</div>
-                        <div class="product-image">
-                               <img src="https://images.unsplash.com/photo-1572021331468-dd4eb034e7e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                                   srcset="https://images.unsplash.com/photo-1572021331468-dd4eb034e7e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=60 400w, https://images.unsplash.com/photo-1572021331468-dd4eb034e7e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80 800w, https://images.unsplash.com/photo-1572021331468-dd4eb034e7e3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80 1200w"
-                                   sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                   alt="PoshPearl Smart Lever Lock - Luxury interior lock"
-                                   loading="lazy"
-                                   width="800"
-                                   height="600">
-                            <div class="product-overlay">
-                                <button class="product-quick-view" aria-label="Quick view Smart Lever Lock">
-                                    <i class="fas fa-eye" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="product-content">
-                            <div class="product-category">Smart Lever Lock</div>
-                            <h3 class="product-title">Luxury Edition</h3>
-                            <p class="product-description">Secure your home, inside and out. Suitable for doors that require locking within the home, such as home offices or personal rooms.</p>
-                            <div class="product-features">
-                                <span class="feature-tag">
-                                    <i class="fas fa-voice" aria-hidden="true"></i>
-                                    Voice Control
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="fas fa-history" aria-hidden="true"></i>
-                                    Access History
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="fas fa-battery-full" aria-hidden="true"></i>
-                                    Long Battery
-                                </span>
-                            </div>
-                            <div class="product-footer">
-                                <div class="product-price">
-                                    <span class="price">₦120,000</span>
-                                    <span class="price-note">Including VAT</span>
-                                </div>
-                                <div class="product-actions">
-                                    <button class="btn btn-outline" aria-label="Add to wishlist">
-                                        <i class="far fa-heart" aria-hidden="true"></i>
-                                    </button>
-                                    <a href="shop.html?product=Luxury%20Edition&price=%E2%82%A6120%2C000&desc=Luxury%20Edition%20-%20Secure%20your%20home%20with%20a%20luxury%20lever%20lock" class="btn btn-primary">
-                                        <span>See on Shop</span>
-                                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
                 </div>
                 
                 <div class="section-cta">
-                    <a href="shop.html" class="btn btn-secondary btn-large">
+                    <a href="/shop/" class="btn btn-secondary btn-large">
                         <span>View All Products</span>
                         <i class="fas fa-arrow-right" aria-hidden="true"></i>
                     </a>
@@ -1042,6 +953,29 @@
         </section>
 
         <!-- Installation Section -->
+        <!-- Video Demos -->
+        <section class="video-demos my-5" id="videoDemos" aria-labelledby="videoDemos-title">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-badge"><span>Product Videos</span></div>
+                    <h2 id="videoDemos-title" class="section-title">D2pro Smart Lock — Video Demos</h2>
+                    <p class="section-description">Short demos showing features and quick installation highlights.</p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/wXMbG4uRit4" title="D2pro Smart Lock - Demo 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/rUDblgJjmAw" title="D2pro Smart Lock - Demo 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <section class="installation-section" id="installation" aria-labelledby="installation-title">
             <div class="container">
                 <div class="section-header">
@@ -1298,8 +1232,7 @@
                     <div class="footer-column">
                         <div class="footer-logo">
                             <a href="/" class="logo">
-                                <i class="fas fa-gem" aria-hidden="true"></i>
-                                <span class="logo-text">Posh<span class="logo-highlight">Pearl</span></span>
+                                <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="PoshPearl" height="40">
                             </a>
                             <p class="footer-description">Redefining Home Security with Premium Smart Living Solutions</p>
                             <div class="footer-social">
@@ -1398,17 +1331,54 @@
 
     <!-- JavaScript Files -->
         <!-- Site product sync (externalized for maintainability) -->
-        <script src="assets/js/site-products.js" defer></script>
+        <script src="{% static 'assets/js/site-products.js' %}" defer></script>
         <!-- Client-side contact form validation -->
-        <script src="assets/js/contact.js" defer></script>
-        <script src="assets/js/functions.js" defer></script>
+        <script src="{% static 'assets/js/contact.js' %}" defer></script>
+        <script src="{% static 'assets/js/functions.js' %}" defer></script>
         <!-- Load Bootstrap 4.4.1 dependencies and JS (jQuery, Popper, Bootstrap) before our scripts -->
         <!-- Bootstrap 5 bundle (includes Popper) -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer crossorigin="anonymous"></script>
 
-        <script src="assets/js/animations.js" defer></script>
-        <script src="assets/js/hero-carousel.js" defer></script>
+        <script src="{% static 'assets/js/animations.js' %}" defer></script>
+        <script src="{% static 'assets/js/hero-carousel.js' %}" defer></script>
     
+    <!-- Mobile nav toggle (improves mobile UX) -->
+    <script>
+        (function(){
+            const openBtn = document.getElementById('mobileMenuBtn');
+            const closeBtn = document.getElementById('mobileCloseBtn');
+            const mobileNav = document.getElementById('mobileNav');
+            const overlay = document.getElementById('overlay');
+
+            if(!openBtn || !mobileNav) return;
+
+            function openMenu(){
+                mobileNav.classList.add('open');
+                mobileNav.setAttribute('aria-hidden','false');
+                overlay.style.display = 'block';
+                overlay.setAttribute('aria-hidden','false');
+                document.body.style.overflow = 'hidden';
+                openBtn.setAttribute('aria-expanded','true');
+            }
+
+            function closeMenu(){
+                mobileNav.classList.remove('open');
+                mobileNav.setAttribute('aria-hidden','true');
+                overlay.style.display = '';
+                overlay.setAttribute('aria-hidden','true');
+                document.body.style.overflow = '';
+                openBtn.setAttribute('aria-expanded','false');
+            }
+
+            openBtn.addEventListener('click', openMenu);
+            if(closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if(overlay) overlay.addEventListener('click', closeMenu);
+
+            // Close on Escape
+            document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeMenu(); });
+        })();
+    </script>
+
     <!-- Service Worker Registration -->
     <script>
         // Improved service worker registration with async/await and relative path

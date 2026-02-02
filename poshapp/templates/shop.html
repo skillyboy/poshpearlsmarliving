@@ -3,161 +3,599 @@
 {% load static %}
 
 {% block title %}{% if product %}Shop - {{ product.name }}{% else %}Shop{% endif %}{% endblock %}
+
 {% block head_extra %}
 <link rel="stylesheet" href="{% static 'assets/css/poshapp-shop.css' %}">
 {% endblock %}
+
 {% block body_class %}pp-shop{% endblock %}
 
 {% block content %}
-<section class="pp-hero" id="overview" data-section data-animate>
+<main class="pp-main" id="top">
+  {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
+
+  <section class="pp-hero" id="overview" data-section data-animate>
     <div class="container pp-hero__grid">
-        <div>
-            {% if product %}
-            <span class="pp-badge">Distributor price</span>
-            <h1 class="pp-hero__title">{{ product.name }}</h1>
-            {% if product.short_description %}
-                <p class="pp-hero__lead">{{ product.short_description }}</p>
-            {% elif product.description %}
-                <p class="pp-hero__lead">{{ product.description }}</p>
-            {% endif %}
-            <div class="pp-hero__actions">
-                <button class="pp-btn primary" type="button" data-modal-target="quote">Request quote</button>
-                <a class="pp-btn ghost" href="/support/">Ask support</a>
+
+      <header class="pp-hero__content">
+        <nav class="pp-breadcrumb" aria-label="Breadcrumb">
+          <a href="{% url 'home' %}">Home</a>
+          <span aria-hidden="true">/</span>
+          <a href="{% url 'shop' %}">Shop</a>
+          {% if product %}
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{{ product.name }}</span>
+          {% endif %}
+        </nav>
+
+        {% if product %}
+          <div class="pp-hero__eyebrow">
+            <span class="pp-badge">Wholesale pricing</span>
+          </div>
+
+          <h1 class="pp-hero__title">{{ product.name }}</h1>
+
+          {% if product.short_description %}
+            <p class="pp-hero__lead">{{ product.short_description }}</p>
+          {% elif product.description %}
+            <p class="pp-hero__lead">{{ product.description }}</p>
+          {% endif %}
+
+          <ul class="pp-hero__highlights" aria-label="Key highlights">
+            <li>3D face recognition</li>
+            <li>Palm vein unlock</li>
+            <li>Wi-Fi control</li>
+          </ul>
+
+          <div class="pp-hero__cta-card">
+            <div class="pp-hero__actions" role="group" aria-label="Purchase actions">
+                <button class="pp-btn primary" type="button" data-modal-target="quote">
+                  Request quote
+                </button>
+
+              <div class="pp-qty-select" aria-label="Select quantity">
+                <label for="pp-qty" class="pp-qty-select__label">Qty</label>
+                <input
+                  id="pp-qty"
+                  name="quantity"
+                  type="number"
+                  min="1"
+                  value="1"
+                  inputmode="numeric"
+                  data-add-qty
+                  aria-label="Quantity"
+                >
+              </div>
+
+              <button
+                class="pp-btn"
+                type="button"
+                data-add-to-cart
+                data-product-id="{{ product.id }}"
+                aria-label="Add to cart"
+              >
+                Add to cart
+              </button>
+
+              <a class="pp-btn ghost" href="{% url 'support' %}">Ask support</a>
             </div>
+            <a class="pp-hero__cart-link" href="{% url 'cart' %}">View cart</a>
+
+            <p class="pp-hero__note">
+              Bulk-ready pricing, dedicated onboarding, and fast fulfillment for verified distributors.
+            </p>
+
+            <div class="pp-trust" aria-label="Trust signals">
+              <div class="pp-trust__item">
+                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                <span>Warranty-backed hardware</span>
+              </div>
+              <div class="pp-trust__item">
+                <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
+                <span>Fast Abuja delivery</span>
+              </div>
+              <div class="pp-trust__item">
+                <i class="fa-solid fa-headset" aria-hidden="true"></i>
+                <span>Dedicated distributor support</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pp-hero__meta" aria-label="Product metadata">
+            <div class="pp-meta-card">
+              <span>SKU</span>
+              <strong>{{ product.sku|default:"N/A" }}</strong>
+            </div>
+            <div class="pp-meta-card">
+              <span>Availability</span>
+              <strong>
+                {% if product.stock_quantity > 0 %}
+                  {{ product.stock_quantity }} units
+                {% else %}
+                  On request
+                {% endif %}
+              </strong>
+            </div>
+            <div class="pp-meta-card">
+              <span>Currency</span>
+              <strong>{{ product.currency }}</strong>
+            </div>
+          </div>
+
+          {% if product.categories.exists %}
+          <div class="pp-chip-list" aria-label="Product categories">
+            {% for category in product.categories.all %}
+              <span class="pp-chip">{{ category.name }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+        {% else %}
+          <span class="pp-badge">Wholesale pricing</span>
+          <h1 class="pp-hero__title">No products yet</h1>
+          <p class="pp-hero__lead">
+            Add a product in the admin to publish your listing, or run
+            <code>python manage.py load_products</code> to seed the catalog.
+          </p>
+        {% endif %}
+      </header>
+
+      {% if product %}
+      <aside class="pp-hero__panel" aria-label="Product summary">
+        {% with hero_image=product.images.first %}
+          <figure class="pp-hero__media">
+            {% if hero_image %}
+              <img
+                src="{{ hero_image.image.url }}"
+                alt="{{ hero_image.alt_text|default:product.name }}"
+                loading="eager"
+                decoding="async"
+                width="640"
+                height="800"
+              >
             {% else %}
-            <span class="pp-badge">Distributor price</span>
-            <h1 class="pp-hero__title">No products yet</h1>
-            <p class="pp-hero__lead">Add a product in the admin to publish your listing.</p>
+              <img
+                src="{% static 'assets/images/products/d2pro1.jpeg' %}"
+                alt="{{ product.name }}"
+                loading="eager"
+                decoding="async"
+                width="640"
+                height="800"
+              >
             {% endif %}
-        </div>
-    </div>
-</section>
+          </figure>
+        {% endwith %}
 
-{% if product %}
-<nav class="pp-section-nav" aria-label="On this page">
-    <div class="container">
-        <a href="#gallery" data-scroll data-section-link>Gallery</a>
-        <a href="#pricing" data-scroll data-section-link>Pricing</a>
-        <a href="#request" data-scroll data-section-link>Request</a>
-    </div>
-</nav>
+        <div class="pp-hero__panel-body">
+          {% with first_tier=product.price_tiers.first %}
+            <div class="pp-stat" aria-label="Starting tier">
+              <span class="pp-stat__label">Starting tier</span>
+              <span class="pp-stat__value">
+                {% if first_tier %}
+                  {{ first_tier.currency }} {{ first_tier.price|intcomma }}
+                  <span class="pp-stat__sub">for {{ first_tier.min_quantity }}+ pcs</span>
+                {% elif product.price %}
+                  {{ product.currency }} {{ product.price|intcomma }}
+                {% else %}
+                  On request
+                {% endif %}
+              </span>
+            </div>
+          {% endwith %}
 
-<section class="pp-section" id="gallery" data-section data-animate>
-    <div class="container">
-        <div class="pp-section__header">
-            <h2>Product gallery</h2>
+          {% if product.compare_at_price %}
+          <div class="pp-stat" aria-label="List price">
+            <span class="pp-stat__label">List price</span>
+            <span class="pp-stat__value pp-stat__value--muted">
+              {{ product.currency }} {{ product.compare_at_price|intcomma }}
+            </span>
+          </div>
+          {% endif %}
+
+          <div class="pp-hero__panel-links" aria-label="Jump links">
+            <a href="#gallery" data-scroll>View gallery</a>
+            <a href="#pricing" data-scroll>View pricing tiers</a>
+          </div>
         </div>
-        <div class="pp-gallery" data-gallery>
-            {% if product.images.all %}
-                {% for image in product.images.all %}
-                    {% if forloop.first %}
-                        <div class="pp-gallery__stage">
-                            <button class="pp-gallery__main pp-skeleton" type="button" data-gallery-main data-modal-image="{{ image.image.url }}" data-modal-alt="{{ image.alt_text|default:product.name }}" aria-label="Open image preview">
-                                <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" loading="eager" decoding="async" width="880" height="1100">
-                            </button>
-                            <span class="pp-gallery__hint">Tap to zoom</span>
-                        </div>
+      </aside>
+      {% endif %}
+
+    </div>
+  </section>
+
+  {% if product %}
+  <nav class="pp-section-nav" aria-label="On this page">
+    <div class="container">
+      <a href="#catalog" data-scroll data-section-link>Catalog</a>
+      <a href="#gallery" data-scroll data-section-link>Gallery</a>
+      <a href="#pricing" data-scroll data-section-link>Pricing</a>
+      <a href="#details" data-scroll data-section-link>Details</a>
+      <a href="#benefits" data-scroll data-section-link>Benefits</a>
+      <a href="#request" data-scroll data-section-link>Request</a>
+    </div>
+  </nav>
+  {% endif %}
+
+  {% if products %}
+  <section class="pp-section pp-section--surface" id="catalog" data-section data-animate>
+    <div class="container">
+      <div class="pp-section__header">
+        <h2>{% if product %}More products{% else %}Product catalog{% endif %}</h2>
+        <p class="pp-muted">Compare smart locks, pricing tiers, and deployment options.</p>
+      </div>
+
+      <div class="pp-product-grid">
+        {% for item in products %}
+        <article class="pp-product-card">
+          <a class="pp-product-card__media" href="{% url 'product_detail' slug=item.slug %}">
+            {% with card_image=item.images.first %}
+              {% if card_image %}
+                <img src="{{ card_image.image.url }}" alt="{{ card_image.alt_text|default:item.name }}" loading="lazy" decoding="async">
+              {% else %}
+                <img src="{{ product_fallback }}" alt="{{ item.name }}" loading="lazy" decoding="async">
+              {% endif %}
+            {% endwith %}
+          </a>
+          <div class="pp-product-card__body">
+            {% with category=item.categories.first %}
+              {% if category %}
+                <span class="pp-chip">{{ category.name }}</span>
+              {% endif %}
+            {% endwith %}
+            <h3>{{ item.name }}</h3>
+            <p class="pp-muted">{{ item.short_description|default:item.description|truncatechars:120 }}</p>
+            <div class="pp-product-card__price">
+              {% with tier=item.price_tiers.first %}
+                {% if tier %}
+                  <strong>{{ tier.currency }} {{ tier.price|intcomma }}</strong>
+                  <span>for {{ tier.min_quantity }}+ pcs</span>
+                {% elif item.price %}
+                  <strong>{{ item.currency }} {{ item.price|intcomma }}</strong>
+                  <span>per unit</span>
+                {% else %}
+                  <strong>On request</strong>
+                {% endif %}
+              {% endwith %}
+            </div>
+            <div class="pp-product-card__actions">
+              <button class="pp-btn" type="button" data-add-to-cart data-product-id="{{ item.id }}">Add to cart</button>
+              <a class="pp-btn ghost" href="{% url 'product_detail' slug=item.slug %}">View details</a>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% else %}
+  <section class="pp-section pp-section--surface" id="catalog" data-section data-animate>
+    <div class="container">
+      <div class="pp-empty-state">
+        {% if product %}
+          <p>No other products available yet. Check back soon for more listings.</p>
+          <a class="pp-btn primary" href="{% url 'shop' %}">Back to shop</a>
+        {% else %}
+          <p>No products available yet. Add products in admin or run <code>python manage.py load_products</code>.</p>
+          <a class="pp-btn primary" href="/admin/">Go to admin</a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if product %}
+  <section class="pp-section" id="gallery" data-section data-animate>
+    <div class="container">
+      <div class="pp-section__header">
+        <h2>Product gallery</h2>
+        <p class="pp-muted">Tap any image to zoom. Use arrow keys in preview.</p>
+      </div>
+
+      <div class="pp-gallery" data-gallery>
+        {% if product.images.exists %}
+          {% for image in product.images.all %}
+            {% if forloop.first %}
+              <div class="pp-gallery__stage">
+                <button
+                  class="pp-gallery__main pp-skeleton"
+                  type="button"
+                  data-gallery-main
+                  data-modal-image="{{ image.image.url }}"
+                  data-modal-alt="{{ image.alt_text|default:product.name }}"
+                  aria-label="Open image preview"
+                >
+                  <img
+                    src="{{ image.image.url }}"
+                    alt="{{ image.alt_text|default:product.name }}"
+                    loading="eager"
+                    decoding="async"
+                    width="880"
+                    height="1100"
+                  >
+                </button>
+                <span class="pp-gallery__hint">Tap to zoom</span>
+                <span class="pp-gallery__count">{{ product.images.count }} images</span>
+              </div>
+            {% endif %}
+          {% endfor %}
+
+          <div class="pp-gallery__thumbs" aria-label="Gallery thumbnails">
+            {% for image in product.images.all %}
+              <button
+                class="pp-gallery__thumb{% if forloop.first %} is-active{% endif %}"
+                type="button"
+                data-gallery-thumb
+                data-preview-src="{{ image.image.url }}"
+                data-preview-alt="{{ image.alt_text|default:product.name }}"
+                aria-label="Select image {{ forloop.counter }}"
+              >
+                <img
+                  src="{{ image.image.url }}"
+                  alt="{{ image.alt_text|default:product.name }}"
+                  loading="lazy"
+                  decoding="async"
+                  width="240"
+                  height="320"
+                >
+              </button>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="pp-gallery__stage">
+            <button
+              class="pp-gallery__main pp-skeleton"
+              type="button"
+              data-gallery-main
+              data-modal-image="{% static 'assets/images/products/d2pro1.jpeg' %}"
+              data-modal-alt="{{ product.name }}"
+              aria-label="Open image preview"
+            >
+              <img
+                src="{% static 'assets/images/products/d2pro1.jpeg' %}"
+                alt="{{ product.name }}"
+                loading="eager"
+                decoding="async"
+                width="880"
+                height="1100"
+              >
+            </button>
+            <span class="pp-gallery__hint">Tap to zoom</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="pp-section" id="pricing" data-section data-animate>
+    <div class="container">
+      <div class="pp-section__header">
+        <h2>Wholesale tiers</h2>
+        <p class="pp-muted">Set your quantity above to see the best tier auto highlight.</p>
+      </div>
+
+      <div class="pp-price-card">
+        <table class="pp-table" aria-label="Wholesale pricing tiers">
+          <thead>
+            <tr>
+              <th scope="col">Quantity</th>
+              <th scope="col">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if product.price_tiers.exists %}
+              {% for tier in product.price_tiers.all %}
+                <tr class="pp-tier-row {% if forloop.last %}is-highlight{% endif %}">
+                  <td>
+                    <span class="pp-qty">{{ tier.min_quantity }} pieces</span>
+                    {% if tier.label %}
+                      <span class="pp-chip pp-chip--accent">{{ tier.label }}</span>
                     {% endif %}
-                {% endfor %}
-                <div class="pp-gallery__thumbs">
-                    {% for image in product.images.all %}
-                        <button class="pp-gallery__thumb{% if forloop.first %} is-active{% endif %}" type="button" data-gallery-thumb data-preview-src="{{ image.image.url }}" data-preview-alt="{{ image.alt_text|default:product.name }}">
-                            <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" loading="lazy" decoding="async" width="240" height="320">
-                        </button>
-                    {% endfor %}
-                </div>
+                  </td>
+                  <td>
+                    <span class="pp-price">
+                      {{ tier.currency }} {{ tier.price|intcomma }}
+                    </span>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% elif product.price %}
+              <tr class="pp-tier-row">
+                <td>Single unit</td>
+                <td><span class="pp-price">{{ product.currency }} {{ product.price|intcomma }}</span></td>
+              </tr>
             {% else %}
-                <div class="pp-gallery__stage">
-                    <button class="pp-gallery__main pp-skeleton" type="button" data-gallery-main data-modal-image="{% static 'assets/images/products/d2pro1.jpeg' %}" data-modal-alt="{{ product.name }}" aria-label="Open image preview">
-                        <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="{{ product.name }}" loading="eager" decoding="async" width="880" height="1100">
-                    </button>
-                    <span class="pp-gallery__hint">Tap to zoom</span>
-                </div>
+              <tr>
+                <td colspan="2">Pricing not available.</td>
+              </tr>
             {% endif %}
-        </div>
+          </tbody>
+        </table>
+      </div>
     </div>
-</section>
+  </section>
 
-<section class="pp-section" id="pricing" data-section data-animate>
+  <section class="pp-section" id="details" data-section data-animate>
     <div class="container">
-        <div class="pp-section__header">
-            <h2>Wholesale tiers</h2>
-        </div>
-        <div class="pp-price-card">
-            <table class="pp-table">
-                <thead>
-                    <tr>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if product.price_tiers.exists %}
-                        {% for tier in product.price_tiers.all %}
-                            <tr>
-                                <td>{{ tier.min_quantity }} pieces</td>
-                                <td>{{ tier.currency }} {{ tier.price|intcomma }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% elif product.price %}
-                        <tr>
-                            <td>Single unit</td>
-                            <td>{{ product.currency }} {{ product.price|intcomma }}</td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="2">Pricing not available.</td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</section>
+      <div class="pp-section__header">
+        <h2>Product details</h2>
+        <p>Key highlights and deployment notes for resellers and bulk procurement.</p>
+      </div>
 
-<section class="pp-section" id="request" data-section data-animate>
+      <div class="pp-details">
+        <div class="pp-details__copy">
+          {% if product.description %}
+            <p>{{ product.description }}</p>
+          {% else %}
+            <p>Designed for modern access control with premium hardware, reliable connectivity, and long-term support.</p>
+          {% endif %}
+
+          <ul class="pp-feature-list">
+            <li>Face recognition + palm vein unlock</li>
+            <li>Remote access with mobile management</li>
+            <li>Multi-user profiles and audit trail</li>
+            <li>Installer-ready kit for fast rollout</li>
+          </ul>
+        </div>
+
+        <aside class="pp-specs" aria-label="Technical specs">
+          <h3>Technical specs</h3>
+          <div class="pp-specs__row">
+            <span>Access modes</span>
+            <strong>Face, fingerprint, keypad, mechanical key</strong>
+          </div>
+          <div class="pp-specs__row">
+            <span>Connectivity</span>
+            <strong>Wi-Fi + mobile app</strong>
+          </div>
+          <div class="pp-specs__row">
+            <span>Installation</span>
+            <strong>Standard smart lock fit</strong>
+          </div>
+          <div class="pp-specs__row">
+            <span>Support</span>
+            <strong>Distributor onboarding + after-sales</strong>
+          </div>
+        </aside>
+
+        <div class="pp-details__grid">
+          <article class="pp-detail-card">
+            <h3>Access modes</h3>
+            <p>Face recognition, fingerprint, keypad, and key override options.</p>
+          </article>
+          <article class="pp-detail-card">
+            <h3>Remote control</h3>
+            <p>App-based access management with live notifications and audit trail.</p>
+          </article>
+          <article class="pp-detail-card">
+            <h3>Installer ready</h3>
+            <p>Streamlined install kit with clear guides for fast deployment.</p>
+          </article>
+          <article class="pp-detail-card">
+            <h3>Distributor support</h3>
+            <p>Dedicated onboarding, bulk pricing, and after-sales support.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pp-section" id="benefits" data-section data-animate>
     <div class="container">
-        <div class="pp-request">
-            <div>
-                <h2>Request a distributor quote</h2>
-            </div>
-            <div>
-                <button class="pp-btn primary" type="button" data-modal-target="quote">Request quote</button>
-                <a class="pp-btn ghost" href="/contact/">Contact</a>
-            </div>
-        </div>
-    </div>
-</section>
-{% endif %}
+      <div class="pp-section__header">
+        <h2>Why distributors choose D2pro</h2>
+        <p>Built for scale, reliability, and premium client experiences.</p>
+      </div>
 
-<template id="quote-form-template">
+      <div class="pp-feature-grid">
+        <article class="pp-feature-card">
+          <i class="fa-solid fa-people-group" aria-hidden="true"></i>
+          <h3>Multi-site ready</h3>
+          <p>Deploy across residential and commercial projects with consistent setup workflows.</p>
+        </article>
+
+        <article class="pp-feature-card">
+          <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+          <h3>Profit-friendly tiers</h3>
+          <p>Clear wholesale breaks and reliable restock support for large orders.</p>
+        </article>
+
+        <article class="pp-feature-card">
+          <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+          <h3>Flexible onboarding</h3>
+          <p>We provide training, install guidance, and co-branded materials.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="pp-section" id="request" data-section data-animate>
+    <div class="container">
+      <div class="pp-request">
+        <div class="pp-request__copy">
+          <h2>Request a distributor quote</h2>
+          <p>Share your expected volume and delivery location for a tailored response.</p>
+        </div>
+        <div class="pp-request__actions">
+          <button class="pp-btn primary" type="button" data-modal-target="quote">Request quote</button>
+          <a class="pp-btn ghost" href="{% url 'contact' %}">Contact</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="pp-purchase-bar" aria-label="Quick purchase" data-purchase-bar>
+    <div class="pp-purchase-bar__content">
+      <span class="pp-purchase-bar__name">{{ product.name }}</span>
+      <div class="pp-purchase-bar__actions">
+        <button class="pp-btn" type="button" data-add-to-cart data-product-id="{{ product.id }}">Add to cart</button>
+        <a class="pp-btn primary" href="{% url 'checkout' %}">Checkout</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <template id="quote-form-template">
     <form class="pp-form" data-validate>
-        <div class="pp-field">
-            <label for="quote-name">Full name</label>
-            <input id="quote-name" name="name" type="text" required aria-describedby="quote-name-error">
-            <div class="pp-field__error" id="quote-name-error" role="status"></div>
-        </div>
-        <div class="pp-field">
-            <label for="quote-email">Email address</label>
-            <input id="quote-email" name="email" type="email" required aria-describedby="quote-email-error">
-            <div class="pp-field__error" id="quote-email-error" role="status"></div>
-        </div>
-        <div class="pp-field">
-            <label for="quote-qty">Estimated quantity</label>
-            <input id="quote-qty" name="quantity" type="number" min="1" placeholder="e.g. 100" required aria-describedby="quote-qty-error">
-            <div class="pp-field__error" id="quote-qty-error" role="status"></div>
-        </div>
-        <div class="pp-field">
-            <label for="quote-notes">Delivery location</label>
-            <input id="quote-notes" name="location" type="text" placeholder="City, Country" aria-describedby="quote-notes-error">
-            <div class="pp-field__error" id="quote-notes-error" role="status"></div>
-        </div>
-        <div class="pp-field">
-            <label for="quote-message">Message</label>
-            <textarea id="quote-message" name="message" rows="4" placeholder="Any special requirements?" aria-describedby="quote-message-error"></textarea>
-            <div class="pp-field__error" id="quote-message-error" role="status"></div>
-        </div>
-        <button class="pp-btn primary" type="submit">Send request</button>
+      <div class="pp-field">
+        <label for="quote-name">Full name</label>
+        <input id="quote-name" name="name" type="text" required aria-describedby="quote-name-error">
+        <div class="pp-field__error" id="quote-name-error" role="status"></div>
+      </div>
+
+      <div class="pp-field">
+        <label for="quote-email">Email address</label>
+        <input id="quote-email" name="email" type="email" required aria-describedby="quote-email-error">
+        <div class="pp-field__error" id="quote-email-error" role="status"></div>
+      </div>
+
+      <div class="pp-field">
+        <label for="quote-qty">Estimated quantity</label>
+        <input id="quote-qty" name="quantity" type="number" min="1" placeholder="e.g. 100" required aria-describedby="quote-qty-error">
+        <div class="pp-field__error" id="quote-qty-error" role="status"></div>
+      </div>
+
+      <div class="pp-field">
+        <label for="quote-notes">Delivery location</label>
+        <input id="quote-notes" name="location" type="text" placeholder="City, Country" aria-describedby="quote-notes-error">
+        <div class="pp-field__error" id="quote-notes-error" role="status"></div>
+      </div>
+
+      <div class="pp-field">
+        <label for="quote-message">Message</label>
+        <textarea id="quote-message" name="message" rows="4" placeholder="Any special requirements?" aria-describedby="quote-message-error"></textarea>
+        <div class="pp-field__error" id="quote-message-error" role="status"></div>
+      </div>
+
+      <button class="pp-btn primary" type="submit">Send request</button>
     </form>
-</template>
+  </template>
+
+</main>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var bar = document.querySelector('[data-purchase-bar]');
+    var hero = document.getElementById('overview');
+    if (!bar || !hero || typeof IntersectionObserver === 'undefined') {
+      return;
+    }
+
+    bar.classList.add('is-floating');
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          bar.classList.remove('is-visible');
+        } else {
+          bar.classList.add('is-visible');
+        }
+      });
+    }, { rootMargin: '-80px 0px 0px 0px', threshold: 0.1 });
+
+    observer.observe(hero);
+  });
+</script>
 {% endblock %}

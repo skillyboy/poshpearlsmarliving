@@ -5,6 +5,14 @@
 
     const qs = (sel, scope = document) => scope.querySelector(sel);
     const qsa = (sel, scope = document) => Array.from(scope.querySelectorAll(sel));
+    const escapeHtml = (value) =>
+        (value || '').replace(/[&<>"']/g, (match) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        }[match]));
 
     const toastRoot = qs('#toast-root');
     const showToast = (message, type = 'info') => {
@@ -15,6 +23,234 @@
         toastRoot.appendChild(toast);
         setTimeout(() => toast.remove(), 3200);
     };
+
+    const formatMoney = (currency, value) => {
+        const amount = typeof value === 'number' ? value : Number(value || 0);
+        return `${currency} ${amount.toLocaleString()}`;
+    };
+
+    const getCookie = (name) => {
+        if (!document.cookie) return null;
+        const token = document.cookie.split(';').map((item) => item.trim()).find((item) => item.startsWith(`${name}=`));
+        return token ? decodeURIComponent(token.split('=')[1]) : null;
+    };
+    const csrfToken = getCookie('csrftoken');
+
+    const cartToggle = qs('[data-cart-toggle]');
+    const cartDrawer = qs('[data-cart-drawer]');
+    const cartBackdrop = qs('[data-cart-backdrop]');
+    const cartClose = qs('[data-cart-close]');
+    const cartItemsEl = qs('[data-cart-items]');
+    const cartSubtotalEl = qs('[data-cart-subtotal]');
+    const cartCountEls = qsa('[data-cart-count]');
+    const cartPage = qs('[data-cart-page]');
+
+    const openCart = () => {
+        if (!cartDrawer) return;
+        body.classList.add('cart-open');
+        cartDrawer.setAttribute('aria-hidden', 'false');
+        if (cartBackdrop) cartBackdrop.hidden = false;
+    };
+
+    const closeCart = () => {
+        if (!cartDrawer) return;
+        body.classList.remove('cart-open');
+        cartDrawer.setAttribute('aria-hidden', 'true');
+        if (cartBackdrop) cartBackdrop.hidden = true;
+    };
+
+    cartToggle?.addEventListener('click', () => {
+        body.classList.contains('cart-open') ? closeCart() : openCart();
+    });
+    cartClose?.addEventListener('click', closeCart);
+    cartBackdrop?.addEventListener('click', closeCart);
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && body.classList.contains('cart-open')) closeCart();
+    });
+
+    const cartRequest = async (url, options) => {
+        const merged = { ...options };
+        const method = (merged.method || 'GET').toUpperCase();
+        merged.headers = { ...(merged.headers || {}) };
+        if (method !== 'GET' && csrfToken) {
+            merged.headers['X-CSRFToken'] = csrfToken;
+        }
+        const response = await fetch(url, merged);
+        if (!response.ok) {
+            const data = await response.json().catch(() => ({}));
+            throw new Error(data?.detail || 'Cart update failed.');
+        }
+        return response.json();
+    };
+
+    const renderCartDrawer = (data) => {
+        if (!cartItemsEl || !cartSubtotalEl) return;
+        cartItemsEl.innerHTML = '';
+        if (!data?.items?.length) {
+            cartItemsEl.innerHTML = '<p>Your cart is empty.</p>';
+            cartSubtotalEl.textContent = formatMoney('NGN', 0);
+            return;
+        }
+        data.items.forEach((item) => {
+            const node = document.createElement('div');
+            node.className = 'pp-cart-item-mini';
+            node.innerHTML = `
+                <img src="${item.image || '/static/assets/images/products/d2pro1.jpeg'}" alt="${escapeHtml(item.name)}">
+                <div>
+                    <h4>${escapeHtml(item.name)}</h4>
+                    <span>${item.quantity} × ${formatMoney(item.currency, item.unit_price)}</span>
+                </div>
+                <button type="button" data-cart-remove data-item-id="${item.id}" aria-label="Remove item">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            `;
+            cartItemsEl.appendChild(node);
+        });
+        cartSubtotalEl.textContent = formatMoney(data.currency, data.subtotal);
+    };
+
+    const updateCartCount = (data) => {
+        const count = data?.items?.length x 0;
+        cartCountEls.forEach((el) => {
+            el.textContent = count;
+        });
+    };
+
+    const refreshCart = async () => {
+        try {
+            const data = await cartRequest('/api/cart', { method: 'GET' });
+            renderCartDrawer(data);
+            updateCartCount(data);
+            return data;
+        } catch (error) {
+            showToast(error.message || 'Unable to load cart.', 'error');
+            return null;
+        }
+    };
+
+    const syncCartPage = (data) => {
+        if (!cartPage || !data) return;
+        if (!data.items.length) {
+            window.location.reload();
+            return;
+        }
+        const subtotalEl = qs('[data-cart-page-subtotal]', cartPage);
+        if (subtotalEl) subtotalEl.textContent = formatMoney(data.currency, data.subtotal);
+        const itemsById = new Map(data.items.map((item) => [String(item.id), item]));
+        qsa('[data-cart-item]', cartPage).forEach((row) => {
+            const itemId = row.getAttribute('data-item-id');
+            const item = itemsById.get(itemId);
+            if (!item) {
+                row.remove();
+                return;
+            }
+            const qtyInput = qs('[data-qty-input]', row);
+            if (qtyInput) qtyInput.value = item.quantity;
+            const unitPrice = qs('[data-unit-price]', row);
+            if (unitPrice) unitPrice.textContent = formatMoney(item.currency, item.unit_price);
+            const lineTotal = qs('[data-line-total]', row);
+            if (lineTotal) lineTotal.textContent = formatMoney(item.currency, item.line_total);
+        });
+    };
+
+    const updateItemQuantity = async (itemId, quantity) => {
+        const data = await cartRequest(`/api/cart/items/${itemId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ quantity }),
+        });
+        renderCartDrawer(data);
+        updateCartCount(data);
+        syncCartPage(data);
+    };
+
+    const removeCartItem = async (itemId) => {
+        const data = await cartRequest(`/api/cart/items/${itemId}`, {
+            method: 'DELETE',
+        });
+        renderCartDrawer(data);
+        updateCartCount(data);
+        syncCartPage(data);
+    };
+
+    const addToCartButtons = qsa('[data-add-to-cart]');
+    addToCartButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const productId = button.getAttribute('data-product-id');
+            if (!productId) return;
+            const qtyInput = button.closest('.pp-hero__actions')?.querySelector('[data-add-qty]');
+            const quantity = Math.max(1, Number(qtyInput?.value || 1));
+            const previousLabel = button.textContent;
+            button.disabled = true;
+            button.textContent = 'Adding...';
+            try {
+                const data = await cartRequest('/api/cart/items', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ product_id: Number(productId), quantity }),
+                });
+                updateCartCount(data);
+                renderCartDrawer(data);
+                showToast('Added to cart.', 'success');
+                openCart();
+            } catch (error) {
+                showToast(error.message || 'Unable to add item.', 'error');
+            } finally {
+                button.disabled = false;
+                button.textContent = previousLabel;
+            }
+        });
+    });
+
+    cartItemsEl?.addEventListener('click', (event) => {
+        const target = event.target.closest('[data-cart-remove]');
+        if (!target) return;
+        const itemId = target.getAttribute('data-item-id');
+        if (!itemId) return;
+        removeCartItem(itemId).catch((error) => {
+            showToast(error.message || 'Unable to remove item.', 'error');
+        });
+    });
+
+    cartPage?.addEventListener('click', (event) => {
+        const row = event.target.closest('[data-cart-item]');
+        if (!row) return;
+        const itemId = row.getAttribute('data-item-id');
+        if (!itemId) return;
+        if (event.target.closest('[data-cart-remove]')) {
+            removeCartItem(itemId).catch((error) => {
+                showToast(error.message || 'Unable to remove item.', 'error');
+            });
+            return;
+        }
+        if (event.target.closest('[data-qty-inc]') || event.target.closest('[data-qty-dec]')) {
+            const input = qs('[data-qty-input]', row);
+            if (!input) return;
+            const current = Number(input.value || 1);
+            const next = event.target.closest('[data-qty-inc]') ? current + 1 : Math.max(1, current - 1);
+            input.value = next;
+            updateItemQuantity(itemId, next).catch((error) => {
+                showToast(error.message || 'Unable to update quantity.', 'error');
+            });
+        }
+    });
+
+    cartPage?.addEventListener('change', (event) => {
+        if (!event.target.matches('[data-qty-input]')) return;
+        const row = event.target.closest('[data-cart-item]');
+        if (!row) return;
+        const itemId = row.getAttribute('data-item-id');
+        if (!itemId) return;
+        const next = Math.max(1, Number(event.target.value || 1));
+        event.target.value = next;
+        updateItemQuantity(itemId, next).catch((error) => {
+            showToast(error.message || 'Unable to update quantity.', 'error');
+        });
+    });
 
     const themeToggle = qs('[data-theme-toggle]');
     const setTheme = (theme) => {
@@ -197,15 +433,6 @@
         });
     });
 
-    const escapeHtml = (value) =>
-        (value || '').replace(/[&<>"']/g, (match) => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
-        }[match]));
-
     qsa('[data-gallery]').forEach((gallery) => {
         const mainButton = qs('[data-gallery-main]', gallery);
         const mainImage = mainButton?.querySelector('img');
@@ -281,4 +508,6 @@
             setTimeout(() => body.classList.remove('is-loading'), 160);
         });
     }
+
+    refreshCart();
 })();

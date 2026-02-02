@@ -20,20 +20,34 @@ class Command(BaseCommand):
             sku="D2PRO-LOCK",
             defaults={
                 "name": "D2pro Smart Lock",
-                "short_description": "Distributor pricing for premium smart lock hardware.",
+                "short_description": (
+                    "Distributor-ready smart lock with biometric access and remote control."
+                ),
+                "description": (
+                    "Premium smart lock featuring 3D face recognition, palm vein unlocking, "
+                    "video call support, and abnormal activity reminders. Built for secure, "
+                    "high-traffic residential and commercial doors with app management."
+                ),
                 "price": 150000,
                 "currency": "NGN",
                 "stock_quantity": 100,
                 "is_active": True,
+                "is_featured": True,
             },
         )
 
         product.name = "D2pro Smart Lock"
         product.short_description = (
-            "Distributor pricing for premium smart lock hardware."
+            "Distributor-ready smart lock with biometric access and remote control."
+        )
+        product.description = (
+            "Premium smart lock featuring 3D face recognition, palm vein unlocking, "
+            "video call support, and abnormal activity reminders. Built for secure, "
+            "high-traffic residential and commercial doors with app management."
         )
         product.currency = "NGN"
         product.is_active = True
+        product.is_featured = True
         product.save()
         product.categories.add(category)
 

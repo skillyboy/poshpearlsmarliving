@@ -18,11 +18,14 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
+
+from poshapp.api import api as posh_api
 from django.views.static import serve
 
 urlpatterns = [
     path("", include("poshapp.urls")),
     path('admin/', admin.site.urls),
+    path("api/", posh_api.urls),
 ]
 
 if settings.DEBUG:

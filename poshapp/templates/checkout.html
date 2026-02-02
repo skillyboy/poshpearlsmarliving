@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Checkout{% endblock %}
+{% block body_class %}pp-checkout{% endblock %}
+
+{% block content %}
+<section class="pp-section pp-checkout-page">
+    <div class="container">
+        <div class="pp-section__header">
+            <h1>Checkout</h1>
+            <p>Share your delivery details and confirm your order.</p>
+        </div>
+
+        {% if empty_cart %}
+        <div class="pp-empty-state">
+            <p>Your cart is empty. Add items before checking out.</p>
+            <a class="pp-btn primary" href="{% url 'shop' %}">Browse products</a>
+        </div>
+        {% elif order %}
+        <div class="pp-success-state">
+            <h2>Order received</h2>
+            <p>Thanks! Your order reference is <strong>#{{ order.id }}</strong>. We will contact you shortly.</p>
+            <a class="pp-btn primary" href="{% url 'shop' %}">Back to shop</a>
+        </div>
+        {% else %}
+        <div class="pp-checkout-layout">
+            <form class="pp-form" method="post">
+                {% csrf_token %}
+                <div class="pp-field">
+                    <label for="{{ form.full_name.id_for_label }}">Full name</label>
+                    {{ form.full_name }}
+                    {% if form.full_name.errors %}
+                    <div class="pp-field__error">{{ form.full_name.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                <div class="pp-field">
+                    <label for="{{ form.email.id_for_label }}">Email address</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <div class="pp-field__error">{{ form.email.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                <div class="pp-field">
+                    <label for="{{ form.phone.id_for_label }}">Phone</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                    <div class="pp-field__error">{{ form.phone.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                <div class="pp-field">
+                    <label for="{{ form.address.id_for_label }}">Delivery address</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                    <div class="pp-field__error">{{ form.address.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                <div class="pp-field">
+                    <label for="{{ form.notes.id_for_label }}">Order notes</label>
+                    {{ form.notes }}
+                </div>
+                <button class="pp-btn primary" type="submit">Place order</button>
+            </form>
+
+            <aside class="pp-cart-summary">
+                <h2>Order summary</h2>
+                <div class="pp-summary-list">
+                    {% for item in cart.items %}
+                    <div class="pp-summary-row">
+                        <span>{{ item.name }} x {{ item.quantity }}</span>
+                        <strong>{{ item.currency }} {{ item.line_total|intcomma }}</strong>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="pp-summary-row total">
+                    <span>Subtotal</span>
+                    <strong>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong>
+                </div>
+            </aside>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
