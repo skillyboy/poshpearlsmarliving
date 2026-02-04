@@ -154,6 +154,11 @@ class Order(models.Model):
         ("fulfilled", "Fulfilled"),
         ("cancelled", "Cancelled"),
     ]
+    PAYMENT_STATUS_CHOICES = [
+        ("pending", "Pending"),
+        ("paid", "Paid"),
+        ("failed", "Failed"),
+    ]
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="orders",
@@ -168,7 +173,13 @@ class Order(models.Model):
     notes = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="new")
     subtotal = models.DecimalField(max_digits=12, decimal_places=0, default=0)
+    amount = models.DecimalField(max_digits=12, decimal_places=0, default=0)
     currency = models.CharField(max_length=3, default="NGN")
+    payment_status = models.CharField(
+        max_length=20, choices=PAYMENT_STATUS_CHOICES, default="pending"
+    )
+    payment_reference = models.CharField(max_length=120, blank=True)
+    paid_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

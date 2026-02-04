@@ -1,4 +1,5 @@
 (() => {
+    document.documentElement.classList.replace('no-js', 'js');
     const root = document.documentElement;
     const body = document.body;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -50,6 +51,7 @@
         body.classList.add('cart-open');
         cartDrawer.setAttribute('aria-hidden', 'false');
         if (cartBackdrop) cartBackdrop.hidden = false;
+        refreshCart();
     };
 
     const closeCart = () => {
@@ -95,7 +97,7 @@
             const node = document.createElement('div');
             node.className = 'pp-cart-item-mini';
             node.innerHTML = `
-                <img src="${item.image || '/static/assets/images/products/d2pro1.jpeg'}" alt="${escapeHtml(item.name)}">
+                <img src="${item.image || '/static/assets/images/products/d2pro1.jpeg'}" alt="${escapeHtml(item.name)}" onerror="this.onerror=null;this.src='/static/assets/images/products/d2pro1.jpeg';">
                 <div>
                     <h4>${escapeHtml(item.name)}</h4>
                     <span>${item.quantity} × ${formatMoney(item.currency, item.unit_price)}</span>
@@ -110,7 +112,7 @@
     };
 
     const updateCartCount = (data) => {
-        const count = data?.items?.length x 0;
+        const count = data?.items?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0;
         cartCountEls.forEach((el) => {
             el.textContent = count;
         });
@@ -175,35 +177,42 @@
         syncCartPage(data);
     };
 
-    const addToCartButtons = qsa('[data-add-to-cart]');
-    addToCartButtons.forEach((button) => {
-        button.addEventListener('click', async () => {
-            const productId = button.getAttribute('data-product-id');
-            if (!productId) return;
-            const qtyInput = button.closest('.pp-hero__actions')?.querySelector('[data-add-qty]');
-            const quantity = Math.max(1, Number(qtyInput?.value || 1));
-            const previousLabel = button.textContent;
-            button.disabled = true;
-            button.textContent = 'Adding...';
-            try {
-                const data = await cartRequest('/api/cart/items', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ product_id: Number(productId), quantity }),
-                });
-                updateCartCount(data);
-                renderCartDrawer(data);
-                showToast('Added to cart.', 'success');
-                openCart();
-            } catch (error) {
-                showToast(error.message || 'Unable to add item.', 'error');
-            } finally {
-                button.disabled = false;
-                button.textContent = previousLabel;
-            }
-        });
+    const handleAddToCart = async (button) => {
+        const productId = button.getAttribute('data-product-id');
+        if (!productId) {
+            showToast('Missing product id.', 'error');
+            return;
+        }
+        const qtyInput = button.closest('.pp-hero__actions')?.querySelector('[data-add-qty]');
+        const quantity = Math.max(1, Number(qtyInput?.value || 1));
+        const previousLabel = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Adding...';
+        try {
+            const data = await cartRequest('/api/cart/items', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ product_id: Number(productId), quantity }),
+            });
+            updateCartCount(data);
+            renderCartDrawer(data);
+            showToast('Added to cart.', 'success');
+            openCart();
+        } catch (error) {
+            showToast(error.message || 'Unable to add item.', 'error');
+        } finally {
+            button.disabled = false;
+            button.textContent = previousLabel;
+        }
+    };
+
+    document.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-add-to-cart]');
+        if (!button) return;
+        event.preventDefault();
+        handleAddToCart(button);
     });
 
     cartItemsEl?.addEventListener('click', (event) => {
@@ -488,18 +497,27 @@
 
     const animated = qsa('[data-animate]');
     if (animated.length) {
-        const reveal = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        reveal.unobserve(entry.target);
-                    }
-                });
-            },
-            { threshold: 0.2 }
-        );
-        animated.forEach((el) => reveal.observe(el));
+        const revealAll = () => animated.forEach((el) => el.classList.add('is-visible'));
+        if (typeof IntersectionObserver === 'undefined') {
+            revealAll();
+        } else {
+            try {
+                const reveal = new IntersectionObserver(
+                    (entries) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('is-visible');
+                                reveal.unobserve(entry.target);
+                            }
+                        });
+                    },
+                    { threshold: 0.2 }
+                );
+                animated.forEach((el) => reveal.observe(el));
+            } catch (error) {
+                revealAll();
+            }
+        }
     }
 
     if (body.classList.contains('pp-shop')) {

@@ -20,7 +20,7 @@
                 {% for item in cart.items %}
                 <article class="pp-cart-item" data-cart-item data-item-id="{{ item.id }}">
                     <div class="pp-cart-item__media">
-                        <img src="{{ item.image|default:product_fallback }}" alt="{{ item.name }}" loading="lazy" decoding="async">
+                        <img src="{{ item.image|default:product_fallback }}" alt="{{ item.name }}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='{{ product_fallback }}';">
                     </div>
                     <div class="pp-cart-item__details">
                         <h3>{{ item.name }}</h3>

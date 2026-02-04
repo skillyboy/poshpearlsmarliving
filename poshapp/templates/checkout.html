@@ -19,14 +19,40 @@
         </div>
         {% elif order %}
         <div class="pp-success-state">
+            {% if order.payment_status == "paid" %}
+            <h2>Payment received</h2>
+            <p>Thanks! Your payment was successful. Order reference: <strong>#{{ order.id }}</strong>.</p>
+            {% else %}
             <h2>Order received</h2>
             <p>Thanks! Your order reference is <strong>#{{ order.id }}</strong>. We will contact you shortly.</p>
-            <a class="pp-btn primary" href="{% url 'shop' %}">Back to shop</a>
+            {% endif %}
+            <p class="pp-muted">Our team will confirm delivery timing within 24 hours.</p>
+            <div class="pp-summary-list">
+                {% for item in order.items.all %}
+                <div class="pp-summary-row">
+                    <span>{{ item.product }} x {{ item.quantity }}</span>
+                    <strong>{{ item.currency }} {{ item.line_total|intcomma }}</strong>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="pp-summary-row total">
+                <span>Subtotal</span>
+                <strong>{{ order.currency }} {{ order.subtotal|intcomma }}</strong>
+            </div>
+            <div class="pp-cart-drawer__actions" style="justify-content:center;">
+                <a class="pp-btn primary" href="{% url 'shop' %}">Back to shop</a>
+                <a class="pp-btn ghost" href="{% url 'support' %}">Need help?</a>
+            </div>
         </div>
         {% else %}
         <div class="pp-checkout-layout">
-            <form class="pp-form" method="post">
+            <form class="pp-form" method="post" action="{% url 'payment_initialize' %}">
                 {% csrf_token %}
+                {% if payment_error %}
+                <div class="pp-empty-state" style="text-align:left;">
+                    <strong>Payment error:</strong> {{ payment_error }}
+                </div>
+                {% endif %}
                 <div class="pp-field">
                     <label for="{{ form.full_name.id_for_label }}">Full name</label>
                     {{ form.full_name }}
@@ -59,7 +85,8 @@
                     <label for="{{ form.notes.id_for_label }}">Order notes</label>
                     {{ form.notes }}
                 </div>
-                <button class="pp-btn primary" type="submit">Place order</button>
+                <p class="pp-muted">You will be redirected to Paystack to complete payment.</p>
+                <button class="pp-btn primary" type="submit">Pay now</button>
             </form>
 
             <aside class="pp-cart-summary">

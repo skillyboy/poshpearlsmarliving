@@ -664,6 +664,22 @@ pre {
   padding: var(--space-4) 0;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.header-cta {
+  display: inline-flex;
+}
+
+@media (min-width: 1024px) {
+  .header-cta {
+    display: none;
+  }
+}
+
 /* Logo */
 .logo-container {
   display: flex;
@@ -1142,8 +1158,8 @@ pre {
 .hero {
   position: relative;
   padding: var(--space-20) 0 var(--space-32);
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-  color: var(--text-light);
+  background: #ffffff;
+  color: var(--text-dark);
   overflow: hidden;
 }
 
@@ -1167,7 +1183,7 @@ pre {
   right: 0;
   bottom: 0;
   /* Use a light, semi-opaque overlay so carousel slides remain visible */
-  background: linear-gradient(135deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.36) 100%);
+  background: transparent;
   pointer-events: none;
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
@@ -1179,8 +1195,7 @@ pre {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: radial-gradient(circle at 20% 80%, rgba(244, 176, 0, 0.15) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(244, 176, 0, 0.1) 0%, transparent 50%);
+  background-image: none;
 }
 
 /* Hero carousel styles */

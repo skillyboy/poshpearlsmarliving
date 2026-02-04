@@ -490,6 +490,105 @@
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+.pp-filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--pp-space-2);
+    align-items: flex-end;
+    margin-bottom: var(--pp-space-2);
+}
+
+.pp-results-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--pp-space-2);
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--pp-text-14);
+    color: var(--pp-muted);
+    margin-bottom: var(--pp-space-2);
+}
+
+.pp-clear-filters {
+    box-shadow: var(--pp-shadow-1);
+}
+
+.pp-filter-hint {
+    margin: 0;
+    color: var(--pp-muted);
+    font-size: var(--pp-text-14);
+}
+
+.pp-filter-hint--error {
+    color: #b91c1c;
+}
+
+.pp-filter-field {
+    display: grid;
+    gap: 6px;
+    min-width: 200px;
+}
+
+.pp-filter-label {
+    font-size: var(--pp-text-14);
+    color: var(--pp-muted);
+}
+
+.pp-filter-controls input,
+.pp-filter-controls select {
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-md);
+    padding: 10px 12px;
+    background: var(--pp-surface);
+    font-size: var(--pp-text-16);
+}
+
+.pp-filter-controls input[type="number"] {
+    max-width: 160px;
+}
+
+.pp-filter-controls input:focus-visible,
+.pp-filter-controls select:focus-visible {
+    outline: 2px solid var(--pp-focus);
+    border-color: var(--pp-primary);
+}
+
+.pp-pagination {
+    margin-top: var(--pp-space-3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--pp-space-2);
+    align-items: center;
+    justify-content: center;
+    color: var(--pp-muted);
+    font-size: var(--pp-text-14);
+}
+
+.pp-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: var(--pp-space-3);
+}
+
+.pp-chip-link {
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.pp-chip-link:hover,
+.pp-chip-link:focus-visible {
+    border-color: rgba(123, 79, 93, 0.35);
+    outline: none;
+}
+
+.pp-chip-link.is-active {
+    background: rgba(123, 79, 93, 0.2);
+    color: var(--pp-primary-dark);
+    border-color: rgba(123, 79, 93, 0.35);
+}
+
 .pp-product-card {
     background: var(--pp-surface);
     border: 1px solid var(--pp-border);
@@ -1074,4 +1173,145 @@
 
 :root[data-theme="dark"] .pp-purchase-bar.is-floating {
     background: rgba(18, 22, 27, 0.92);
+}
+
+/* Modern Enhancements */
+
+/* 1. Improved Visual Hierarchy */
+.pp-hero__title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+}
+
+/* 2. Better Button UX */
+.pp-btn {
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.pp-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.pp-btn:active {
+    transform: translateY(0);
+}
+
+/* 3. Modern Card Hover Effects */
+.pp-product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.pp-product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* 4. Sticky Purchase Bar Enhancement */
+.pp-purchase-bar {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+    border-top: 1px solid #e9ecef;
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+}
+
+.pp-purchase-bar.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* 5. Gallery Improvements */
+.pp-gallery__thumb {
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.pp-gallery__thumb:hover {
+    border-color: #007bff;
+    transform: scale(1.05);
+}
+
+.pp-gallery__thumb.is-active {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+/* 6. Price Tier Highlight Animation */
+.pp-tier-row.is-highlight {
+    background: linear-gradient(90deg, rgba(0, 123, 255, 0.05) 0%, transparent 100%);
+    position: relative;
+}
+
+.pp-tier-row.is-highlight::before {
+    content: "Best Value";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.875rem;
+    color: #28a745;
+    font-weight: 500;
+}
+
+/* 7. Loading Skeleton Animation */
+.pp-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* 8. Mobile Optimizations */
+@media (max-width: 768px) {
+    .pp-hero__grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .pp-section-nav {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .pp-purchase-bar__content {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .pp-purchase-bar__actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+}
+
+/* 9. Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .pp-purchase-bar {
+        background: rgba(30, 30, 30, 0.95);
+        border-color: #444;
+    }
+
+    .pp-product-card {
+        border-color: #444;
+        background: #222;
+    }
+}
+
+/* 10. Focus States for Accessibility */
+.pp-btn:focus-visible,
+.pp-gallery__thumb:focus-visible,
+.pp-qty-select input:focus-visible {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
 }

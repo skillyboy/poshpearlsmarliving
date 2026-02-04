@@ -1,10 +1,13 @@
 from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from ninja import NinjaAPI
 from ninja.errors import HttpError
 
 from .models import CartItem, Category, Order, OrderItem, Product
 from .cart import add_item, cart_summary, get_cart as get_cart_for_request
+from .payments import PaystackError, initialize_paystack_transaction
 from .schemas import (
     CartItemIn,
     CartItemOut,
@@ -14,6 +17,7 @@ from .schemas import (
     CheckoutIn,
     OrderItemOut,
     OrderOut,
+    PaymentInitOut,
     ProductImageOut,
     ProductOut,
     ProductPriceTierOut,
@@ -99,7 +103,17 @@ def get_cart(request):
 
 
 @api.get("/products", response=list[ProductOut])
-def list_products(request, category: str | None = None, featured: bool | None = None):
+def list_products(
+    request,
+    category: str | None = None,
+    featured: bool | None = None,
+    q: str | None = None,
+    ordering: str | None = None,
+    min_price: int | None = None,
+    max_price: int | None = None,
+    limit: int = 20,
+    offset: int = 0,
+):
     queryset = (
         Product.objects.filter(is_active=True)
         .prefetch_related("images", "price_tiers", "categories")
@@ -109,7 +123,28 @@ def list_products(request, category: str | None = None, featured: bool | None = 
         queryset = queryset.filter(categories__slug=category)
     if featured is not None:
         queryset = queryset.filter(is_featured=featured)
-    return [_serialize_product(product) for product in queryset]
+    if q:
+        queryset = queryset.filter(Q(name__icontains=q) | Q(sku__icontains=q))
+    if min_price is not None:
+        queryset = queryset.filter(price__gte=min_price)
+    if max_price is not None:
+        queryset = queryset.filter(price__lte=max_price)
+    if ordering:
+        ordering_map = {
+            "updated": "-updated_at",
+            "updated_asc": "updated_at",
+            "price": "price",
+            "-price": "-price",
+            "name": "name",
+            "-name": "-name",
+        }
+        order_by = ordering_map.get(ordering)
+        if order_by:
+            queryset = queryset.order_by(order_by)
+    safe_limit = max(1, min(int(limit), 100))
+    safe_offset = max(0, int(offset))
+    paged = queryset[safe_offset : safe_offset + safe_limit]
+    return [_serialize_product(product) for product in paged]
 
 
 @api.get("/products/{product_id}", response=ProductOut)
@@ -152,7 +187,9 @@ def create_order(request, payload: CheckoutIn):
             address=payload.address,
             notes=payload.notes or "",
             subtotal=summary["subtotal"],
+            amount=summary["subtotal"],
             currency=summary["currency"],
+            payment_status="pending",
         )
         items_out = []
         for item in cart.items.select_related("product"):
@@ -180,7 +217,66 @@ def create_order(request, payload: CheckoutIn):
         items=items_out,
         subtotal=summary["subtotal"],
         currency=summary["currency"],
+        payment_status=order.payment_status,
     )
+
+
+@api.post("/payments/init", response=PaymentInitOut)
+def init_payment(request, payload: CheckoutIn):
+    cart = get_cart_for_request(request)
+    summary = cart_summary(cart)
+    if not summary["items"]:
+        raise HttpError(400, "Cart is empty.")
+
+    with transaction.atomic():
+        order = Order.objects.create(
+            user=request.user if request.user.is_authenticated else None,
+            full_name=payload.full_name,
+            email=payload.email,
+            phone=payload.phone,
+            address=payload.address,
+            notes=payload.notes or "",
+            subtotal=summary["subtotal"],
+            amount=summary["subtotal"],
+            currency=summary["currency"],
+            payment_status="pending",
+        )
+        for item in cart.items.select_related("product"):
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                quantity=item.quantity,
+                unit_price=item.unit_price,
+                currency=item.currency,
+            )
+
+    try:
+        callback_url = request.build_absolute_uri(reverse("payment_callback"))
+        payment = initialize_paystack_transaction(
+            order,
+            payload.email,
+            summary["subtotal"],
+            summary["currency"],
+            callback_url,
+            metadata={"order_id": order.id},
+        )
+        order.payment_reference = payment["reference"]
+        order.save(update_fields=["payment_reference"])
+    except PaystackError:
+        order.payment_status = "failed"
+        order.save(update_fields=["payment_status"])
+        raise HttpError(400, "Payment initialization failed.")
+
+    return PaymentInitOut(
+        order_id=order.id,
+        reference=order.payment_reference,
+        authorization_url=payment["authorization_url"],
+    )
+
+
+@api.post("/payments/initialize", response=PaymentInitOut)
+def init_payment_alias(request, payload: CheckoutIn):
+    return init_payment(request, payload)
 
 
 @api.post("/cart/items", response=CartOut)

@@ -75,6 +75,12 @@ class CheckoutIn(Schema):
     notes: Optional[str] = None
 
 
+class PaymentInitOut(Schema):
+    order_id: int
+    reference: str
+    authorization_url: str
+
+
 class OrderItemOut(Schema):
     product_id: int
     name: str
@@ -89,3 +95,4 @@ class OrderOut(Schema):
     items: List[OrderItemOut]
     subtotal: int
     currency: str
+    payment_status: str

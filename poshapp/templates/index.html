@@ -16,7 +16,7 @@
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#5F1E2C">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/static/manifest.json">
     <link rel="apple-touch-icon" href="/icons/icon-192.png">
     
     <title>PoshPearl Smart Living - Premium Smart Door Locks</title>
@@ -109,8 +109,8 @@
     <!-- Bootstrap 5 (bundle) - modernized, no jQuery required -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
 
-    <link rel="preload" href="{% static 'assets/css/style.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{% static 'assets/css/style.css' %}"></noscript>
+    <link rel="preload" href="{% static 'assets/css/style.css' %}?v=20260204" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{% static 'assets/css/style.css' %}?v=20260204"></noscript>
     
     <!-- Google Fonts -->
     <!-- Improve font loading: preconnect then load -->
@@ -389,6 +389,13 @@
                     </ul>
                 </nav>
 
+                <div class="header-actions">
+                    <a href="/shop/" class="nav-cta header-cta">
+                        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                        <span>Shop Now</span>
+                    </a>
+                </div>
+
                 <!-- Mobile Menu Button -->
                 <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobileNav">
                     <span class="menu-icon"></span>
@@ -609,7 +616,7 @@
     <!-- Hero Section -->
     <section class="hero" aria-label="Hero section">
         <div class="hero-background" role="presentation">
-            <div class="hero-overlay" style="background: linear-gradient(135deg, rgba(95,30,44,0.8) 0%, rgba(244,176,0,0.4) 100%);"></div>
+            <div class="hero-overlay"></div>
             <div class="hero-pattern"></div>
             <!-- Hero carousel: subtle images sliding under content (visual only) -->
             <div class="hero-carousel" aria-hidden="true">
@@ -623,19 +630,19 @@
         <div class="container">
                 <div class="hero-content animate-fast">
                 <div class="hero-badge">
-                    <span>Premium Security</span>
-                </div>
-                <div class="hero-logo" aria-hidden="true">
-                    <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="PoshPearl logo">
+                    <a class="btn btn-primary" href="{% url 'shop' %}">
+                        <span>Explore Products</span>
+                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                    </a>
                 </div>
                 <h1 class="hero-title">
                     <span class="hero-line">Say Goodbye to</span>
                     <span class="hero-line highlight">Fumbling for Keys</span>
                 </h1>
                 <p class="hero-subtitle">Seamless entry. Exceptional style.</p>
-                <p class="hero-description">Unlock a smarter, safer home — elegant hardware engineered for daily life. Browse our curated collections to find the model that matches your door and style.</p>
+                <p class="hero-description">Unlock a smarter, safer home &mdash; elegant hardware engineered for daily life. Browse our curated collections to find the model that matches your door and style.</p>
                 <div class="hero-actions">
-                    <a href="#products" class="btn btn-primary btn-large">
+                    <a href="{% url 'shop' %}" class="btn btn-primary btn-large">
                         <span>Explore Products</span>
                         <i class="fas fa-arrow-right" aria-hidden="true"></i>
                     </a>
@@ -681,7 +688,7 @@
                         <span>Our Collection</span>
                     </div>
                     <h2 id="products-title" class="section-title">Premium Smart Lock Collection</h2>
-                    <p class="section-description">Discover intelligent locks designed for modern living — secure, stylish, and easy to use. Not sure which to pick? Visit our Shop to compare features, pricing, and request a personalised quote.</p>
+                    <p class="section-description">Discover intelligent locks designed for modern living &mdash; secure, stylish, and easy to use. Not sure which to pick? Visit our Shop to compare features, pricing, and request a personalised quote.</p>
                 </div>
                 
                 <div class="products-grid animate-slow" data-skeleton>
@@ -727,7 +734,7 @@
                                     <button class="btn btn-outline" aria-label="Add to wishlist">
                                         <i class="far fa-heart" aria-hidden="true"></i>
                                     </button>
-                                                    <a href="/shop/?product=D2pro&price=%E2%82%A685%2C000&desc=D2pro%20-%20Premium%20smart%20lock%20with%20advanced%20features" class="btn btn-primary">
+                                                    <a href="/shop/" class="btn btn-primary">
                                                         <span>See on Shop</span>
                                                         <i class="fas fa-arrow-right" aria-hidden="true"></i>
                                                     </a>
@@ -1331,16 +1338,16 @@
 
     <!-- JavaScript Files -->
         <!-- Site product sync (externalized for maintainability) -->
-        <script src="{% static 'assets/js/site-products.js' %}" defer></script>
+        <script src="{% static 'assets/js/site-products.js' %}?v=20260204" defer></script>
         <!-- Client-side contact form validation -->
-        <script src="{% static 'assets/js/contact.js' %}" defer></script>
-        <script src="{% static 'assets/js/functions.js' %}" defer></script>
+        <script src="{% static 'assets/js/contact.js' %}?v=20260204" defer></script>
+        <script src="{% static 'assets/js/functions.js' %}?v=20260204" defer></script>
         <!-- Load Bootstrap 4.4.1 dependencies and JS (jQuery, Popper, Bootstrap) before our scripts -->
         <!-- Bootstrap 5 bundle (includes Popper) -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer crossorigin="anonymous"></script>
 
-        <script src="{% static 'assets/js/animations.js' %}" defer></script>
-        <script src="{% static 'assets/js/hero-carousel.js' %}" defer></script>
+        <script src="{% static 'assets/js/animations.js' %}?v=20260204" defer></script>
+        <script src="{% static 'assets/js/hero-carousel.js' %}?v=20260204" defer></script>
     
     <!-- Mobile nav toggle (improves mobile UX) -->
     <script>
@@ -1387,7 +1394,7 @@
             window.addEventListener('load', async function(){
                 try{
                     // Use relative path so registration works on subpaths and during dev
-                    const reg = await navigator.serviceWorker.register('sw.js');
+                    const reg = await navigator.serviceWorker.register('/static/sw.js');
                     console.log('ServiceWorker registered. Scope:', reg.scope);
                 }catch(err){
                     console.warn('ServiceWorker registration failed:', err);

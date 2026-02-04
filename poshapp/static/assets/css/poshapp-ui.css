@@ -630,15 +630,20 @@ body.cart-open .pp-cart-drawer__panel {
     border-left-color: #EF4444;
 }
 
-[data-animate] {
+:root.js [data-animate] {
     opacity: 0;
     transform: translateY(16px);
     transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-[data-animate].is-visible {
+:root.js [data-animate].is-visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+:root.no-js [data-animate] {
+    opacity: 1;
+    transform: none;
 }
 
 @media (max-width: 900px) {

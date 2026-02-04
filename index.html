@@ -15,7 +15,7 @@
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#5F1E2C">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/static/manifest.json">
     <link rel="apple-touch-icon" href="/icons/icon-192.png">
     
     <title>PoshPearl Smart Living - Premium Smart Door Locks</title>
@@ -380,13 +380,20 @@
 
                         <!-- CTA Button -->
                         <li class="nav-item cta-item">
-                            <a href="shop.html" class="nav-cta">
+                            <a href="/shop/" class="nav-cta">
                                 <i class="fas fa-shopping-cart" aria-hidden="true"></i>
                                 <span>Shop Now</span>
                             </a>
                         </li>
                     </ul>
                 </nav>
+
+                <div class="header-actions">
+                    <a href="/shop/" class="nav-cta header-cta">
+                        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                        <span>Shop Now</span>
+                    </a>
+                </div>
 
                 <!-- Mobile Menu Button -->
                 <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobileNav">
@@ -622,10 +629,10 @@
         <div class="container">
                 <div class="hero-content animate-fast">
                 <div class="hero-badge">
-                    <span>Premium Security</span>
-                </div>
-                <div class="hero-logo" aria-hidden="true">
-                    <img src="/static/assets/images/poshlogo 2.png" alt="PoshPearl logo">
+                    <a class="btn btn-primary" href="/shop/">
+                        <span>Explore Products</span>
+                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                    </a>
                 </div>
                 <h1 class="hero-title">
                     <span class="hero-line">Say Goodbye to</span>
@@ -726,7 +733,7 @@
                                     <button class="btn btn-outline" aria-label="Add to wishlist">
                                         <i class="far fa-heart" aria-hidden="true"></i>
                                     </button>
-                                                    <a href="shop.html?product=D2pro&price=%E2%82%A685%2C000&desc=D2pro%20-%20Premium%20smart%20lock%20with%20advanced%20features" class="btn btn-primary">
+                                                    <a href="/shop/" class="btn btn-primary">
                                                         <span>See on Shop</span>
                                                         <i class="fas fa-arrow-right" aria-hidden="true"></i>
                                                     </a>
@@ -737,7 +744,7 @@
                 </div>
                 
                 <div class="section-cta">
-                    <a href="shop.html" class="btn btn-secondary btn-large">
+                    <a href="/shop/" class="btn btn-secondary btn-large">
                         <span>View All Products</span>
                         <i class="fas fa-arrow-right" aria-hidden="true"></i>
                     </a>
@@ -1385,7 +1392,7 @@
             window.addEventListener('load', async function(){
                 try{
                     // Use relative path so registration works on subpaths and during dev
-                    const reg = await navigator.serviceWorker.register('sw.js');
+                    const reg = await navigator.serviceWorker.register('/static/sw.js');
                     console.log('ServiceWorker registered. Scope:', reg.scope);
                 }catch(err){
                     console.warn('ServiceWorker registration failed:', err);

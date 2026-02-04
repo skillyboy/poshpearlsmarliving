@@ -152,6 +152,7 @@
                 decoding="async"
                 width="640"
                 height="800"
+                onerror="this.onerror=null;this.src='{{ product_fallback }}';"
               >
             {% else %}
               <img
@@ -161,6 +162,7 @@
                 decoding="async"
                 width="640"
                 height="800"
+                onerror="this.onerror=null;this.src='{{ product_fallback }}';"
               >
             {% endif %}
           </figure>
@@ -224,15 +226,82 @@
         <p class="pp-muted">Compare smart locks, pricing tiers, and deployment options.</p>
       </div>
 
+      {% if pagination.total_count %}
+      <div class="pp-results-row">
+        <span>Showing {{ pagination.start_index }}&ndash;{{ pagination.end_index }} of {{ pagination.total_count }} results</span>
+        {% if pagination.has_filters %}
+          <a class="pp-btn primary pp-clear-filters" href="{% url 'shop' %}">Clear filters</a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <form class="pp-filter-controls" method="get" aria-label="Catalog filters">
+        {% if active_category %}
+          <input type="hidden" name="category" value="{{ active_category.slug }}">
+        {% endif %}
+        <label class="pp-filter-field">
+          <span class="pp-filter-label">Search</span>
+          <input type="search" name="q" placeholder="Search products" value="{{ request.GET.q|default:'' }}">
+        </label>
+        <label class="pp-filter-field">
+          <span class="pp-filter-label">Min price</span>
+          <input type="number" name="min_price" min="0" placeholder="0" value="{{ request.GET.min_price|default:'' }}">
+        </label>
+        <label class="pp-filter-field">
+          <span class="pp-filter-label">Max price</span>
+          <input type="number" name="max_price" min="0" placeholder="500000" value="{{ request.GET.max_price|default:'' }}">
+        </label>
+        <p class="pp-filter-hint">Enter a minimum and/or maximum price (NGN).</p>
+        {% if pagination.invalid_price_range %}
+          <p class="pp-filter-hint pp-filter-hint--error">Min price was higher than max price. We swapped them for you.</p>
+        {% endif %}
+        <label class="pp-filter-field">
+          <span class="pp-filter-label">Sort</span>
+          <select name="ordering">
+            <option value="updated"{% if request.GET.ordering == "updated" or not request.GET.ordering %} selected{% endif %}>Newest</option>
+            <option value="updated_asc"{% if request.GET.ordering == "updated_asc" %} selected{% endif %}>Oldest</option>
+            <option value="price"{% if request.GET.ordering == "price" %} selected{% endif %}>Price: Low to High</option>
+            <option value="-price"{% if request.GET.ordering == "-price" %} selected{% endif %}>Price: High to Low</option>
+            <option value="name"{% if request.GET.ordering == "name" %} selected{% endif %}>Name: A-Z</option>
+            <option value="-name"{% if request.GET.ordering == "-name" %} selected{% endif %}>Name: Z-A</option>
+          </select>
+        </label>
+        <label class="pp-filter-field">
+          <span class="pp-filter-label">Per page</span>
+          <select name="per_page">
+            <option value="6"{% if request.GET.per_page == "6" or not request.GET.per_page %} selected{% endif %}>6</option>
+            <option value="12"{% if request.GET.per_page == "12" %} selected{% endif %}>12</option>
+            <option value="24"{% if request.GET.per_page == "24" %} selected{% endif %}>24</option>
+          </select>
+        </label>
+        <button class="pp-btn" type="submit">Apply</button>
+      </form>
+
+      {% if categories %}
+      <div class="pp-filter-row" aria-label="Category filters">
+        <a class="pp-chip pp-chip-link{% if not active_category %} is-active{% endif %}" href="{% url 'shop' %}">
+          All
+        </a>
+        {% for category in categories %}
+          <a
+            class="pp-chip pp-chip-link{% if active_category and active_category.id == category.id %} is-active{% endif %}"
+            href="{% url 'shop' %}?category={{ category.slug }}"
+          >
+            {{ category.name }}
+          </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+
       <div class="pp-product-grid">
         {% for item in products %}
         <article class="pp-product-card">
           <a class="pp-product-card__media" href="{% url 'product_detail' slug=item.slug %}">
             {% with card_image=item.images.first %}
               {% if card_image %}
-                <img src="{{ card_image.image.url }}" alt="{{ card_image.alt_text|default:item.name }}" loading="lazy" decoding="async">
+                <img src="{{ card_image.image.url }}" alt="{{ card_image.alt_text|default:item.name }}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='{{ product_fallback }}';">
               {% else %}
-                <img src="{{ product_fallback }}" alt="{{ item.name }}" loading="lazy" decoding="async">
+                <img src="{{ product_fallback }}" alt="{{ item.name }}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='{{ product_fallback }}';">
               {% endif %}
             {% endwith %}
           </a>
@@ -265,13 +334,31 @@
         </article>
         {% endfor %}
       </div>
+
+      {% if pagination.total_pages > 1 %}
+      <nav class="pp-pagination" aria-label="Catalog pagination">
+        {% if pagination.has_prev %}
+          <a class="pp-btn ghost" href="?{% if pagination.querystring %}{{ pagination.querystring }}&{% endif %}page={{ pagination.prev_page }}&per_page={{ pagination.per_page }}">Previous</a>
+        {% endif %}
+        <span>Page {{ pagination.page }} of {{ pagination.total_pages }}</span>
+        {% if pagination.has_next %}
+          <a class="pp-btn ghost" href="?{% if pagination.querystring %}{{ pagination.querystring }}&{% endif %}page={{ pagination.next_page }}&per_page={{ pagination.per_page }}">Next</a>
+        {% endif %}
+      </nav>
+      {% endif %}
     </div>
   </section>
   {% else %}
   <section class="pp-section pp-section--surface" id="catalog" data-section data-animate>
     <div class="container">
       <div class="pp-empty-state">
-        {% if product %}
+        {% if active_category %}
+          <p>No products found in {{ active_category.name }} yet.</p>
+          <a class="pp-btn primary" href="{% url 'shop' %}">View all products</a>
+        {% elif request.GET.q %}
+          <p>No products match "{{ request.GET.q }}". Try a different search.</p>
+          <a class="pp-btn primary" href="{% url 'shop' %}">Clear search</a>
+        {% elif product %}
           <p>No other products available yet. Check back soon for more listings.</p>
           <a class="pp-btn primary" href="{% url 'shop' %}">Back to shop</a>
         {% else %}
@@ -311,6 +398,7 @@
                     decoding="async"
                     width="880"
                     height="1100"
+                    onerror="this.onerror=null;this.src='{{ product_fallback }}';"
                   >
                 </button>
                 <span class="pp-gallery__hint">Tap to zoom</span>
@@ -336,6 +424,7 @@
                   decoding="async"
                   width="240"
                   height="320"
+                  onerror="this.onerror=null;this.src='{{ product_fallback }}';"
                 >
               </button>
             {% endfor %}
@@ -357,6 +446,7 @@
                 decoding="async"
                 width="880"
                 height="1100"
+                onerror="this.onerror=null;this.src='{{ product_fallback }}';"
               >
             </button>
             <span class="pp-gallery__hint">Tap to zoom</span>

@@ -43,6 +43,31 @@ py manage.py createsuperuser
 py manage.py runserver
 ```
 
+## Paystack (MVP payments)
+
+Set these environment variables before running the server:
+
+```
+PAYSTACK_SECRET_KEY=sk_test_xxx
+PAYSTACK_PUBLIC_KEY=pk_test_xxx
+PAYSTACK_BASE_URL=https://api.paystack.co
+PAYSTACK_CALLBACK_URL=
+```
+
+`PAYSTACK_CALLBACK_URL` is optional. If empty, the app will build the callback URL automatically.
+
+You can place the values above in a `.env` file in the project root, and the app will load them on startup.
+
+## Payment (Paystack)
+
+Set the following environment variables before running the server:
+
+```
+PAYSTACK_SECRET_KEY=your_paystack_secret_key
+PAYSTACK_PUBLIC_KEY=your_paystack_public_key
+PAYSTACK_BASE_URL=https://api.paystack.co
+```
+
 ## Key URLs
 
 - Home: http://127.0.0.1:8000/
@@ -50,6 +75,8 @@ py manage.py runserver
 - Cart: http://127.0.0.1:8000/cart/
 - Checkout: http://127.0.0.1:8000/checkout/
 - Admin: http://127.0.0.1:8000/admin/
+ - Paystack Callback: http://127.0.0.1:8000/payments/callback/
+ - Paystack Webhook: http://127.0.0.1:8000/payments/webhook/
 
 ## Cart API (Django Ninja)
 

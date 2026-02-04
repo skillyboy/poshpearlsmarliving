@@ -362,8 +362,8 @@ function openQuickView(data, opener) {
         // More detailed specs placeholder — if data.specs provided, render list
         const specsHtml = (data.specs && data.specs.length) ? (`<ul class="product-specs">` + data.specs.map(s => `<li>${escapeHtml(s)}</li>`).join('') + `</ul>`) : '';
 
-        // build shop link with query params for product deep-link
-        const shopUrl = 'shop.html?product=' + encodeURIComponent(data.title || '') + '&price=' + encodeURIComponent(data.price || '') + '&desc=' + encodeURIComponent(data.desc || '');
+        // build shop link to the live shop page (search by title when available)
+        const shopUrl = data.title ? ('/shop/?q=' + encodeURIComponent(data.title)) : '/shop/';
 
         const content = `
             <div class="modal-media"><img src="${data.img}" alt="${escapeHtml(data.title)}"></div>

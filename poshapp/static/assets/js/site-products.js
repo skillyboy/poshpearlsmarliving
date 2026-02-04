@@ -22,6 +22,11 @@
         }catch(e){ return 0; }
     }
 
+    function shopSearchUrl(term){
+        const q = term ? ('q=' + encodeURIComponent(term)) : '';
+        return q ? ('/shop/?' + q) : '/shop/';
+    }
+
     function collectProducts(){
         const items = [];
 
@@ -54,8 +59,7 @@
                 // make the menu link navigate to shop detail (progressive enhancement)
                 a.addEventListener('click', function(e){
                     e.preventDefault();
-                    const q = 'product=' + encodeURIComponent(title);
-                    window.location.href = 'shop.html?' + q;
+                    window.location.href = shopSearchUrl(title);
                 });
             }catch(e){ }
         });
@@ -65,10 +69,9 @@
             try{
                 const title = card.querySelector('.product-title')?.textContent.trim();
                 if(!title) return;
-                const id = slugify(title);
                 const buy = card.querySelector('.product-actions a.btn-primary');
                 if(buy){
-                    buy.setAttribute('href', 'shop.html?product=' + encodeURIComponent(id));
+                    buy.setAttribute('href', shopSearchUrl(title));
                 }
             }catch(e){ }
         });
