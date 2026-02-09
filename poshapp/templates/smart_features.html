@@ -1,0 +1,51 @@
+﻿{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Smart Features - PoshPearl{% endblock %}
+{% block body_class %}pp-light pp-smart-features{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/smart-features.css' %}?v=20260207">
+{% endblock %}
+
+{% block content %}
+<section class="pp-shell">
+    <div class="container">
+        <div class="pp-commerce-header">
+            <div>
+                <p class="pp-pill"><i class="fa-solid fa-star"></i> Smart features</p>
+                <h1 class="pp-section-title">Smart features that make life easier</h1>
+                <p class="pp-section-subtitle">Manage your devices with real-time alerts and simple controls.</p>
+            </div>
+        </div>
+
+        <div class="pp-features-grid">
+            <div class="pp-card pp-feature-card">
+                <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="App Control">
+                <h3>App Control</h3>
+                <p>Manage devices from your phone and grant access remotely.</p>
+                <div class="pp-feature-actions">
+                    <a class="pp-btn-primary" href="{% url 'products' %}">Explore products</a>
+                </div>
+            </div>
+            <div class="pp-card pp-feature-card">
+                <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="Real-Time Alerts">
+                <h3>Real-Time Alerts</h3>
+                <p>Instant notifications for activity, access, and security events.</p>
+                <div class="pp-feature-actions">
+                    <a class="pp-btn-secondary" href="{% url 'support' %}">Learn more</a>
+                </div>
+            </div>
+            <div class="pp-card pp-feature-card">
+                <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="Secure Access">
+                <h3>Secure Access</h3>
+                <p>Fingerprint, PIN, and RFID access for flexible security.</p>
+                <div class="pp-feature-actions">
+                    <a class="pp-btn-secondary" href="{% url 'products' %}">View devices</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,1406 +1,177 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en" class="no-js">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="Premium smart door locks for effortless home access. Experience PoshPearl Smart Living - elegant, secure, and keyless entry solutions.">
-    <meta name="keywords" content="smart door locks, home security, keyless entry, biometric lock, smart home, Abuja, Nigeria">
-    
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:title" content="PoshPearl Smart Living - Premium Smart Door Locks">
-    <meta property="og:description" content="Say goodbye to fumbling for keys. Experience effortless home access with our premium smart locks.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
-    <meta property="og:url" content="https://poshpearl.com">
-    <meta name="twitter:card" content="summary_large_image">
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#5F1E2C">
-    <link rel="manifest" href="/static/manifest.json">
-    <link rel="apple-touch-icon" href="/icons/icon-192.png">
-    
-    <title>PoshPearl Smart Living - Premium Smart Door Locks</title>
-    
-    <!-- Critical CSS for initial render -->
-    <style>
-        /* Minimal critical CSS */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            overflow-x: hidden;
-            background-color: #FEFEFF;
-        }
-        /* Visible skip link on focus for accessibility */
-        .skip-to-content:focus .sr-only{ 
-            position: static;
-            width: auto;
-            height: auto;
-            margin: 0;
-            overflow: visible;
-            clip: auto;
-            white-space: normal;
-        }
-        .loading-overlay { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            right: 0; 
-            bottom: 0; 
-            background: #FEFEFF; 
-            z-index: 9999; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .loader-spinner { 
-            width: 50px; 
-            height: 50px; 
-            border: 3px solid #CFCFCF; 
-            border-top-color: #F4B000; 
-            border-radius: 50%; 
-            animation: spin 1s linear infinite; 
-        }
-        @keyframes spin { 
-            to { transform: rotate(360deg); } 
-        }
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-        /* Enhanced styles for better look */
-        .hero-actions .btn {
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-        .hero-actions .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-        }
-        .product-card {
-            transition: all 0.3s ease;
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        .ratio {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-    </style>
-    
-    <!-- Preload important images -->
-    <link rel="preload" href="https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" as="image" fetchpriority="high">
-    <!-- Resource hints -->
-    <link rel="preconnect" href="https://images.unsplash.com">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    
-    <!-- Main CSS file (non-blocking): preload then apply to avoid render-blocking while preserving critical inline CSS -->
-    <!-- Bootstrap 5 (bundle) - modernized, no jQuery required -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
+{% load humanize %}
 
-    <link rel="preload" href="{% static 'assets/css/style.css' %}?v=20260204" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{% static 'assets/css/style.css' %}?v=20260204"></noscript>
-    
-    <!-- Google Fonts -->
-    <!-- Improve font loading: preconnect then load -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap">
-    
-        <!-- Font Awesome (non-blocking) -->
-        <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+{% block title %}PoshPearl Smart Living{% endblock %}
 
-        <!-- SEO: canonical & robots -->
-        <link rel="canonical" href="https://poshpearl.com">
-        <meta name="robots" content="index, follow">
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'assets/css/home.css' %}?v=20260205">
+{% endblock %}
 
-        <!-- Structured data: Organization + Website -->
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "PoshPearl Smart Living",
-            "url": "https://poshpearl.com",
-            "logo": "https://poshpearl.com/icons/icon-192.png",
-            "sameAs": [
-                "https://www.facebook.com/",
-                "https://www.instagram.com/poshpearl_smartliving",
-                "https://wa.me/2347041087502"
-            ]
-        }
-        </script>
-</head>
-<body>
-    <!-- Skip to Content Link -->
-    <a href="#main-content" class="skip-to-content" aria-label="Skip to main content">
-        <span class="sr-only">Skip to main content</span>
-    </a>
+{% block body_class %}pp-light pp-home{% endblock %}
 
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay" aria-hidden="true">
-        <div class="loader">
-            <div class="loader-spinner"></div>
-            <div class="loader-text">Loading...</div>
+{% block content %}
+<main class="pp-home">
+  {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
+
+  <section class="pp-home__hero">
+    <div class="container pp-home__hero-grid">
+      <div class="pp-home__hero-copy">
+        <p class="pp-home__eyebrow">Upgrade to smart living</p>
+        <h1>Smarter security and effortless control</h1>
+        <p>Experience seamless home automation and security solutions built for modern living.</p>
+        <div class="pp-home__hero-actions">
+          <a class="pp-btn-gold" href="{% url 'contact' %}">Book Consultation</a>
+          <a class="pp-btn-ghost" href="{% url 'products' %}">Explore our products</a>
         </div>
+      </div>
+      <div class="pp-home__hero-media">
+        <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="Smart lock" loading="lazy"
+             onerror="this.onerror=null;this.src='{{ product_fallback }}';">
+      </div>
     </div>
+  </section>
 
-    <!-- Mobile Overlay -->
-    <div class="overlay" id="overlay" aria-hidden="true"></div>
-
-    <!-- Top Header -->
-    <div class="header-top" role="banner">
-        <div class="container">
-            <div class="header-top-content">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <i class="fas fa-phone" aria-hidden="true"></i>
-                        <span>07041087502</span>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-                        <span>Abuja, Nigeria</span>
-                    </div>
-                </div>
-                <div class="social-links">
-                    <a href="#" class="social-link" aria-label="Facebook">
-                        <i class="fab fa-facebook-f" aria-hidden="true"></i>
-                    </a>
-                    <a href="#" class="social-link" aria-label="Instagram">
-                        <i class="fab fa-instagram" aria-hidden="true"></i>
-                    </a>
-                    <a href="https://wa.me/2347041087502" class="social-link" aria-label="WhatsApp">
-                        <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                    </a>
-                    <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">
-                        <span class="theme-toggle-icon" aria-hidden="true">
-                            <i class="fas fa-moon"></i>
-                        </span>
-                        <span class="theme-toggle-text">Dark mode</span>
-                    </button>
-                </div>
-            </div>
+  <section class="pp-home__features">
+    <div class="container">
+      <h2>Transform your home into a smart home.</h2>
+      <div class="pp-home__feature-grid">
+        <div class="pp-home__feature-card">
+          <i class="fa-solid fa-shield-halved"></i>
+          <h3>Smart Security</h3>
+          <p>Fingerprint locks, cameras, and sensors.</p>
         </div>
+        <div class="pp-home__feature-card">
+          <i class="fa-solid fa-bell"></i>
+          <h3>Smart Alerts</h3>
+          <p>Real‑time notifications for your home.</p>
+        </div>
+        <div class="pp-home__feature-card">
+          <i class="fa-solid fa-sliders"></i>
+          <h3>Full Control</h3>
+          <p>Manage everything from one app.</p>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <!-- Main Header -->
-    <header class="main-header" role="banner">
-        <div class="container">
-            <div class="header-inner">
-                <!-- Logo -->
-                <div class="logo-container">
-                    <a href="/" class="logo" aria-label="PoshPearl Home">
-                        <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="PoshPearl" height="50">
-                    </a>
-                </div>
+  <section class="pp-home__trust">
+    <div class="container">
+      <p>Trusted by thousands of Nigerians</p>
+      <div class="pp-home__logos">
+        <span>Zenith</span>
+        <span>FCMB</span>
+        <span>TGI</span>
+        <span>Paystack</span>
+        <span>Axa Mansard</span>
+      </div>
+    </div>
+  </section>
 
-                <!-- Desktop Navigation -->
-                <nav class="main-nav" aria-label="Main Navigation">
-                    <ul class="nav-list">
-                        <!-- Products Dropdown -->
-                        <li class="nav-item dropdown" data-dropdown="products">
-                            <button id="dropdown-products-toggle" class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="megamenu-products">
-                                Products
-                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                            </button>
-                            <div id="megamenu-products" class="dropdown-menu megamenu" role="menu">
-                                <div class="container">
-                                    <div class="megamenu-content">
-                                        <div class="megamenu-section">
-                                            <h3 class="megamenu-title">Lever & Knob Sets</h3>
-                                            <ul class="megamenu-list">
-                                                <li><a href="#levers" role="menuitem">Levers</a></li>
-                                                <li><a href="#knobs" role="menuitem">Knobs</a></li>
-                                                <li><a href="#entrance-hardware" role="menuitem">Entrance Hardware</a></li>
-                                                <li><a href="#electronic-locks" role="menuitem">Electronic Locks</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="megamenu-section">
-                                            <h3 class="megamenu-title">Security Hardware</h3>
-                                            <ul class="megamenu-list">
-                                                <li><a href="#deadbolts" role="menuitem">Deadbolts</a></li>
-                                                <li><a href="#mortice-locks" role="menuitem">Mortice Locks</a></li>
-                                                <li><a href="#flush-security-bolts" role="menuitem">Flush & Security Bolts</a></li>
-                                                <li><a href="#patio-hardware" role="menuitem">Patio Hardware</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="megamenu-section">
-                                            <h3 class="megamenu-title">Pull Handles</h3>
-                                            <ul class="megamenu-list">
-                                                <li><a href="#pull-handles" role="menuitem">Pull Handles</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="megamenu-section">
-                                            <h3 class="megamenu-title">Auxillary</h3>
-                                            <ul class="megamenu-list">
-                                                <li><a href="#accessories" role="menuitem">Accessories</a></li>
-                                                <li><a href="#cavity-sets" role="menuitem">Cavity Sets</a></li>
-                                                <li><a href="#latches" role="menuitem">Latches</a></li>
-                                                <li><a href="#spare-parts" role="menuitem">Spare Parts</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="megamenu-section">
-                                            <h3 class="megamenu-title">Sliding Door Hardware</h3>
-                                            <ul class="megamenu-list">
-                                                <li><a href="#sliding-cavity-sets" role="menuitem">Cavity Sets</a></li>
-                                                <li><a href="#flush-pulls" role="menuitem">Flush Pulls</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+  <section class="pp-home__devices">
+    <div class="container">
+      <div class="pp-home__section-head">
+        <h2>Smart devices, simple living</h2>
+        <a href="{% url 'products' %}">View all products</a>
+      </div>
+      <div class="pp-home__device-grid">
+        {% for product in products|slice:":3" %}
+        <article class="pp-home__device-card">
+          {% with hero_image=product.images.first %}
+            <img src="{{ hero_image.image.url|default:product_fallback }}" alt="{{ product.name }}" loading="lazy"
+                 onerror="this.onerror=null;this.src='{{ product_fallback }}';">
+          {% endwith %}
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.short_description|default:product.description|truncatechars:80 }}</p>
+          <a class="pp-btn-ghost" href="{% url 'product_detail_products' product.slug %}">Camera →</a>
+        </article>
+        {% empty %}
+        <article class="pp-home__device-card">
+          <img src="{{ product_fallback }}" alt="Smart device">
+          <h3>Smart Locks</h3>
+          <p>Reliable access with biometric security.</p>
+          <a class="pp-btn-ghost" href="{% url 'products' %}">Explore →</a>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
 
-                        <!-- Collections Dropdown -->
-                        <li class="nav-item dropdown" data-dropdown="collections">
-                            <button id="dropdown-collections-toggle" class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="megamenu-collections">
-                                Collections
-                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                            </button>
-                            <div id="megamenu-collections" class="dropdown-menu megamenu" role="menu">
-                                <div class="container">
-                                    <div class="megamenu-content">
-                                        <div class="megamenu-section">
-                                            <h3 class="megamenu-title">Ranges</h3>
-                                            <ul class="megamenu-list">
-                                                <li><a href="#avant" role="menuitem">Avant</a></li>
-                                                <li><a href="#neue" role="menuitem">Neue</a></li>
-                                                <li><a href="#choice" role="menuitem">Choice</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="megamenu-section">
-                                            <h3 class="megamenu-title">Finishes</h3>
-                                            <ul class="megamenu-list">
-                                                <li><a href="#satin-brass" role="menuitem">Satin Brass</a></li>
-                                                <li><a href="#matt-black" role="menuitem">Matt Black</a></li>
-                                                <li><a href="#satin-chrome" role="menuitem">Satin Chrome</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="megamenu-section">
-                                            <h3 class="megamenu-title">Endorsed Brands</h3>
-                                            <ul class="megamenu-list">
-                                                <li><a href="#tradepro" role="menuitem">TradePro</a></li>
-                                                <li><a href="#austral-lock" role="menuitem">Austral Lock</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="megamenu-section">
-                                            <h3 class="megamenu-title">Technologies</h3>
-                                            <ul class="megamenu-list">
-                                                <li><a href="#freestyle" role="menuitem">Freestyle</a></li>
-                                                <li><a href="#mode" role="menuitem">Mode</a></li>
-                                                <li><a href="#liberty" role="menuitem">Liberty</a></li>
-                                                <li><a href="#haven" role="menuitem">Haven</a></li>
-                                                <li><a href="#trilock" role="menuitem">Trilock</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="megamenu-cta">
-                                            <a href="#style-guide" class="cta-link">
-                                                <span>View our Style Guide 2025</span>
-                                                <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+  <section class="pp-home__pricing">
+    <div class="container">
+      <div class="pp-home__section-head">
+        <h2>Clear pricing, flexible plans</h2>
+        <p>Simple pricing for smarter living. Choose the plan that fits your needs.</p>
+      </div>
+      <div class="pp-home__pricing-grid">
+        <article class="pp-home__plan">
+          <h3>Basic</h3>
+          <p class="pp-home__plan-price">₦5,000<span>/mo</span></p>
+          <ul>
+            <li>Control up to 5 devices</li>
+            <li>Basic automations</li>
+            <li>Email support</li>
+          </ul>
+          <button class="pp-btn-ghost">Get started</button>
+        </article>
+        <article class="pp-home__plan is-featured">
+          <h3>Pro</h3>
+          <p class="pp-home__plan-price">₦15,000<span>/mo</span></p>
+          <ul>
+            <li>Control up to 15 devices</li>
+            <li>Smart automations</li>
+            <li>Priority support</li>
+          </ul>
+          <button class="pp-btn-gold">Get started</button>
+        </article>
+        <article class="pp-home__plan">
+          <h3>Enterprise</h3>
+          <p class="pp-home__plan-price">Custom</p>
+          <ul>
+            <li>Unlimited devices</li>
+            <li>Dedicated account</li>
+            <li>Custom integrations</li>
+          </ul>
+          <button class="pp-btn-ghost">Contact us</button>
+        </article>
+      </div>
+    </div>
+  </section>
 
-                        <!-- About Us -->
-                        <li class="nav-item">
-                            <a href="#about" class="nav-link">About us</a>
-                        </li>
-
-                        <!-- Style Hub -->
-                        <li class="nav-item">
-                            <a href="#style-hub" class="nav-link">Style Hub</a>
-                        </li>
-
-                        <!-- DIY Hub Dropdown -->
-                        <li class="nav-item dropdown" data-dropdown="diy">
-                            <button id="dropdown-diy-toggle" class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="megamenu-diy">
-                                DIY Hub
-                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                            </button>
-                            <div id="megamenu-diy" class="dropdown-menu megamenu" role="menu">
-                                <div class="container">
-                                    <div class="megamenu-content">
-                                        <div class="megamenu-section">
-                                            <h3 class="megamenu-title">Quick Links</h3>
-                                            <ul class="megamenu-list">
-                                                <li><a href="#hardware-tips" role="menuitem">Hardware Tips</a></li>
-                                                <li><a href="#ultimate-guide" role="menuitem">The Ultimate Guide</a></li>
-                                                <li><a href="#blog" role="menuitem">Blog</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="megamenu-section">
-                                            <h3 class="megamenu-title">Other Hubs</h3>
-                                            <ul class="megamenu-list">
-                                                <li><a href="#style-hub-inner" role="menuitem">Style Hub</a></li>
-                                                <li><a href="#smart-home-hub" role="menuitem">Smart Home Hub</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="megamenu-section">
-                                            <h3 class="megamenu-title">Hardware Essentials</h3>
-                                            <ul class="megamenu-list">
-                                                <li><a href="#hardware-101" role="menuitem">Hardware 101</a></li>
-                                                <li><a href="#glossary" role="menuitem">A - Z Hardware Glossary</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="megamenu-section">
-                                            <h3 class="megamenu-title">Help Centre</h3>
-                                            <ul class="megamenu-list">
-                                                <li><a href="#faq" role="menuitem">FAQ</a></li>
-                                                <li><a href="#document-library" role="menuitem">Document Library</a></li>
-                                                <li><a href="#contact" role="menuitem">Contact Us</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-
-                        <!-- Smart Home Hub -->
-                        <li class="nav-item">
-                            <a href="#smart-home-hub" class="nav-link">Smart Home Hub</a>
-                        </li>
-
-                        <!-- Help Centre -->
-                        <li class="nav-item">
-                            <a href="#help" class="nav-link">Help Centre</a>
-                        </li>
-
-                        <!-- CTA Button -->
-                        <li class="nav-item cta-item">
-                            <a href="/shop/" class="nav-cta">
-                                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
-                                <span>Shop Now</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-
-                <div class="header-actions">
-                    <a href="/shop/" class="nav-cta header-cta">
-                        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
-                        <span>Shop Now</span>
-                    </a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobileNav">
-                    <span class="menu-icon"></span>
-                    <span class="menu-icon"></span>
-                    <span class="menu-icon"></span>
-                </button>
-            </div>
+  <section class="pp-home__help">
+    <div class="container">
+      <div class="pp-home__section-head">
+        <h2>How can we help you?</h2>
+        <div class="pp-home__help-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="search" placeholder="Search for answers...">
         </div>
-    </header>
+      </div>
+      <div class="pp-home__help-grid">
+        <article><h3>Getting Started</h3><p>Guides for setting up your smart devices.</p></article>
+        <article><h3>Managing Devices</h3><p>Information for maintenance and automations.</p></article>
+        <article><h3>Account & Billing</h3><p>Payment subscriptions and billing info.</p></article>
+        <article><h3>Troubleshooting</h3><p>Solutions to common issues and errors.</p></article>
+      </div>
+      <div class="pp-home__help-links">
+        <a href="{% url 'support' %}">Live Chat</a>
+        <a href="{% url 'support' %}">24/7 Support</a>
+        <a href="{% url 'support' %}">Email Support</a>
+      </div>
+    </div>
+  </section>
 
-    <!-- Mobile Navigation -->
-    <nav class="mobile-nav" id="mobileNav" aria-label="Mobile Navigation" aria-hidden="true">
-        <div class="mobile-nav-header">
-            <div class="mobile-logo">
-                <a href="/" class="logo">
-                    <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="PoshPearl" height="40">
-                </a>
-            </div>
-            <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close mobile menu">
-                <i class="fas fa-times" aria-hidden="true"></i>
-            </button>
+  <section class="pp-home__notfound">
+    <div class="container">
+      <div class="pp-home__notfound-card">
+        <h2>404</h2>
+        <p>Oops! Page not found.</p>
+        <div class="pp-home__notfound-actions">
+          <a class="pp-btn-gold" href="{% url 'home' %}">Go back home</a>
+          <a class="pp-btn-ghost" href="{% url 'support' %}">Search</a>
         </div>
-        
-        <div class="mobile-nav-content">
-            <ul class="mobile-nav-list">
-                <!-- Products Mobile -->
-                <li class="mobile-nav-item accordion">
-                    <button class="mobile-nav-link accordion-toggle" aria-expanded="false">
-                        Products
-                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                    </button>
-                    <div class="accordion-content" hidden>
-                        <div class="mobile-submenu">
-                            <div class="mobile-submenu-section">
-                                <h4>Lever & Knob Sets</h4>
-                                <ul>
-                                    <li><a href="#levers">Levers</a></li>
-                                    <li><a href="#knobs">Knobs</a></li>
-                                    <li><a href="#entrance-hardware">Entrance Hardware</a></li>
-                                    <li><a href="#electronic-locks">Electronic Locks</a></li>
-                                </ul>
-                            </div>
-                            <div class="mobile-submenu-section">
-                                <h4>Security Hardware</h4>
-                                <ul>
-                                    <li><a href="#deadbolts">Deadbolts</a></li>
-                                    <li><a href="#mortice-locks">Mortice Locks</a></li>
-                                    <li><a href="#flush-security-bolts">Flush & Security Bolts</a></li>
-                                    <li><a href="#patio-hardware">Patio Hardware</a></li>
-                                </ul>
-                            </div>
-                            <div class="mobile-submenu-section">
-                                <h4>Pull Handles</h4>
-                                <ul>
-                                    <li><a href="#pull-handles">Pull Handles</a></li>
-                                </ul>
-                            </div>
-                            <div class="mobile-submenu-section">
-                                <h4>Auxillary</h4>
-                                <ul>
-                                    <li><a href="#accessories">Accessories</a></li>
-                                    <li><a href="#cavity-sets">Cavity Sets</a></li>
-                                    <li><a href="#latches">Latches</a></li>
-                                    <li><a href="#spare-parts">Spare Parts</a></li>
-                                </ul>
-                            </div>
-                            <div class="mobile-submenu-section">
-                                <h4>Sliding Door Hardware</h4>
-                                <ul>
-                                    <li><a href="#sliding-cavity-sets">Cavity Sets</a></li>
-                                    <li><a href="#flush-pulls">Flush Pulls</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- Collections Mobile -->
-                <li class="mobile-nav-item accordion">
-                    <button class="mobile-nav-link accordion-toggle" aria-expanded="false">
-                        Collections
-                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                    </button>
-                    <div class="accordion-content" hidden>
-                        <div class="mobile-submenu">
-                            <div class="mobile-submenu-section">
-                                <h4>Ranges</h4>
-                                <ul>
-                                    <li><a href="#avant">Avant</a></li>
-                                    <li><a href="#neue">Neue</a></li>
-                                    <li><a href="#choice">Choice</a></li>
-                                </ul>
-                            </div>
-                            <div class="mobile-submenu-section">
-                                <h4>Finishes</h4>
-                                <ul>
-                                    <li><a href="#satin-brass">Satin Brass</a></li>
-                                    <li><a href="#matt-black">Matt Black</a></li>
-                                    <li><a href="#satin-chrome">Satin Chrome</a></li>
-                                </ul>
-                            </div>
-                            <div class="mobile-submenu-section">
-                                <h4>Endorsed Brands</h4>
-                                    <ul>
-                                    <li><a href="#tradepro">TradePro</a></li>
-                                    <li><a href="#austral-lock">Austral Lock</a></li>
-                                </ul>
-                            </div>
-                            <div class="mobile-submenu-section">
-                                <h4>Technologies</h4>
-                                <ul>
-                                    <li><a href="#freestyle">Freestyle</a></li>
-                                    <li><a href="#mode">Mode</a></li>
-                                    <li><a href="#liberty">Liberty</a></li>
-                                    <li><a href="#haven">Haven</a></li>
-                                    <li><a href="#trilock">Trilock</a></li>
-                                </ul>
-                            </div>
-                            <div class="mobile-submenu-cta">
-                                <a href="#style-guide" class="mobile-cta-link">
-                                    View our Style Guide 2025
-                                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- About Us Mobile -->
-                <li class="mobile-nav-item">
-                    <a href="#about" class="mobile-nav-link">About us</a>
-                </li>
-
-                <!-- Style Hub Mobile -->
-                <li class="mobile-nav-item">
-                    <a href="#style-hub" class="mobile-nav-link">Style Hub</a>
-                </li>
-
-                <!-- DIY Hub Mobile -->
-                <li class="mobile-nav-item accordion">
-                    <button class="mobile-nav-link accordion-toggle" aria-expanded="false">
-                        DIY Hub
-                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                    </button>
-                    <div class="accordion-content" hidden>
-                        <div class="mobile-submenu">
-                            <div class="mobile-submenu-section">
-                                <h4>Quick Links</h4>
-                                <ul>
-                                    <li><a href="#hardware-tips">Hardware Tips</a></li>
-                                    <li><a href="#ultimate-guide">The Ultimate Guide</a></li>
-                                    <li><a href="#blog">Blog</a></li>
-                                </ul>
-                            </div>
-                            <div class="mobile-submenu-section">
-                                <h4>Other Hubs</h4>
-                                <ul>
-                                    <li><a href="#style-hub-inner">Style Hub</a></li>
-                                    <li><a href="#smart-home-hub">Smart Home Hub</a></li>
-                                </ul>
-                            </div>
-                            <div class="mobile-submenu-section">
-                                <h4>Hardware Essentials</h4>
-                                <ul>
-                                    <li><a href="#hardware-101">Hardware 101</a></li>
-                                    <li><a href="#glossary">A - Z Hardware Glossary</a></li>
-                                </ul>
-                            </div>
-                            <div class="mobile-submenu-section">
-                                <h4>Help Centre</h4>
-                                <ul>
-                                    <li><a href="#faq">FAQ</a></li>
-                                    <li><a href="#document-library">Document Library</a></li>
-                                    <li><a href="#contact">Contact Us</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- Smart Home Hub Mobile -->
-                <li class="mobile-nav-item">
-                    <a href="#smart-home-hub" class="mobile-nav-link">Smart Home Hub</a>
-                </li>
-
-                <!-- Help Centre Mobile -->
-                <li class="mobile-nav-item">
-                    <a href="#help" class="mobile-nav-link">Help Centre</a>
-                </li>
-            </ul>
-            
-            <div class="mobile-nav-footer">
-                <div class="mobile-contact">
-                    <a href="tel:07041087502" class="mobile-contact-link">
-                        <i class="fas fa-phone" aria-hidden="true"></i>
-                        <span>07041087502</span>
-                    </a>
-                    <a href="mailto:info@poshpearl.com" class="mobile-contact-link">
-                        <i class="fas fa-envelope" aria-hidden="true"></i>
-                        <span>info@poshpearl.com</span>
-                    </a>
-                </div>
-                <div class="mobile-social">
-                    <a href="#" class="mobile-social-link" aria-label="Facebook">
-                        <i class="fab fa-facebook-f" aria-hidden="true"></i>
-                    </a>
-                    <a href="#" class="mobile-social-link" aria-label="Instagram">
-                        <i class="fab fa-instagram" aria-hidden="true"></i>
-                    </a>
-                    <a href="https://wa.me/2347041087502" class="mobile-social-link" aria-label="WhatsApp">
-                        <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero" aria-label="Hero section">
-        <div class="hero-background" role="presentation">
-            <div class="hero-overlay"></div>
-            <div class="hero-pattern"></div>
-            <!-- Hero carousel: subtle images sliding under content (visual only) -->
-            <div class="hero-carousel" aria-hidden="true">
-                <div class="hero-carousel-track">
-                    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1558036117-15e82a2c9a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80');"></div>
-                    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80');"></div>
-                    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80');"></div>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-                <div class="hero-content animate-fast">
-                <div class="hero-badge">
-                    <a class="btn btn-primary" href="{% url 'shop' %}">
-                        <span>Explore Products</span>
-                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <h1 class="hero-title">
-                    <span class="hero-line">Say Goodbye to</span>
-                    <span class="hero-line highlight">Fumbling for Keys</span>
-                </h1>
-                <p class="hero-subtitle">Seamless entry. Exceptional style.</p>
-                <p class="hero-description">Unlock a smarter, safer home &mdash; elegant hardware engineered for daily life. Browse our curated collections to find the model that matches your door and style.</p>
-                <div class="hero-actions">
-                    <a href="{% url 'shop' %}" class="btn btn-primary btn-large">
-                        <span>Explore Products</span>
-                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                    </a>
-                    <a href="#contact" class="btn btn-secondary">
-                        <span>Contact Us</span>
-                        <i class="fas fa-phone" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <div class="hero-features">
-                    <div class="feature-item">
-                        <i class="fas fa-shield-alt" aria-hidden="true"></i>
-                        <span>Advanced Security</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-bolt" aria-hidden="true"></i>
-                        <span>Smart Technology</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-award" aria-hidden="true"></i>
-                        <span>Premium Quality</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="hero-scroll" aria-hidden="true">
-            <span>Scroll to explore</span>
-            <i class="fas fa-chevron-down" aria-hidden="true"></i>
-        </div>
-    </section>
-
-    <!-- Main Content -->
-    <main id="main-content" role="main">
-        <div id="about" class="section-anchor" aria-hidden="true"></div>
-        <div id="style-hub" class="section-anchor" aria-hidden="true"></div>
-        <div id="style-hub-inner" class="section-anchor" aria-hidden="true"></div>
-        <div id="smart-home-hub" class="section-anchor" aria-hidden="true"></div>
-        <div id="help" class="section-anchor" aria-hidden="true"></div>
-        <!-- Products Section -->
-        <section class="products-section" id="products" aria-labelledby="products-title">
-            <div class="container">
-                <div class="section-header">
-                    <div class="section-badge">
-                        <span>Our Collection</span>
-                    </div>
-                    <h2 id="products-title" class="section-title">Premium Smart Lock Collection</h2>
-                    <p class="section-description">Discover intelligent locks designed for modern living &mdash; secure, stylish, and easy to use. Not sure which to pick? Visit our Shop to compare features, pricing, and request a personalised quote.</p>
-                </div>
-                
-                <div class="products-grid animate-slow" data-skeleton>
-                    <!-- D2pro Product -->
-                    <article class="product-card" data-category="smart-locks">
-                        <div class="product-badge">Featured</div>
-                        <div class="product-image">
-                               <img src="{% static 'assets/images/products/d2pro1.jpeg' %}"
-                                   alt="D2pro Smart Lock - Premium smart lock with advanced features"
-                                   loading="lazy"
-                                   width="800"
-                                   height="600">
-                            <div class="product-overlay">
-                                <button class="product-quick-view" aria-label="Quick view D2pro">
-                                    <i class="fas fa-eye" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="product-content">
-                            <div class="product-category">Smart Lock</div>
-                            <h3 class="product-title">D2pro Smart Lock</h3>
-                            <p class="product-description">Premium smart lock with fingerprint recognition, keypad entry, and Wi-Fi connectivity for remote access and control.</p>
-                            <div class="product-features">
-                                <span class="feature-tag">
-                                    <i class="fas fa-fingerprint" aria-hidden="true"></i>
-                                    Fingerprint
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="fas fa-keypad" aria-hidden="true"></i>
-                                    Keypad
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="fas fa-wifi" aria-hidden="true"></i>
-                                    Wi-Fi
-                                </span>
-                            </div>
-                            <div class="product-footer">
-                                <div class="product-price">
-                                    <span class="price">₦85,000</span>
-                                    <span class="price-note">Including VAT</span>
-                                </div>
-                                <div class="product-actions">
-                                    <button class="btn btn-outline" aria-label="Add to wishlist">
-                                        <i class="far fa-heart" aria-hidden="true"></i>
-                                    </button>
-                                                    <a href="/shop/" class="btn btn-primary">
-                                                        <span>See on Shop</span>
-                                                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-                
-                <div class="section-cta">
-                    <a href="/shop/" class="btn btn-secondary btn-large">
-                        <span>View All Products</span>
-                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Features Section -->
-        <section class="features-section" id="features" aria-labelledby="features-title">
-            <div class="container">
-                <div class="section-header">
-                    <div class="section-badge">
-                        <span>Why Choose Us</span>
-                    </div>
-                    <h2 id="features-title" class="section-title">Built with Premium Features</h2>
-                    <p class="section-description">Experience the ultimate in security and convenience with our advanced features</p>
-                </div>
-                
-                <div class="features-grid" data-skeleton>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-fingerprint" aria-hidden="true"></i>
-                        </div>
-                        <h3 class="feature-title">Biometric Access</h3>
-                        <p class="feature-description">Quick and secure access with fingerprint authentication. Register up to 100 fingerprints for family and trusted guests.</p>
-                        <ul class="feature-list">
-                            <li>Instant recognition</li>
-                            <li>Multiple profiles</li>
-                            <li>Backup options</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-keyboard" aria-hidden="true"></i>
-                        </div>
-                        <h3 class="feature-title">Illuminated Keypad</h3>
-                        <p class="feature-description">Backlit keypad for easy access in low-light conditions. Create temporary or permanent PIN codes for guests.</p>
-                        <ul class="feature-list">
-                            <li>LED backlight</li>
-                            <li>Custom PINs</li>
-                            <li>One-time codes</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-id-card" aria-hidden="true"></i>
-                        </div>
-                        <h3 class="feature-title">RFID Tag Access</h3>
-                        <p class="feature-description">Convenient entry with RFID tags. Perfect for family members who prefer not to use PIN codes or fingerprints.</p>
-                        <ul class="feature-list">
-                            <li>Contactless entry</li>
-                            <li>Multiple tags</li>
-                            <li>Easy to carry</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-key" aria-hidden="true"></i>
-                        </div>
-                        <h3 class="feature-title">Key Override</h3>
-                        <p class="feature-description">Traditional key access for backup in case of electronic failure. Peace of mind with mechanical override.</p>
-                        <ul class="feature-list">
-                            <li>Emergency access</li>
-                            <li>Standard key</li>
-                            <li>Reliable backup</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-user-clock" aria-hidden="true"></i>
-                        </div>
-                        <h3 class="feature-title">Auto-Lock</h3>
-                        <p class="feature-description">Automatically lock your door after a set period. Never worry again if you forgot to lock the door.</p>
-                        <ul class="feature-list">
-                            <li>Customizable timer</li>
-                            <li>Manual override</li>
-                            <li>Status indicator</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-bell" aria-hidden="true"></i>
-                        </div>
-                        <h3 class="feature-title">Security Alerts</h3>
-                        <p class="feature-description">Receive instant notifications if someone tries to tamper with your lock. Enhanced security for peace of mind.</p>
-                        <ul class="feature-list">
-                            <li>Real-time alerts</li>
-                            <li>Tamper detection</li>
-                            <li>Activity logs</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Smart Control Section -->
-        <section class="smart-control-section" id="smart-control" aria-labelledby="smart-control-title">
-            <div class="container">
-                <div class="smart-control-grid">
-                    <div class="smart-control-content">
-                        <div class="section-badge">
-                            <span>Smart Living</span>
-                        </div>
-                        <h2 id="smart-control-title" class="section-title">Control Your Home From Anywhere</h2>
-                        <p class="section-description">The <strong>PoshPearl Wi-Fi Bridge</strong> pairs your smart locks to your home Wi-Fi for complete remote access control.</p>
-                        
-                        <div class="features-list">
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <i class="fas fa-check-circle" aria-hidden="true"></i>
-                                </div>
-                                <div class="feature-text">
-                                    <h3>Smartphone Notifications</h3>
-                                    <p>Receive instant alerts on your phone for every access event</p>
-                                </div>
-                            </div>
-                            
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <i class="fas fa-check-circle" aria-hidden="true"></i>
-                                </div>
-                                <div class="feature-text">
-                                    <h3>Remote Access Management</h3>
-                                    <p>Grant or revoke access to family members and guests remotely</p>
-                                </div>
-                            </div>
-                            
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <i class="fas fa-check-circle" aria-hidden="true"></i>
-                                </div>
-                                <div class="feature-text">
-                                    <h3>Real-time Monitoring</h3>
-                                    <p>Monitor who enters and leaves your home with detailed activity logs</p>
-                                </div>
-                            </div>
-                            
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <i class="fas fa-check-circle" aria-hidden="true"></i>
-                                </div>
-                                <div class="feature-text">
-                                    <h3>Voice Assistant Integration</h3>
-                                    <p>Control your locks with Google Assistant or Amazon Alexa</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="app-badges">
-                            <a href="#" class="app-badge app-badge-ios" aria-label="Download on App Store">
-                                <i class="fab fa-apple" aria-hidden="true"></i>
-                                <div class="app-badge-text">
-                                    <span>Download on the</span>
-                                    <strong>App Store</strong>
-                                </div>
-                            </a>
-                            <a href="#" class="app-badge app-badge-android" aria-label="Get it on Google Play">
-                                <i class="fab fa-google-play" aria-hidden="true"></i>
-                                <div class="app-badge-text">
-                                    <span>Get it on</span>
-                                    <strong>Google Play</strong>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="smart-control-image">
-                        <div class="image-container">
-                            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                                 alt="Smartphone controlling PoshPearl smart lock"
-                                 loading="lazy"
-                                 width="800"
-                                 height="1000">
-                            <div class="image-overlay">
-                                <div class="app-preview">
-                                    <div class="app-screen">
-                                        <div class="app-header">
-                                            <i class="fas fa-lock" aria-hidden="true"></i>
-                                            <span>PoshPearl Smart</span>
-                                        </div>
-                                        <div class="app-content">
-                                            <div class="app-status">
-                                                <span class="status-label">Front Door</span>
-                                                <span class="status-indicator locked">
-                                                    <i class="fas fa-lock" aria-hidden="true"></i>
-                                                    Locked
-                                                </span>
-                                            </div>
-                                            <div class="app-actions">
-                                                <button class="app-btn unlock" aria-label="Unlock door">
-                                                    <i class="fas fa-unlock" aria-hidden="true"></i>
-                                                    <span>Unlock</span>
-                                                </button>
-                                                <button class="app-btn lock" aria-label="Lock door">
-                                                    <i class="fas fa-lock" aria-hidden="true"></i>
-                                                    <span>Lock</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Installation Section -->
-        <!-- Video Demos -->
-        <section class="video-demos my-5" id="videoDemos" aria-labelledby="videoDemos-title">
-            <div class="container">
-                <div class="section-header">
-                    <div class="section-badge"><span>Product Videos</span></div>
-                    <h2 id="videoDemos-title" class="section-title">D2pro Smart Lock — Video Demos</h2>
-                    <p class="section-description">Short demos showing features and quick installation highlights.</p>
-                </div>
-
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <div class="ratio ratio-16x9">
-                            <iframe src="https://www.youtube.com/embed/wXMbG4uRit4" title="D2pro Smart Lock - Demo 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="ratio ratio-16x9">
-                            <iframe src="https://www.youtube.com/embed/rUDblgJjmAw" title="D2pro Smart Lock - Demo 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section class="installation-section" id="installation" aria-labelledby="installation-title">
-            <div class="container">
-                <div class="section-header">
-                    <div class="section-badge">
-                        <span>Easy Setup</span>
-                    </div>
-                    <h2 id="installation-title" class="section-title">Professional Installation & Support</h2>
-                    <p class="section-description">Our team ensures seamless installation and ongoing support for your smart lock system</p>
-                </div>
-                
-                <div class="installation-steps">
-                    <div class="step">
-                        <div class="step-number">01</div>
-                        <div class="step-content">
-                            <h3 class="step-title">Consultation</h3>
-                            <p class="step-description">We assess your needs and recommend the perfect smart lock solution for your home</p>
-                            <ul class="step-features">
-                                <li>Free consultation</li>
-                                <li>Site assessment</li>
-                                <li>Custom solution</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="step">
-                        <div class="step-number">02</div>
-                        <div class="step-content">
-                            <h3 class="step-title">Professional Installation</h3>
-                            <p class="step-description">Our certified technicians install your smart lock with precision and care</p>
-                            <ul class="step-features">
-                                <li>Expert installation</li>
-                                <li>Clean workmanship</li>
-                                <li>Full testing</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="step">
-                        <div class="step-number">03</div>
-                        <div class="step-content">
-                            <h3 class="step-title">Setup & Configuration</h3>
-                            <p class="step-description">We configure your smart lock and connect it to your home network and smartphone</p>
-                            <ul class="step-features">
-                                <li>Wi-Fi setup</li>
-                                <li>App configuration</li>
-                                <li>User training</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="step">
-                        <div class="step-number">04</div>
-                        <div class="step-content">
-                            <h3 class="step-title">Ongoing Support</h3>
-                            <p class="step-description">24/7 support and regular maintenance to ensure your system works perfectly</p>
-                            <ul class="step-features">
-                                <li>24/7 support</li>
-                                <li>Regular updates</li>
-                                <li>Warranty coverage</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="installation-cta">
-                    <div class="cta-content">
-                        <h3>Ready for Professional Installation?</h3>
-                        <p>Contact us today to schedule your smart lock installation</p>
-                    </div>
-                    <div class="cta-actions">
-                        <a href="tel:07041087502" class="btn btn-primary btn-large">
-                            <i class="fas fa-phone" aria-hidden="true"></i>
-                            <span>Call Now: 07041087502</span>
-                        </a>
-                        <a href="#contact" class="btn btn-secondary">
-                            <i class="fas fa-calendar" aria-hidden="true"></i>
-                            <span>Schedule Consultation</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section class="contact-section" id="contact" aria-labelledby="contact-title">
-            <div class="container">
-                <div class="section-header">
-                    <div class="section-badge">
-                        <span>Get In Touch</span>
-                    </div>
-                    <h2 id="contact-title" class="section-title">Contact PoshPearl Smart Living</h2>
-                    <p class="section-description">Ready to upgrade your home security? Our team will happily answer your questions</p>
-                </div>
-                
-                <div class="contact-grid">
-                    <div class="contact-form-container">
-                        <form id="contactForm" class="contact-form" novalidate>
-                            <div class="form-header">
-                                <h3>Send us a message</h3>
-                                <p>Fill out the form below and we'll get back to you within 24 hours</p>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="name" class="form-label">Full Name *</label>
-                                <input type="text" id="name" name="name" class="form-input" required placeholder="Your full name">
-                                <div class="error-message" id="name-error"></div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="email" class="form-label">Email Address *</label>
-                                    <input type="email" id="email" name="email" class="form-input" required placeholder="your.email@example.com">
-                                    <div class="error-message" id="email-error"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="phone" class="form-label">Phone Number *</label>
-                                    <input type="tel" id="phone" name="phone" class="form-input" required placeholder="0704 108 7502">
-                                    <div class="error-message" id="phone-error"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="product" class="form-label">Product Interest</label>
-                                <select id="product" name="product" class="form-select">
-                                    <option value="">Select a product</option>
-                                    <option value="deadbolt">Smart Deadbolt Pro</option>
-                                    <option value="entrance">Elegance Series</option>
-                                    <option value="lever">Luxury Edition</option>
-                                    <option value="all">All Products</option>
-                                    <option value="consultation">Professional Consultation</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="message" class="form-label">Your Message</label>
-                                <textarea id="message" name="message" class="form-textarea" placeholder="Tell us about your requirements or ask any questions..."></textarea>
-                            </div>
-                            
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input type="checkbox" id="newsletter" name="newsletter" class="form-check-input">
-                                    <label for="newsletter" class="form-check-label">
-                                        Subscribe to our newsletter for updates and promotions
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <div class="privacy-note">
-                                <i class="fas fa-shield-alt" aria-hidden="true"></i>
-                                <span>By submitting this form, you agree to our Privacy Policy and consent to be contacted by PoshPearl.</span>
-                            </div>
-                            
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input type="checkbox" id="humanVerify" class="form-check-input" required>
-                                    <label for="humanVerify" class="form-check-label">
-                                        I verify that I am a human and not a robot
-                                    </label>
-                                </div>
-                                <div class="error-message" id="verify-error"></div>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary btn-submit" id="submitBtn">
-                                <span class="btn-text">Send Message</span>
-                                <i class="fas fa-paper-plane" aria-hidden="true"></i>
-                            </button>
-                        </form>
-                    </div>
-                    
-                    <div class="contact-info-container">
-                        <div class="contact-info-card">
-                            <div class="contact-info-header">
-                                <h3>Contact Information</h3>
-                                <p>We're here to help you with all your smart lock needs</p>
-                            </div>
-                            
-                            <div class="contact-info-list">
-                                <div class="contact-info-item">
-                                    <div class="contact-icon">
-                                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="contact-details">
-                                        <h4>Visit Our Showroom</h4>
-                                        <address>
-                                            CAF95 Kaura Market,<br>
-                                            Opposite Prince and Princess Estate,<br>
-                                            Abuja, Nigeria
-                                        </address>
-                                        <a href="https://maps.google.com/?q=CAF95+Kaura+Market+Abuja" class="contact-link" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-directions" aria-hidden="true"></i>
-                                            <span>Get Directions</span>
-                                        </a>
-                                    </div>
-                                </div>
-                                
-                                <div class="contact-info-item">
-                                    <div class="contact-icon">
-                                        <i class="fas fa-phone" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="contact-details">
-                                        <h4>Call Us Now</h4>
-                                        <a href="tel:07041087502" class="contact-phone">07041087502</a>
-                                        <p class="contact-hours">Monday - Friday: 9AM - 6PM<br>Saturday: 10AM - 4PM</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="contact-info-item">
-                                    <div class="contact-icon">
-                                        <i class="fas fa-envelope" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="contact-details">
-                                        <h4>Email Us</h4>
-                                        <a href="mailto:info@poshpearl.com" class="contact-email">info@poshpearl.com</a>
-                                        <p class="contact-response">We respond within 24 hours</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="contact-info-item">
-                                    <div class="contact-icon">
-                                        <i class="fab fa-instagram" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="contact-details">
-                                        <h4>Follow Us</h4>
-                                        <a href="https://instagram.com/poshpearl_smartliving" class="contact-social" target="_blank" rel="noopener noreferrer">
-                                            @poshpearl_smartliving
-                                        </a>
-                                        <p class="contact-social-desc">Latest updates and inspiration</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="contact-actions">
-                                <a href="tel:07041087502" class="btn btn-primary btn-block">
-                                    <i class="fas fa-phone" aria-hidden="true"></i>
-                                    <span>Call Now</span>
-                                </a>
-                                <a href="https://wa.me/2347041087502" class="btn btn-secondary btn-block" target="_blank">
-                                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                                    <span>WhatsApp Us</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="main-footer" role="contentinfo">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-grid">
-                    <div class="footer-column">
-                        <div class="footer-logo">
-                            <a href="/" class="logo">
-                                <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="PoshPearl" height="40">
-                            </a>
-                            <p class="footer-description">Redefining Home Security with Premium Smart Living Solutions</p>
-                            <div class="footer-social">
-                                <a href="#" class="social-link" aria-label="Facebook">
-                                    <i class="fab fa-facebook-f" aria-hidden="true"></i>
-                                </a>
-                                <a href="#" class="social-link" aria-label="Instagram">
-                                    <i class="fab fa-instagram" aria-hidden="true"></i>
-                                </a>
-                                <a href="#" class="social-link" aria-label="Twitter">
-                                    <i class="fab fa-twitter" aria-hidden="true"></i>
-                                </a>
-                                <a href="https://wa.me/2347041087502" class="social-link" aria-label="WhatsApp">
-                                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="footer-column">
-                        <h4 class="footer-title">Products</h4>
-                        <ul class="footer-links">
-                            <li><a href="#products">Smart Deadbolt</a></li>
-                            <li><a href="#products">Smart Entrance Lock</a></li>
-                            <li><a href="#products">Smart Lever Lock</a></li>
-                            <li><a href="#smart-control">Wi-Fi Bridge</a></li>
-                            <li><a href="#products">Accessories</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="footer-column">
-                        <h4 class="footer-title">Support</h4>
-                        <ul class="footer-links">
-                            <li><a href="#installation">Installation Guides</a></li>
-                            <li><a href="#help">Product Manuals</a></li>
-                            <li><a href="#help">FAQs</a></li>
-                            <li><a href="#contact">Warranty</a></li>
-                            <li><a href="#contact">Contact Support</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="footer-column">
-                        <h4 class="footer-title">Company</h4>
-                        <ul class="footer-links">
-                            <li><a href="#about">About Us</a></li>
-                            <li><a href="#contact">Find a Retailer</a></li>
-                            <li><a href="#contact">Professional Installers</a></li>
-                            <li><a href="#contact">Become a Dealer</a></li>
-                            <li><a href="#careers">Careers</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="footer-column">
-                        <h4 class="footer-title">Newsletter</h4>
-                        <div class="newsletter">
-                            <p>Subscribe to get updates on new products and exclusive offers</p>
-                            <form class="newsletter-form">
-                                <div class="newsletter-input">
-                                    <input type="email" placeholder="Your email address" required>
-                                    <button type="submit" aria-label="Subscribe">
-                                        <i class="fas fa-paper-plane" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                                <p class="newsletter-note">We respect your privacy. Unsubscribe at any time.</p>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="footer-bottom">
-                    <div class="footer-bottom-content">
-                        <div class="copyright">
-                            <p>&copy; 2025 PoshPearl Smart Living. All rights reserved.</p>
-                            <p>CAF95 Kaura Market, Opposite Prince and Princess Estate, Abuja, Nigeria</p>
-                        </div>
-                        <div class="footer-legal">
-                            <a href="#privacy">Privacy Policy</a>
-                            <a href="#terms">Terms of Use</a>
-                            <a href="#shipping">Shipping Policy</a>
-                            <a href="#returns">Returns & Refunds</a>
-                            <a href="#sitemap">Sitemap</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Back to Top Button -->
-    <button class="back-to-top" id="backToTop" aria-label="Back to top">
-        <i class="fas fa-chevron-up" aria-hidden="true"></i>
-    </button>
-
-    <!-- Notification Container -->
-    <div class="notification-container" id="notificationContainer" aria-live="polite" aria-atomic="false"></div>
-
-    <!-- JavaScript Files -->
-        <!-- Site product sync (externalized for maintainability) -->
-        <script src="{% static 'assets/js/site-products.js' %}?v=20260204" defer></script>
-        <!-- Client-side contact form validation -->
-        <script src="{% static 'assets/js/contact.js' %}?v=20260204" defer></script>
-        <script src="{% static 'assets/js/functions.js' %}?v=20260204" defer></script>
-        <!-- Load Bootstrap 4.4.1 dependencies and JS (jQuery, Popper, Bootstrap) before our scripts -->
-        <!-- Bootstrap 5 bundle (includes Popper) -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer crossorigin="anonymous"></script>
-
-        <script src="{% static 'assets/js/animations.js' %}?v=20260204" defer></script>
-        <script src="{% static 'assets/js/hero-carousel.js' %}?v=20260204" defer></script>
-    
-    <!-- Mobile nav toggle (improves mobile UX) -->
-    <script>
-        (function(){
-            const openBtn = document.getElementById('mobileMenuBtn');
-            const closeBtn = document.getElementById('mobileCloseBtn');
-            const mobileNav = document.getElementById('mobileNav');
-            const overlay = document.getElementById('overlay');
-
-            if(!openBtn || !mobileNav) return;
-
-            function openMenu(){
-                mobileNav.classList.add('open');
-                mobileNav.setAttribute('aria-hidden','false');
-                overlay.style.display = 'block';
-                overlay.setAttribute('aria-hidden','false');
-                document.body.style.overflow = 'hidden';
-                openBtn.setAttribute('aria-expanded','true');
-            }
-
-            function closeMenu(){
-                mobileNav.classList.remove('open');
-                mobileNav.setAttribute('aria-hidden','true');
-                overlay.style.display = '';
-                overlay.setAttribute('aria-hidden','true');
-                document.body.style.overflow = '';
-                openBtn.setAttribute('aria-expanded','false');
-            }
-
-            openBtn.addEventListener('click', openMenu);
-            if(closeBtn) closeBtn.addEventListener('click', closeMenu);
-            if(overlay) overlay.addEventListener('click', closeMenu);
-
-            // Close on Escape
-            document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeMenu(); });
-        })();
-    </script>
-
-    <!-- Service Worker Registration -->
-    <script>
-        // Improved service worker registration with async/await and relative path
-        (function(){
-            if(!('serviceWorker' in navigator)) return;
-            window.addEventListener('load', async function(){
-                try{
-                    // Use relative path so registration works on subpaths and during dev
-                    const reg = await navigator.serviceWorker.register('/static/sw.js');
-                    console.log('ServiceWorker registered. Scope:', reg.scope);
-                }catch(err){
-                    console.warn('ServiceWorker registration failed:', err);
-                }
-            });
-        })();
-    </script>
-</body>
-</html>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

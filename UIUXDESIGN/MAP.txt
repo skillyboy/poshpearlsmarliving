@@ -1,0 +1,96 @@
+Products (Catalog)
+
+ChatGPT Image Feb 5, 2026, 02_01_52 AM.png → Products listing page (filters + grid + CTAs)
+Product Detail
+
+ChatGPT Image Feb 5, 2026, 02_01_48 AM.png → Product detail page (tabs, pricing, gallery, filters sidebar)
+Login
+
+ChatGPT Image Feb 5, 2026, 02_01_57 AM.png → Login page
+Verify Account
+
+ChatGPT Image Feb 5, 2026, 02_01_41 AM.png → Verify account page
+Add Your Home (Onboarding)
+
+ChatGPT Image Feb 5, 2026, 02_01_36 AM.png → Add Your Home flow
+Devices Dashboard
+
+ChatGPT Image Feb 5, 2026, 02_01_22 AM.png → Devices dashboard
+ChatGPT Image Feb 5, 2026, 02_01_32 AM.png → Devices dashboard (duplicate style)
+
+
+
+
+
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_01_52 AM.png
+- Products catalog (filters + product grid) – primary mockup for /products/
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_01_48 AM.png
+- Product detail page (gallery + tabs + pricing + sidebar filters) – /products/<slug>/
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_01_57 AM.png
+- Login page (welcome back + form)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_01_41 AM.png
+- Verify account page (OTP + success/error states)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_01_36 AM.png
+- Add Your Home onboarding form (basic info + steps)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_01_22 AM.png
+- Devices dashboard (device cards + sidebar + pagination)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_01_32 AM.png
+- Devices dashboard (duplicate of 02_01_22)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_05_07 AM.png
+- Device detail/control page (tabs: control/access/settings)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_39_08 AM.png
+- Device detail/control page (duplicate of 02_05_07)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_16_58 AM.png
+- Marketing landing/home page (hero + features + logos)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_17_02 AM.png
+- Marketing landing/home page (duplicate of 02_16_58)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_39_03 AM.png
+- Marketing landing/home page (duplicate of 02_16_58)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_38_21 AM.png
+- Pricing plans + Help center + Landing sections + 404 page (multi-screen sheet)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_38_23 AM.png
+- Pricing plans + Help center + Smart living solutions + 404 page (variant)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_38_25 AM.png
+- Smart features page + Wishlist page + Wishlist empty state + Terms of service
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_38_29 AM.png
+- Payment success + Payment failed + Account dashboard + Recent orders (multi-screen sheet)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_38_27 AM.png
+- Payment success + Payment failed + Account dashboard + Recent orders (duplicate of 02_38_29)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_38_33 AM.png
+- Payment success + Payment failed + Account dashboard + Recent orders (duplicate of 02_38_29)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_38_36 AM.png
+- Payment success + Account dashboard + Orders list (variant sheet)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_38_47 AM.png
+- Payment success + Account dashboard + Orders list (duplicate of 02_38_36)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_38_39 AM.png
+- Cart + Checkout + Payment initialize/progress + Empty cart (multi-screen sheet)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_38_45 AM.png
+- Cart + Checkout + Payment initialize/progress + Empty cart (duplicate of 02_38_39)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_38_51 AM.png
+- Cart + Checkout + Payment initialize + Payment success/failed (mobile-focused sheet)
+
+UIUXDESIGN/ChatGPT Image Feb 5, 2026, 02_38_57 AM.png
+- Cart + Checkout + Promo section + Mobile checkout summary (multi-screen sheet)

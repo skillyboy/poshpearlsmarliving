@@ -1,0 +1,27 @@
+Hello {{ user.get_full_name|default:user.username }},
+
+Welcome to PoshPearl! We've created an account for you to make it easier to track your orders.
+
+Your order #{{ order.id }} has been received and is being processed.
+
+TO ACCESS YOUR ACCOUNT:
+Set your password here: {{ password_reset_url }}
+
+Once you set your password, you can:
+- View your order history at {{ site_url }}/account/orders/
+- Track your orders anytime
+- Faster checkout on future purchases
+
+ORDER SUMMARY:
+{% for item in items %}
+- {{ item.product.name }} x {{ item.quantity }} = {{ item.currency }} {{ item.line_total|floatformat:0 }}
+{% endfor %}
+
+Subtotal: {{ order.currency }} {{ order.subtotal|floatformat:0 }}
+
+Delivery Address:
+{{ order.address }}
+
+Questions? Contact us at {{ site_url }}/contact/
+
+Thank you for shopping with PoshPearl!

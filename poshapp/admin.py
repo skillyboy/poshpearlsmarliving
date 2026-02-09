@@ -11,6 +11,7 @@ from .models import (
     ProductImage,
     ProductPriceTier,
     User,
+    WholesaleInquiry,
 )
 
 
@@ -74,6 +75,21 @@ class OrderItemInline(admin.TabularInline):
     extra = 0
 
 
+@admin.action(description="Mark selected orders as processing")
+def mark_processing(modeladmin, request, queryset):
+    queryset.update(status="processing")
+
+
+@admin.action(description="Mark selected orders as fulfilled")
+def mark_fulfilled(modeladmin, request, queryset):
+    queryset.update(status="fulfilled")
+
+
+@admin.action(description="Mark selected orders as cancelled")
+def mark_cancelled(modeladmin, request, queryset):
+    queryset.update(status="cancelled")
+
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
@@ -89,3 +105,30 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ("status", "payment_status", "created_at")
     search_fields = ("full_name", "email", "phone")
     inlines = [OrderItemInline]
+    actions = [mark_processing, mark_fulfilled, mark_cancelled]
+
+
+@admin.register(WholesaleInquiry)
+class WholesaleInquiryAdmin(admin.ModelAdmin):
+    list_display = ['company_name', 'contact_name', 'email', 'business_type', 'expected_volume', 'status', 'created_at']
+    list_filter = ['status', 'business_type', 'expected_volume', 'created_at']
+    search_fields = ['company_name', 'contact_name', 'email', 'phone']
+    readonly_fields = ['created_at', 'updated_at']
+    
+    fieldsets = (
+        ('Company Information', {
+            'fields': ('company_name', 'business_type', 'business_address', 'website')
+        }),
+        ('Contact Information', {
+            'fields': ('contact_name', 'email', 'phone')
+        }),
+        ('Business Details', {
+            'fields': ('expected_volume', 'message')
+        }),
+        ('Status', {
+            'fields': ('status', 'user')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at')
+        }),
+    )

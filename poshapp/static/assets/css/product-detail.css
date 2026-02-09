@@ -1,0 +1,226 @@
+.pp-product-detail .pp-detail__hero {
+  padding: 12px 0 24px;
+}
+
+.pp-detail__layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
+  gap: 24px;
+}
+
+.pp-detail__filters {
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius);
+  padding: 16px;
+  box-shadow: var(--pp-shadow);
+  height: fit-content;
+}
+
+.pp-detail__summary {
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius);
+  padding: 20px;
+  box-shadow: var(--pp-shadow);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 20px;
+}
+
+.pp-detail__media {
+  display: grid;
+  gap: 12px;
+}
+
+.pp-detail__main {
+  background: rgba(244, 236, 236, 0.85);
+  border-radius: var(--pp-radius);
+  padding: 18px;
+  border: 1px solid var(--pp-border);
+}
+
+.pp-detail__main img {
+  width: 100%;
+  height: 320px;
+  object-fit: contain;
+}
+
+.pp-detail__thumbs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.pp-detail__thumb {
+  border: 1px solid var(--pp-border);
+  background: var(--pp-surface);
+  border-radius: 12px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.pp-detail__thumb.is-active {
+  border-color: rgba(92, 46, 46, 0.5);
+  box-shadow: 0 8px 16px rgba(61, 31, 31, 0.12);
+}
+
+.pp-detail__thumb img {
+  width: 100%;
+  height: 60px;
+  object-fit: contain;
+}
+
+.pp-detail__info h1 {
+  margin: 6px 0;
+  font-size: clamp(24px, 3vw, 34px);
+  color: var(--pp-text);
+}
+
+.pp-detail__badge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(197, 142, 79, 0.2);
+  color: var(--pp-accent-strong);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.pp-detail__rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--pp-muted);
+  font-size: 0.9rem;
+}
+
+.pp-detail__price-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.pp-detail__price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--pp-accent);
+}
+
+.pp-detail__save {
+  background: rgba(197, 142, 79, 0.25);
+  color: var(--pp-accent-strong);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.pp-detail__retail {
+  margin-top: 6px;
+  color: var(--pp-muted);
+}
+
+.pp-detail__actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.pp-detail__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.pp-detail__tabs {
+  margin-top: 24px;
+}
+
+.pp-detail__tablist {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--pp-border);
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+
+.pp-detail__tablist a {
+  text-decoration: none;
+  color: var(--pp-muted);
+  font-weight: 600;
+}
+
+.pp-detail__tablist a.is-active {
+  color: var(--pp-accent);
+  border-bottom: 2px solid var(--pp-accent);
+  padding-bottom: 6px;
+}
+
+.pp-detail__content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 20px;
+}
+
+.pp-detail__content h2,
+.pp-detail__content h3 {
+  margin: 0 0 10px;
+}
+
+.pp-detail__content ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--pp-muted);
+}
+
+.pp-detail__aside {
+  display: grid;
+  gap: 16px;
+}
+
+.pp-detail__specs,
+.pp-detail__reviews {
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius);
+  padding: 14px;
+  box-shadow: var(--pp-shadow);
+}
+
+.pp-detail__specs div {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  color: var(--pp-muted);
+}
+
+.pp-detail__review-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
+  gap: 8px;
+  align-items: center;
+  color: var(--pp-muted);
+  font-size: 0.85rem;
+}
+
+.pp-detail__bar {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #c58e4f, #f4b000);
+}
+
+@media (max-width: 980px) {
+  .pp-detail__layout {
+    grid-template-columns: 1fr;
+  }
+  .pp-detail__summary {
+    grid-template-columns: 1fr;
+  }
+  .pp-detail__content {
+    grid-template-columns: 1fr;
+  }
+}

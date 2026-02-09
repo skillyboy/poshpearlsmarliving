@@ -1,0 +1,85 @@
+﻿{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}My Orders - PoshPearl{% endblock %}
+{% block body_class %}pp-light pp-account{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/account.css' %}?v=20260207">
+{% endblock %}
+
+{% block content %}
+<section class="pp-shell">
+    <div class="container">
+        <div class="pp-account-layout">
+            <aside class="pp-card pp-account-sidebar">
+                <div class="pp-account-user">
+                    <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="User">
+                    <div>
+                        <strong>Hi, {{ user.first_name|default:user.username }}</strong>
+                        <div class="pp-muted">{{ user.email }}</div>
+                    </div>
+                </div>
+                <nav class="pp-account-nav">
+                    <a href="{% url 'dashboard' %}"><i class="fa-solid fa-house"></i> Dashboard</a>
+                    <a class="is-active" href="{% url 'user_orders' %}"><i class="fa-solid fa-receipt"></i> Orders</a>
+                    <a href="{% url 'wishlist' %}"><i class="fa-solid fa-heart"></i> Wishlist</a>
+                    <a href="{% url 'track_order' %}"><i class="fa-solid fa-truck"></i> Track order</a>
+                </nav>
+            </aside>
+
+            <main>
+                <div class="pp-commerce-header">
+                    <div>
+                        <p class="pp-pill"><i class="fa-solid fa-box"></i> Orders</p>
+                        <h1 class="pp-section-title">Order history</h1>
+                        <p class="pp-section-subtitle">View and track all your orders.</p>
+                    </div>
+                </div>
+
+                <div class="pp-card pp-account-card" style="margin-bottom: 16px;">
+                    <div class="pp-account-grid-2">
+                        <select class="pp-select">
+                            <option value="">All statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                        </select>
+                        <input class="pp-input" type="date" placeholder="From">
+                        <input class="pp-input" type="date" placeholder="To">
+                        <button class="pp-btn-primary" type="button">Apply filters</button>
+                    </div>
+                </div>
+
+                {% if orders %}
+                <div class="pp-order-list">
+                    {% for order in orders %}
+                    <div class="pp-order-row">
+                        <div>
+                            <strong>Order #{{ order.id }}</strong>
+                            <div class="pp-order-meta">{{ order.created_at|date:"F d, Y - g:i A" }}</div>
+                        </div>
+                        <div class="pp-order-tag">{{ order.get_status_display }}</div>
+                        <div class="pp-order-total">{{ order.currency }} {{ order.subtotal|intcomma }}</div>
+                        <a class="pp-btn-secondary" href="{% url 'user_order_detail' order.id %}">View details</a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="pp-card pp-status-card">
+                    <div class="pp-status-icon"><i class="fa-solid fa-box-open"></i></div>
+                    <h2>No orders yet</h2>
+                    <p class="pp-muted">Start shopping to see your order history here.</p>
+                    <div class="pp-status-actions">
+                        <a class="pp-btn-primary" href="{% url 'products' %}">Browse products</a>
+                    </div>
+                </div>
+                {% endif %}
+            </main>
+        </div>
+    </div>
+</section>
+{% endblock %}

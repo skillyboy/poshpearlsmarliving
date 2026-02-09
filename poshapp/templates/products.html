@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Products - PoshPearl{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'assets/css/products.css' %}?v=20260205">
+{% endblock %}
+
+{% block body_class %}pp-light pp-products{% endblock %}
+
+{% block content %}
+<main class="pp-products__main">
+  {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
+
+  <section class="pp-products__hero">
+    <div class="container">
+      <nav class="pp-products__breadcrumb" aria-label="Breadcrumb">
+        <a href="{% url 'home' %}">Home</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Products</span>
+      </nav>
+
+      <div class="pp-products__intro">
+        <div>
+          <h1>Products</h1>
+          <p>Smart security and smart living devices built for peace of mind.</p>
+        </div>
+        <a class="pp-products__cta" href="{% url 'contact' %}">Book Consultation</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="pp-products__catalog">
+    <div class="container">
+      <form method="get" class="pp-products__layout">
+        <div class="pp-products__toolbar">
+          <div class="pp-products__search">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" name="q" value="{{ request.GET.q|default:'' }}"
+                   placeholder="Search products, locks, cameras...">
+          </div>
+          <div class="pp-products__toolbar-actions">
+            <span class="pp-products__filters-pill">Filters ({{ pagination.filter_count|default:0 }})</span>
+            <select name="ordering" class="pp-products__sort">
+              <option value="">Sort</option>
+              <option value="updated" {% if request.GET.ordering == "updated" %}selected{% endif %}>Newest</option>
+              <option value="price" {% if request.GET.ordering == "price" %}selected{% endif %}>Price: Low to High</option>
+              <option value="-price" {% if request.GET.ordering == "-price" %}selected{% endif %}>Price: High to Low</option>
+              <option value="name" {% if request.GET.ordering == "name" %}selected{% endif %}>Name: A-Z</option>
+            </select>
+          </div>
+        </div>
+
+        <aside class="pp-products__filters">
+          <div class="pp-products__filters-header">
+            <h3>Filters</h3>
+            {% if pagination.has_filters %}
+              <a href="{% url 'products' %}" class="pp-products__reset">Reset</a>
+            {% endif %}
+          </div>
+
+          <div class="pp-products__filter-group">
+            <h4>Category</h4>
+            <div class="pp-products__checklist">
+              {% for category in categories %}
+              <label class="pp-products__check">
+                <input type="radio" name="category" value="{{ category.slug }}"
+                       {% if active_category and active_category.slug == category.slug %}checked{% endif %}>
+                <span>{{ category.name }}</span>
+              </label>
+              {% endfor %}
+              <label class="pp-products__check">
+                <input type="radio" name="category" value="" {% if not active_category %}checked{% endif %}>
+                <span>All categories</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="pp-products__filter-group">
+            <h4>Availability</h4>
+            <label class="pp-products__check">
+              <input type="checkbox" name="in_stock" value="true"
+                     {% if request.GET.in_stock in "true,1,yes,on" %}checked{% endif %}>
+              <span>In stock</span>
+            </label>
+          </div>
+
+          <div class="pp-products__filter-group">
+            <h4>Price range</h4>
+            <div class="pp-products__range">
+              <input type="range" min="0" max="300000" step="5000" name="min_price"
+                     value="{{ request.GET.min_price|default:0 }}" data-price-min>
+              <input type="range" min="0" max="300000" step="5000" name="max_price"
+                     value="{{ request.GET.max_price|default:300000 }}" data-price-max>
+            </div>
+            <div class="pp-products__range-values">
+              <span data-price-min-value>NGN 0</span>
+              <span data-price-max-value>NGN 300,000</span>
+            </div>
+          </div>
+
+          <button type="submit" class="pp-products__apply">Apply filters</button>
+        </aside>
+
+        <div class="pp-products__results">
+          {% if pagination.total_count %}
+            <p class="pp-products__count">
+              Showing {{ pagination.start_index }}-{{ pagination.end_index }} of {{ pagination.total_count }} products
+            </p>
+          {% endif %}
+
+          <div class="pp-products__grid">
+            {% for product in products %}
+            <article class="pp-product-card">
+              <a class="pp-product-card__media" href="{% url 'product_detail_products' product.slug %}">
+                {% with hero_image=product.images.first %}
+                  {% if hero_image %}
+                    <img src="{{ hero_image.image.url }}" alt="{{ product.name }}" loading="lazy" decoding="async"
+                         onerror="this.onerror=null;this.src='{{ product_fallback }}';">
+                  {% else %}
+                    <img src="{{ product_fallback }}" alt="{{ product.name }}" loading="lazy" decoding="async">
+                  {% endif %}
+                {% endwith %}
+                {% if product.stock_quantity == 0 %}
+                  <span class="pp-product-card__badge pp-product-card__badge--preorder">Pre-order</span>
+                {% else %}
+                  <span class="pp-product-card__badge">In stock</span>
+                {% endif %}
+              </a>
+              <div class="pp-product-card__body">
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.short_description|default:product.description|truncatechars:90 }}</p>
+                <div class="pp-product-card__price">
+                  {% if product.price_tiers.exists %}
+                    {{ product.currency }} {{ product.price_tiers.first.price|intcomma }}
+                  {% elif product.price %}
+                    {{ product.currency }} {{ product.price|intcomma }}
+                  {% else %}
+                    On request
+                  {% endif %}
+                </div>
+                <div class="pp-product-card__chips">
+                  {% for cat in product.categories.all|slice:":3" %}
+                    <span class="pp-product-chip">{{ cat.name }}</span>
+                  {% endfor %}
+                  {% if not product.categories.exists %}
+                    <span class="pp-product-chip">Smart lock</span>
+                    <span class="pp-product-chip">Secure</span>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="pp-product-card__actions">
+                <a href="{% url 'product_detail_products' product.slug %}" class="pp-products__btn pp-products__btn--primary">View details</a>
+                <button type="button" class="pp-products__btn pp-products__btn--ghost" data-modal-target="quote">Add to quote</button>
+              </div>
+            </article>
+            {% empty %}
+            <div class="pp-products__empty">
+              <p>No products found. Try adjusting your filters.</p>
+              <a href="{% url 'products' %}" class="pp-products__btn pp-products__btn--primary">Reset filters</a>
+            </div>
+            {% endfor %}
+          </div>
+
+          {% if pagination.total_pages > 1 %}
+          <nav class="pp-products__pagination" aria-label="Products pagination">
+            <a class="pp-products__page" href="?page={{ pagination.prev_page }}{% if pagination.querystring %}&{{ pagination.querystring }}{% endif %}">Prev</a>
+            <span>Page {{ pagination.page }} of {{ pagination.total_pages }}</span>
+            <a class="pp-products__page" href="?page={{ pagination.next_page }}{% if pagination.querystring %}&{{ pagination.querystring }}{% endif %}">Next</a>
+          </nav>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <template id="quote-form-template">
+    <form class="pp-products__quote" data-validate>
+      <div class="pp-products__field">
+        <label for="quote-name">Full name</label>
+        <input id="quote-name" name="name" type="text" required>
+      </div>
+      <div class="pp-products__field">
+        <label for="quote-email">Email address</label>
+        <input id="quote-email" name="email" type="email" required>
+      </div>
+      <div class="pp-products__field">
+        <label for="quote-qty">Estimated quantity</label>
+        <input id="quote-qty" name="quantity" type="number" min="1" placeholder="e.g. 100">
+      </div>
+      <div class="pp-products__field">
+        <label for="quote-notes">Delivery location</label>
+        <input id="quote-notes" name="location" type="text" placeholder="City, Country">
+      </div>
+      <button class="pp-products__btn pp-products__btn--primary" type="submit">Send request</button>
+    </form>
+  </template>
+</main>
+
+<script>
+  (function () {
+    const minInput = document.querySelector('[data-price-min]');
+    const maxInput = document.querySelector('[data-price-max]');
+    const minLabel = document.querySelector('[data-price-min-value]');
+    const maxLabel = document.querySelector('[data-price-max-value]');
+
+    const format = (value) => `NGN ${Number(value || 0).toLocaleString()}`;
+    const sync = () => {
+      if (!minInput || !maxInput) return;
+      let min = Number(minInput.value || 0);
+      let max = Number(maxInput.value || 0);
+      if (min > max) {
+        const temp = min;
+        min = max;
+        max = temp;
+        minInput.value = min;
+        maxInput.value = max;
+      }
+      if (minLabel) minLabel.textContent = format(min);
+      if (maxLabel) maxLabel.textContent = format(max);
+    };
+
+    minInput?.addEventListener('input', sync);
+    maxInput?.addEventListener('input', sync);
+    sync();
+  })();
+</script>
+{% endblock %}

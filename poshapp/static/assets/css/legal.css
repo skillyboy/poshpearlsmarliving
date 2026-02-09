@@ -1,0 +1,34 @@
+﻿/* =====================================================
+   Legal Pages
+   ===================================================== */
+
+.pp-legal-layout {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 220px minmax(0, 1fr);
+}
+
+.pp-legal-nav {
+  display: grid;
+  gap: 8px;
+}
+
+.pp-legal-nav a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(92, 46, 46, 0.12);
+  text-decoration: none;
+  color: #4b2a2a;
+}
+
+.pp-legal-content {
+  padding: 20px;
+}
+
+@media (max-width: 980px) {
+  .pp-legal-layout {
+    grid-template-columns: 1fr;
+  }
+}

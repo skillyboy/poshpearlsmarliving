@@ -1,20 +1,28 @@
 import json
+from django.contrib.auth.tokens import default_token_generator
 from django.db import models, transaction
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-from .forms import CheckoutForm
-from .models import Category, Order, OrderItem, Product
+from .forms import CheckoutForm, OrderTrackingForm
+from .models import Category, Order, OrderItem, Product, User
 from .cart import cart_summary, get_cart
 from .payments import (
     PaystackError,
     initialize_paystack_transaction,
     verify_paystack_signature,
     verify_paystack_transaction,
+)
+from .emails import (
+    send_order_received_email,
+    send_payment_confirmed_email,
+    send_welcome_new_user_email,
 )
 
 
@@ -44,6 +52,7 @@ def _get_shop_queryset(request, exclude_id=None):
         )
     min_price_raw = request.GET.get("min_price")
     max_price_raw = request.GET.get("max_price")
+    in_stock_raw = request.GET.get("in_stock")
     try:
         min_price = int(min_price_raw) if min_price_raw else None
     except ValueError:
@@ -56,6 +65,8 @@ def _get_shop_queryset(request, exclude_id=None):
         base_queryset = base_queryset.filter(price__gte=min_price)
     if max_price is not None:
         base_queryset = base_queryset.filter(price__lte=max_price)
+    if in_stock_raw in {"true", "1", "yes", "on"}:
+        base_queryset = base_queryset.filter(stock_quantity__gt=0)
     invalid_price_range = False
     if min_price is not None and max_price is not None and min_price > max_price:
         invalid_price_range = True
@@ -89,6 +100,16 @@ def _get_shop_queryset(request, exclude_id=None):
     products = base_queryset[start:end]
     total_pages = (total_count + per_page - 1) // per_page if per_page else 1
 
+    filter_count = 0
+    if category_slug:
+        filter_count += 1
+    if query:
+        filter_count += 1
+    if min_price_raw or max_price_raw:
+        filter_count += 1
+    if in_stock_raw in {"true", "1", "yes", "on"}:
+        filter_count += 1
+
     params = request.GET.copy()
     params.pop("page", None)
     params.pop("per_page", None)
@@ -108,14 +129,68 @@ def _get_shop_queryset(request, exclude_id=None):
         "querystring": querystring,
         "has_filters": bool(querystring),
         "invalid_price_range": invalid_price_range,
+        "filter_count": filter_count,
     }
     return products, categories, active_category, pagination
 
 
+def _get_or_create_user_from_checkout(email, full_name, phone):
+    """
+    Get existing user by email or create a new one.
+    Returns (user, is_new_user, password_reset_url)
+    """
+    user = User.objects.filter(email__iexact=email).first()
+    if user:
+        return user, False, None
+    
+    # Create new user with unusable password
+    username_base = email.split("@")[0]
+    username = username_base
+    counter = 1
+    while User.objects.filter(username=username).exists():
+        username = f"{username_base}{counter}"
+        counter += 1
+    
+    # Parse full name into first and last
+    name_parts = full_name.strip().split(maxsplit=1)
+    first_name = name_parts[0] if name_parts else ""
+    last_name = name_parts[1] if len(name_parts) > 1 else ""
+    
+    user = User.objects.create_user(
+        username=username,
+        email=email,
+        first_name=first_name,
+        last_name=last_name,
+        phone_number=phone,
+    )
+    user.set_unusable_password()
+    user.save()
+    
+    # Generate password reset token
+    from django.conf import settings
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    token = default_token_generator.make_token(user)
+    password_reset_url = f"{settings.SITE_URL}/accounts/reset/{uid}/{token}/"
+    
+    return user, True, password_reset_url
+
+
 def _create_pending_order(request, form, summary):
     with transaction.atomic():
+        # Get or create user from checkout data
+        user_for_order = request.user if request.user.is_authenticated else None
+        is_new_user = False
+        password_reset_url = None
+        
+        if not request.user.is_authenticated:
+            user_for_order, is_new_user, password_reset_url = _get_or_create_user_from_checkout(
+                form.cleaned_data["email"],
+                form.cleaned_data["full_name"],
+                form.cleaned_data["phone"],
+            )
+        
         order = Order.objects.create(
-            user=request.user if request.user.is_authenticated else None,
+            user=user_for_order,
             full_name=form.cleaned_data["full_name"],
             email=form.cleaned_data["email"],
             phone=form.cleaned_data["phone"],
@@ -134,12 +209,17 @@ def _create_pending_order(request, form, summary):
                 unit_price=item.unit_price,
                 currency=item.currency,
             )
-    return order
+    return order, is_new_user, password_reset_url
 
 
 @ensure_csrf_cookie
 def home(request):
-    return render(request, "index.html")
+    products = (
+        Product.objects.filter(is_active=True)
+        .prefetch_related("images", "categories")
+        .order_by("-updated_at", "name")
+    )
+    return render(request, "index.html", {"products": products})
 
 
 @ensure_csrf_cookie
@@ -171,9 +251,24 @@ def product_detail(request, slug):
     )
     return render(
         request,
-        "shop.html",
+        "product_detail.html",
         {
             "product": product,
+            "products": products,
+            "categories": categories,
+            "active_category": active_category,
+            "pagination": pagination,
+        },
+    )
+
+
+@ensure_csrf_cookie
+def products(request):
+    products, categories, active_category, pagination = _get_shop_queryset(request)
+    return render(
+        request,
+        "products.html",
+        {
             "products": products,
             "categories": categories,
             "active_category": active_category,
@@ -230,7 +325,7 @@ def payment_initialize(request):
     if not form.is_valid():
         return render(request, "checkout.html", {"cart": summary, "form": form})
 
-    order = _create_pending_order(request, form, summary)
+    order, is_new_user, password_reset_url = _create_pending_order(request, form, summary)
     try:
         callback_url = request.build_absolute_uri(reverse("payment_callback"))
         payment = initialize_paystack_transaction(
@@ -243,6 +338,13 @@ def payment_initialize(request):
         )
         order.payment_reference = payment["reference"]
         order.save(update_fields=["payment_reference"])
+        
+        # Send welcome email for new users or standard order email for existing
+        if is_new_user and password_reset_url:
+            send_welcome_new_user_email(order.user, order, password_reset_url)
+        else:
+            send_order_received_email(order)
+        
         return redirect(payment["authorization_url"])
     except PaystackError:
         order.payment_status = "failed"
@@ -254,6 +356,7 @@ def payment_initialize(request):
                 "cart": summary,
                 "form": form,
                 "payment_error": "Payment initialization failed. Please try again.",
+                "order_id": order.id,
             },
         )
 
@@ -266,6 +369,36 @@ def support(request):
 @ensure_csrf_cookie
 def contact(request):
     return render(request, "contact.html")
+
+
+@ensure_csrf_cookie
+def track_order(request):
+    form = OrderTrackingForm(request.POST or None)
+    order = None
+    error = None
+    if request.method == "POST":
+        if form.is_valid():
+            order_number = form.cleaned_data["order_number"]
+            email = form.cleaned_data["email"].strip()
+            order = (
+                Order.objects.prefetch_related("items", "items__product")
+                .filter(id=order_number, email__iexact=email)
+                .first()
+            )
+            if not order:
+                error = "We could not find that order. Check your order number and email."
+        else:
+            error = "Please correct the errors below and try again."
+
+    return render(
+        request,
+        "order_tracking.html",
+        {
+            "form": form,
+            "order": order,
+            "tracking_error": error,
+        },
+    )
 
 
 @ensure_csrf_cookie
@@ -301,6 +434,7 @@ def payment_callback(request):
                 "cart": summary,
                 "form": CheckoutForm(),
                 "payment_error": "Payment failed or was cancelled.",
+                "order_id": order.id if order else None,
             },
         )
 
@@ -311,11 +445,15 @@ def payment_callback(request):
     if order.payment_status != "paid":
         amount_kobo = int(data.get("amount") or 0)
         order.payment_status = "paid"
+        if order.status == "new":
+            order.status = "processing"
         order.paid_at = timezone.now()
         if amount_kobo:
             order.amount = amount_kobo // 100
         order.currency = data.get("currency") or order.currency
-        order.save(update_fields=["payment_status", "paid_at", "amount", "currency"])
+        order.save(update_fields=["payment_status", "status", "paid_at", "amount", "currency"])
+
+    send_payment_confirmed_email(order)
 
     cart = get_cart(request)
     cart.items.all().delete()
@@ -344,13 +482,327 @@ def payment_webhook(request):
         reference = data.get("reference")
         if reference:
             order = Order.objects.filter(payment_reference=reference).first()
-            if order and order.payment_status != "paid":
-                amount_kobo = int(data.get("amount") or 0)
-                order.payment_status = "paid"
-                order.paid_at = timezone.now()
-                if amount_kobo:
-                    order.amount = amount_kobo // 100
-                order.currency = data.get("currency") or order.currency
-                order.save(update_fields=["payment_status", "paid_at", "amount", "currency"])
+            if order:
+                if order.payment_status != "paid":
+                    amount_kobo = int(data.get("amount") or 0)
+                    order.payment_status = "paid"
+                    if order.status == "new":
+                        order.status = "processing"
+                    order.paid_at = timezone.now()
+                    if amount_kobo:
+                        order.amount = amount_kobo // 100
+                    order.currency = data.get("currency") or order.currency
+                    order.save(update_fields=["payment_status", "status", "paid_at", "amount", "currency"])
+
+                send_payment_confirmed_email(order)
 
     return JsonResponse({"status": "ok"})
+
+
+@ensure_csrf_cookie
+def dashboard_view(request):
+    """User dashboard with profile and recent orders."""
+    if not request.user.is_authenticated:
+        return redirect(f"/accounts/login/?next={request.path}")
+    
+    recent_orders = Order.objects.filter(user=request.user).order_by("-created_at")[:5]
+    order_count = Order.objects.filter(user=request.user).count()
+    
+    return render(
+        request,
+        "account/dashboard.html",
+        {
+            "recent_orders": recent_orders,
+            "order_count": order_count,
+        },
+    )
+
+
+@ensure_csrf_cookie
+def user_orders_view(request):
+    """List all orders for the logged-in user."""
+    if not request.user.is_authenticated:
+        return redirect(f"/accounts/login/?next={request.path}")
+    
+    orders = (
+        Order.objects.filter(user=request.user)
+        .prefetch_related("items", "items__product")
+        .order_by("-created_at")
+    )
+    
+    return render(request, "account/orders.html", {"orders": orders})
+
+
+@ensure_csrf_cookie
+def user_order_detail_view(request, order_id):
+    """Detailed view of a single order for the logged-in user."""
+    if not request.user.is_authenticated:
+        return redirect(f"/accounts/login/?next={request.path}")
+    
+    order = get_object_or_404(
+        Order.objects.prefetch_related("items", "items__product"),
+        id=order_id,
+        user=request.user,
+    )
+    
+    return render(request, "account/order_detail.html", {"order": order})
+
+
+@ensure_csrf_cookie
+def about_view(request):
+    """About Us page."""
+    return render(request, "about.html")
+
+
+@ensure_csrf_cookie
+def faq_view(request):
+    """FAQ page."""
+    return render(request, "faq.html")
+
+
+@ensure_csrf_cookie
+def privacy_view(request):
+    """Privacy Policy page."""
+    return render(request, "privacy.html")
+
+
+@ensure_csrf_cookie
+def terms_view(request):
+    """Terms of Service page."""
+    return render(request, "terms.html")
+
+
+@ensure_csrf_cookie
+def pricing_view(request):
+    """Pricing page."""
+    return render(request, "pricing.html")
+
+
+def not_found_view(request, exception=None):
+    """Custom 404 page."""
+    return render(request, "404.html", status=404)
+
+
+@ensure_csrf_cookie
+def payment_success_view(request):
+    """Payment success page."""
+    order_id = request.GET.get("order_id")
+    order = None
+    if order_id:
+        order = Order.objects.filter(id=order_id).first()
+    return render(request, "payment_success.html", {"order": order})
+
+
+@ensure_csrf_cookie
+def payment_failed_view(request):
+    """Payment failed page."""
+    order_id = request.GET.get("order_id")
+    order = None
+    if order_id:
+        order = Order.objects.filter(id=order_id).first()
+    return render(request, "payment_failed.html", {"order": order})
+
+
+@ensure_csrf_cookie
+def wholesale_view(request):
+    """Wholesale/B2B partnership inquiry page."""
+    form_submitted = False
+    
+    if request.method == "POST":
+        from .models import WholesaleInquiry
+        
+        # Create wholesale inquiry
+        inquiry = WholesaleInquiry.objects.create(
+            company_name=request.POST.get('company_name', ''),
+            contact_name=request.POST.get('contact_name', ''),
+            email=request.POST.get('email', ''),
+            phone=request.POST.get('phone', ''),
+            business_address=request.POST.get('business_address', ''),
+            business_type=request.POST.get('business_type', ''),
+            expected_volume=request.POST.get('expected_volume', ''),
+            website=request.POST.get('website', ''),
+            message=request.POST.get('message', ''),
+            user=request.user if request.user.is_authenticated else None,
+        )
+        
+        form_submitted = True
+    
+    return render(request, "wholesale.html", {"form_submitted": form_submitted})
+
+
+@ensure_csrf_cookie
+def smart_features_view(request):
+    """Smart features educational page."""
+    return render(request, "smart_features.html")
+
+
+# ========================================
+# WISHLIST VIEWS
+# ========================================
+
+@ensure_csrf_cookie
+def wishlist_view(request):
+    """Display user's wishlist."""
+    if not request.user.is_authenticated:
+        # Show empty state for guests with prompt to login
+        return render(request, "wishlist.html", {
+            "wishlist_items": [],
+            "is_guest": True
+        })
+    
+    from .models import Wishlist
+    
+    # Get or create wishlist for user
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    
+    # Get wishlist items with product details
+    wishlist_items = wishlist.items.select_related('product').prefetch_related('product__images')
+    
+    return render(request, "wishlist.html", {
+        "wishlist_items": wishlist_items,
+        "wishlist_count": wishlist.item_count,
+        "is_guest": False
+    })
+
+
+@ensure_csrf_cookie
+def wishlist_api_items(request):
+    """API endpoint to get wishlist items for authenticated users."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"product_ids": []})
+    
+    from .models import Wishlist
+    
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    product_ids = list(wishlist.items.values_list('product_id', flat=True))
+    
+    return JsonResponse({"product_ids": product_ids})
+
+
+@ensure_csrf_cookie
+def wishlist_api_add(request):
+    """API endpoint to add product to wishlist."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "Authentication required"}, status=401)
+    
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, STATUS=405)
+    
+    from .models import Wishlist, WishlistItem
+    
+    try:
+        data = json.loads(request.body)
+        product_id = data.get("product_id")
+        
+        if not product_id:
+            return JsonResponse({"error": "product_id required"}, status=400)
+        
+        product = get_object_or_404(Product, id=product_id, is_active=True)
+        wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+        
+        # Create wishlist item (unique_together prevents duplicates)
+        item, created = WishlistItem.objects.get_or_create(
+            wishlist=wishlist,
+            product=product
+        )
+        
+        return JsonResponse({
+            "success": True,
+            "created": created,
+            "wishlist_count": wishlist.item_count
+        })
+        
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+@ensure_csrf_cookie
+def wishlist_api_remove(request):
+    """API endpoint to remove product from wishlist."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "Authentication required"}, status=401)
+    
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=405)
+    
+    from .models import Wishlist, WishlistItem
+    
+    try:
+        data = json.loads(request.body)
+        product_id = data.get("product_id")
+        
+        if not product_id:
+            return JsonResponse({"error": "product_id required"}, status=400)
+        
+        wishlist = Wishlist.objects.filter(user=request.user).first()
+        if wishlist:
+            WishlistItem.objects.filter(
+                wishlist=wishlist,
+                product_id=product_id
+            ).delete()
+        
+        wishlist_count = wishlist.item_count if wishlist else 0
+        
+        return JsonResponse({
+            "success": True,
+            "wishlist_count": wishlist_count
+        })
+        
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+@ensure_csrf_cookie
+def wishlist_api_add_all_to_cart(request):
+    """API endpoint to add all wishlist items to cart."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "Authentication required"}, status=401)
+    
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=405)
+    
+    from .models import Wishlist
+    from .cart import get_cart
+    from .models import CartItem
+    
+    try:
+        wishlist = Wishlist.objects.filter(user=request.user).first()
+        if not wishlist:
+            return JsonResponse({"count": 0, "cart_count": 0})
+        
+        cart = get_cart(request)
+        added_count = 0
+        
+        for item in wishlist.items.select_related('product'):
+            product = item.product
+            
+            # Add to cart or update quantity
+            cart_item, created = CartItem.objects.get_or_create(
+                cart=cart,
+                product=product,
+                defaults={
+                    'unit_price': product.price or 0,
+                    'quantity': 1
+                }
+            )
+            
+            if not created:
+                cart_item.quantity += 1
+                cart_item.save()
+            
+            added_count += 1
+        
+        cart_count = cart.items.count()
+        
+        return JsonResponse({
+            "success": True,
+            "count": added_count,
+            "cart_count": cart_count
+        })
+        
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)

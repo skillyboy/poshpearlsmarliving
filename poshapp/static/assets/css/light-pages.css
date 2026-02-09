@@ -1,0 +1,213 @@
+/* =====================================================
+   LIGHT PAGES BASE (Cream + Burgundy + Gold)
+   Applies when body has .pp-light
+   ===================================================== */
+
+body.pp-light {
+  --pp-text: #3d1f1f;
+  --pp-muted: #5a3b3b;
+  --pp-accent: #5c2e2e;
+  --pp-accent-strong: #7a4545;
+  --pp-gold: #c58e4f;
+  --pp-surface: rgba(255, 255, 255, 0.92);
+  --pp-surface-soft: rgba(255, 255, 255, 0.78);
+  --pp-border: rgba(92, 46, 46, 0.16);
+  --pp-shadow: 0 22px 44px rgba(61, 31, 31, 0.12);
+  --pp-radius: 20px;
+  position: relative;
+  background: radial-gradient(1200px 520px at 12% 0%, rgba(92, 46, 46, 0.18), transparent 60%),
+              radial-gradient(1200px 520px at 88% 0%, rgba(245, 166, 35, 0.18), transparent 60%),
+              linear-gradient(180deg, #f8f2f2 0%, #efe6e6 100%) !important;
+  color: var(--pp-text) !important;
+}
+
+body.pp-light::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("../images/bg.png") center/cover no-repeat;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.pp-light > * {
+  position: relative;
+  z-index: 1;
+}
+
+body.pp-light a {
+  color: inherit !important;
+}
+
+body.pp-light .site-header {
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid var(--pp-border);
+  backdrop-filter: blur(10px);
+}
+
+body.pp-light .main-nav a {
+  color: var(--pp-text);
+}
+
+body.pp-light .main-nav a:hover,
+body.pp-light .main-nav a:focus-visible,
+body.pp-light .main-nav a.is-active {
+  background: rgba(92, 46, 46, 0.1);
+  color: var(--pp-accent);
+}
+
+body.pp-light .theme-toggle {
+  background: var(--pp-accent);
+  border-color: var(--pp-accent);
+  color: #fff;
+}
+
+body.pp-light .nav-toggle {
+  background: var(--pp-accent);
+  border-color: var(--pp-accent);
+}
+
+body.pp-light .nav-toggle__bar {
+  background: #fff;
+}
+
+body.pp-light .pp-cart-toggle,
+body.pp-light .pp-wishlist-toggle {
+  background: var(--pp-surface);
+  border-color: var(--pp-border);
+  color: var(--pp-accent);
+}
+
+.pp-shell {
+  padding: clamp(32px, 7vw, 72px) 0;
+}
+
+.pp-section-title {
+  font-size: clamp(30px, 4.2vw, 44px);
+  margin-bottom: 8px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.pp-section-subtitle {
+  color: var(--pp-muted);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+body.pp-light .pp-card,
+body.pp-light .pp-panel {
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius);
+  box-shadow: var(--pp-shadow);
+}
+
+body.pp-light .pp-card.soft {
+  background: var(--pp-surface-soft);
+}
+
+.pp-card__body {
+  padding: 20px;
+}
+
+body.pp-light .pp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(92, 46, 46, 0.14);
+  color: var(--pp-accent);
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+body.pp-light .pp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(92, 46, 46, 0.12);
+  color: var(--pp-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+body.pp-light .pp-badge.is-gold {
+  background: rgba(197, 142, 79, 0.25);
+  color: #8a4b00;
+}
+
+body.pp-light .pp-badge.is-success {
+  background: rgba(92, 146, 92, 0.18);
+  color: #3f6b3f;
+}
+
+body.pp-light .pp-input,
+body.pp-light .pp-select,
+body.pp-light .pp-textarea {
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid var(--pp-border);
+  background: var(--pp-surface);
+  padding: 10px 14px;
+  color: var(--pp-text);
+}
+
+body.pp-light .pp-input:focus-visible,
+body.pp-light .pp-select:focus-visible,
+body.pp-light .pp-textarea:focus-visible {
+  outline: none;
+  border-color: var(--pp-accent);
+  box-shadow: 0 0 0 3px rgba(92, 46, 46, 0.14);
+}
+
+body.pp-light .pp-btn-primary,
+body.pp-light .pp-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+
+body.pp-light .pp-btn-primary {
+  background: linear-gradient(135deg, var(--pp-accent), var(--pp-accent-strong));
+  color: #fff;
+  box-shadow: 0 14px 26px rgba(92, 46, 46, 0.22);
+}
+
+body.pp-light .pp-btn-secondary {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: var(--pp-border);
+  color: var(--pp-accent);
+}
+
+body.pp-light .pp-muted {
+  color: var(--pp-muted);
+}
+
+body.pp-light .pp-divider {
+  height: 1px;
+  background: var(--pp-border);
+  margin: 18px 0;
+}
+
+.pp-grid-2 {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+}
+
+@media (max-width: 980px) {
+  .pp-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}

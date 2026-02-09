@@ -1,0 +1,58 @@
+﻿{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Us - PoshPearl{% endblock %}
+{% block body_class %}pp-light pp-about{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/info-pages.css' %}?v=20260207">
+{% endblock %}
+
+{% block content %}
+<section class="pp-shell">
+    <div class="container">
+        <div class="pp-info-hero">
+            <p class="pp-pill"><i class="fa-solid fa-star"></i> About</p>
+            <h1 class="pp-section-title">About PoshPearl</h1>
+            <p class="pp-section-subtitle">Your trusted partner in premium smart living products.</p>
+        </div>
+
+        <div class="pp-card pp-info-card">
+            <h2>Our Story</h2>
+            <p class="pp-muted">PoshPearl was founded with a simple vision: to provide high-quality smart living products that enhance everyday life.</p>
+            <p class="pp-muted">What started as a small operation has grown into a trusted e-commerce platform serving customers across the region.</p>
+        </div>
+
+        <div class="pp-info-grid" style="margin-top: 18px;">
+            <div class="pp-card pp-info-card">
+                <h3>Quality First</h3>
+                <p class="pp-muted">We curate products to meet the highest standards.</p>
+            </div>
+            <div class="pp-card pp-info-card">
+                <h3>Customer Trust</h3>
+                <p class="pp-muted">Your satisfaction and security are our top priorities.</p>
+            </div>
+            <div class="pp-card pp-info-card">
+                <h3>Innovation</h3>
+                <p class="pp-muted">We continuously improve our offerings and service.</p>
+            </div>
+        </div>
+
+        <div class="pp-card pp-info-card" style="margin-top: 18px;">
+            <h2>What Sets Us Apart</h2>
+            <ul>
+                <li>Curated selection of premium smart products</li>
+                <li>Competitive pricing and wholesale options</li>
+                <li>Fast and reliable delivery</li>
+                <li>Dedicated support</li>
+            </ul>
+        </div>
+
+        <div class="pp-info-actions" style="margin-top: 18px;">
+            <a class="pp-btn-primary" href="{% url 'products' %}">Shop now</a>
+            <a class="pp-btn-secondary" href="{% url 'contact' %}">Contact us</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

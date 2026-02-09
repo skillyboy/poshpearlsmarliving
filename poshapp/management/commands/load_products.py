@@ -1,7 +1,6 @@
 from pathlib import Path
 
 from django.conf import settings
-from django.core.files import File
 from django.core.management.base import BaseCommand
 
 from poshapp.models import Category, Product, ProductImage, ProductPriceTier
@@ -74,16 +73,20 @@ class Command(BaseCommand):
             / "images"
             / "products"
         )
+        media_dir = Path(settings.MEDIA_ROOT) / "products"
+        media_dir.mkdir(parents=True, exist_ok=True)
         image_files = [
             "d2pro1.jpeg",
             "d2pro2.jpeg",
             "d2pro3.jpeg",
         ]
 
-        for index, filename in enumerate(image_files):
-            if product.images.filter(image__endswith=filename).exists():
-                continue
+        for image in list(product.images.all()):
+            image_path = Path(settings.MEDIA_ROOT) / image.image.name
+            if not image.image.name or not image_path.exists():
+                image.delete()
 
+        for index, filename in enumerate(image_files):
             path = images_dir / filename
             if not path.exists():
                 self.stdout.write(
@@ -91,13 +94,20 @@ class Command(BaseCommand):
                 )
                 continue
 
-            with path.open("rb") as handle:
-                ProductImage.objects.create(
-                    product=product,
-                    image=File(handle, name=filename),
-                    alt_text=f"{product.name} image {index + 1}",
-                    is_primary=index == 0,
-                    sort_order=index,
-                )
+            media_path = media_dir / filename
+            if not media_path.exists():
+                media_path.write_bytes(path.read_bytes())
+
+            image_name = f"products/{filename}"
+            if product.images.filter(image=image_name).exists():
+                continue
+
+            ProductImage.objects.create(
+                product=product,
+                image=image_name,
+                alt_text=f"{product.name} image {index + 1}",
+                is_primary=index == 0,
+                sort_order=index,
+            )
 
         self.stdout.write(self.style.SUCCESS("Loaded D2pro product data."))

@@ -2,7 +2,7 @@
 {% load humanize %}
 {% load static %}
 
-{% block title %}{% if product %}Shop - {{ product.name }}{% else %}Shop{% endif %}{% endblock %}
+{% block title %}{% if product %}{{ product.name }} - PoshPearl{% else %}Shop - PoshPearl{% endif %}{% endblock %}
 
 {% block head_extra %}
 <link rel="stylesheet" href="{% static 'assets/css/poshapp-shop.css' %}">
@@ -14,136 +14,143 @@
 <main class="pp-main" id="top">
   {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
 
-  <section class="pp-hero" id="overview" data-section data-animate>
+  {% if product %}
+  <section class="pp-hero" id="overview" data-section>
     <div class="container pp-hero__grid">
-
       <header class="pp-hero__content">
         <nav class="pp-breadcrumb" aria-label="Breadcrumb">
           <a href="{% url 'home' %}">Home</a>
           <span aria-hidden="true">/</span>
-          <a href="{% url 'shop' %}">Shop</a>
-          {% if product %}
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">{{ product.name }}</span>
-          {% endif %}
+          <a href="{% url 'products' %}">Products</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{{ product.name }}</span>
         </nav>
 
-        {% if product %}
-          <div class="pp-hero__eyebrow">
-            <span class="pp-badge">Wholesale pricing</span>
-          </div>
-
-          <h1 class="pp-hero__title">{{ product.name }}</h1>
-
-          {% if product.short_description %}
-            <p class="pp-hero__lead">{{ product.short_description }}</p>
-          {% elif product.description %}
-            <p class="pp-hero__lead">{{ product.description }}</p>
-          {% endif %}
-
-          <ul class="pp-hero__highlights" aria-label="Key highlights">
-            <li>3D face recognition</li>
-            <li>Palm vein unlock</li>
-            <li>Wi-Fi control</li>
-          </ul>
-
-          <div class="pp-hero__cta-card">
-            <div class="pp-hero__actions" role="group" aria-label="Purchase actions">
-                <button class="pp-btn primary" type="button" data-modal-target="quote">
-                  Request quote
-                </button>
-
-              <div class="pp-qty-select" aria-label="Select quantity">
-                <label for="pp-qty" class="pp-qty-select__label">Qty</label>
-                <input
-                  id="pp-qty"
-                  name="quantity"
-                  type="number"
-                  min="1"
-                  value="1"
-                  inputmode="numeric"
-                  data-add-qty
-                  aria-label="Quantity"
-                >
-              </div>
-
-              <button
-                class="pp-btn"
-                type="button"
-                data-add-to-cart
-                data-product-id="{{ product.id }}"
-                aria-label="Add to cart"
-              >
-                Add to cart
-              </button>
-
-              <a class="pp-btn ghost" href="{% url 'support' %}">Ask support</a>
-            </div>
-            <a class="pp-hero__cart-link" href="{% url 'cart' %}">View cart</a>
-
-            <p class="pp-hero__note">
-              Bulk-ready pricing, dedicated onboarding, and fast fulfillment for verified distributors.
-            </p>
-
-            <div class="pp-trust" aria-label="Trust signals">
-              <div class="pp-trust__item">
-                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
-                <span>Warranty-backed hardware</span>
-              </div>
-              <div class="pp-trust__item">
-                <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
-                <span>Fast Abuja delivery</span>
-              </div>
-              <div class="pp-trust__item">
-                <i class="fa-solid fa-headset" aria-hidden="true"></i>
-                <span>Dedicated distributor support</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="pp-hero__meta" aria-label="Product metadata">
-            <div class="pp-meta-card">
-              <span>SKU</span>
-              <strong>{{ product.sku|default:"N/A" }}</strong>
-            </div>
-            <div class="pp-meta-card">
-              <span>Availability</span>
-              <strong>
-                {% if product.stock_quantity > 0 %}
-                  {{ product.stock_quantity }} units
-                {% else %}
-                  On request
-                {% endif %}
-              </strong>
-            </div>
-            <div class="pp-meta-card">
-              <span>Currency</span>
-              <strong>{{ product.currency }}</strong>
-            </div>
-          </div>
-
-          {% if product.categories.exists %}
-          <div class="pp-chip-list" aria-label="Product categories">
-            {% for category in product.categories.all %}
-              <span class="pp-chip">{{ category.name }}</span>
-            {% endfor %}
-          </div>
-          {% endif %}
-
-        {% else %}
+        <div class="pp-hero__eyebrow">
           <span class="pp-badge">Wholesale pricing</span>
-          <h1 class="pp-hero__title">No products yet</h1>
-          <p class="pp-hero__lead">
-            Add a product in the admin to publish your listing, or run
-            <code>python manage.py load_products</code> to seed the catalog.
+          <span class="pp-hero__stock">
+            {% if product.stock_quantity > 0 %}
+              {{ product.stock_quantity }} in stock
+            {% else %}
+              On request
+            {% endif %}
+          </span>
+        </div>
+
+        <h1 class="pp-hero__title">{{ product.name }}</h1>
+
+        {% if product.short_description %}
+          <p class="pp-hero__lead">{{ product.short_description }}</p>
+        {% elif product.description %}
+          <p class="pp-hero__lead">{{ product.description|truncatewords:32 }}</p>
+        {% endif %}
+
+        <ul class="pp-hero__highlights" aria-label="Key highlights">
+          <li>3D face recognition</li>
+          <li>Palm vein unlock</li>
+          <li>Wi-Fi control</li>
+        </ul>
+
+        <div class="pp-hero__cta-card">
+          <div class="pp-hero__price">
+            <span>Starting from</span>
+            <strong>
+              {% if product.price_tiers.first %}
+                {{ product.currency }} {{ product.price_tiers.first.price|intcomma }}
+                <small>/unit ({{ product.price_tiers.first.min_quantity }}+)</small>
+              {% elif product.price %}
+                {{ product.currency }} {{ product.price|intcomma }}
+              {% else %}
+                On request
+              {% endif %}
+            </strong>
+          </div>
+
+          <div class="pp-hero__actions" role="group" aria-label="Purchase actions">
+            <button class="pp-btn primary" type="button" data-modal-target="quote">
+              Request quote
+            </button>
+
+            <div class="pp-qty-select" aria-label="Select quantity">
+              <label for="pp-qty" class="pp-qty-select__label">Qty</label>
+              <input
+                id="pp-qty"
+                name="quantity"
+                type="number"
+                min="1"
+                value="1"
+                inputmode="numeric"
+                data-add-qty
+                aria-label="Quantity"
+              >
+            </div>
+
+            <button
+              class="pp-btn"
+              type="button"
+              data-add-to-cart
+              data-product-id="{{ product.id }}"
+              aria-label="Add to cart"
+            >
+              Add to cart
+            </button>
+
+            <a class="pp-btn ghost" href="/support/">Ask support</a>
+          </div>
+
+          <p class="pp-hero__note">
+            Bulk-ready pricing, dedicated onboarding, and fast fulfillment for verified distributors.
           </p>
+
+          <div class="pp-trust" aria-label="Trust signals">
+            <div class="pp-trust__item">
+              <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+              <span>2-year warranty</span>
+            </div>
+            <div class="pp-trust__item">
+              <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
+              <span>Fast delivery</span>
+            </div>
+            <div class="pp-trust__item">
+              <i class="fa-solid fa-headset" aria-hidden="true"></i>
+              <span>Dedicated support</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pp-hero__meta" aria-label="Product metadata">
+          <div class="pp-meta-card">
+            <span>SKU</span>
+            <strong>{{ product.sku|default:"N/A" }}</strong>
+          </div>
+          <div class="pp-meta-card">
+            <span>Availability</span>
+            <strong>
+              {% if product.stock_quantity > 0 %}
+                {{ product.stock_quantity }} units
+              {% else %}
+                On request
+              {% endif %}
+            </strong>
+          </div>
+          <div class="pp-meta-card">
+            <span>Currency</span>
+            <strong>{{ product.currency }}</strong>
+          </div>
+        </div>
+
+        {% if product.categories.exists %}
+        <div class="pp-chip-list" aria-label="Product categories">
+          {% for category in product.categories.all %}
+            <span class="pp-chip">{{ category.name }}</span>
+          {% endfor %}
+        </div>
         {% endif %}
       </header>
 
-      {% if product %}
       <aside class="pp-hero__panel" aria-label="Product summary">
         {% with hero_image=product.images.first %}
-          <figure class="pp-hero__media">
+          <div class="pp-hero__media">
             {% if hero_image %}
               <img
                 src="{{ hero_image.image.url }}"
@@ -152,20 +159,18 @@
                 decoding="async"
                 width="640"
                 height="800"
-                onerror="this.onerror=null;this.src='{{ product_fallback }}';"
               >
             {% else %}
               <img
-                src="{% static 'assets/images/products/d2pro1.jpeg' %}"
+                src="{{ product_fallback }}"
                 alt="{{ product.name }}"
                 loading="eager"
                 decoding="async"
                 width="640"
                 height="800"
-                onerror="this.onerror=null;this.src='{{ product_fallback }}';"
               >
             {% endif %}
-          </figure>
+          </div>
         {% endwith %}
 
         <div class="pp-hero__panel-body">
@@ -200,178 +205,21 @@
           </div>
         </div>
       </aside>
-      {% endif %}
-
     </div>
   </section>
 
-  {% if product %}
   <nav class="pp-section-nav" aria-label="On this page">
     <div class="container">
-      <a href="#catalog" data-scroll data-section-link>Catalog</a>
       <a href="#gallery" data-scroll data-section-link>Gallery</a>
       <a href="#pricing" data-scroll data-section-link>Pricing</a>
       <a href="#details" data-scroll data-section-link>Details</a>
       <a href="#benefits" data-scroll data-section-link>Benefits</a>
+      <a href="#catalog" data-scroll data-section-link>Related</a>
       <a href="#request" data-scroll data-section-link>Request</a>
     </div>
   </nav>
-  {% endif %}
 
-  {% if products %}
-  <section class="pp-section pp-section--surface" id="catalog" data-section data-animate>
-    <div class="container">
-      <div class="pp-section__header">
-        <h2>{% if product %}More products{% else %}Product catalog{% endif %}</h2>
-        <p class="pp-muted">Compare smart locks, pricing tiers, and deployment options.</p>
-      </div>
-
-      {% if pagination.total_count %}
-      <div class="pp-results-row">
-        <span>Showing {{ pagination.start_index }}&ndash;{{ pagination.end_index }} of {{ pagination.total_count }} results</span>
-        {% if pagination.has_filters %}
-          <a class="pp-btn primary pp-clear-filters" href="{% url 'shop' %}">Clear filters</a>
-        {% endif %}
-      </div>
-      {% endif %}
-
-      <form class="pp-filter-controls" method="get" aria-label="Catalog filters">
-        {% if active_category %}
-          <input type="hidden" name="category" value="{{ active_category.slug }}">
-        {% endif %}
-        <label class="pp-filter-field">
-          <span class="pp-filter-label">Search</span>
-          <input type="search" name="q" placeholder="Search products" value="{{ request.GET.q|default:'' }}">
-        </label>
-        <label class="pp-filter-field">
-          <span class="pp-filter-label">Min price</span>
-          <input type="number" name="min_price" min="0" placeholder="0" value="{{ request.GET.min_price|default:'' }}">
-        </label>
-        <label class="pp-filter-field">
-          <span class="pp-filter-label">Max price</span>
-          <input type="number" name="max_price" min="0" placeholder="500000" value="{{ request.GET.max_price|default:'' }}">
-        </label>
-        <p class="pp-filter-hint">Enter a minimum and/or maximum price (NGN).</p>
-        {% if pagination.invalid_price_range %}
-          <p class="pp-filter-hint pp-filter-hint--error">Min price was higher than max price. We swapped them for you.</p>
-        {% endif %}
-        <label class="pp-filter-field">
-          <span class="pp-filter-label">Sort</span>
-          <select name="ordering">
-            <option value="updated"{% if request.GET.ordering == "updated" or not request.GET.ordering %} selected{% endif %}>Newest</option>
-            <option value="updated_asc"{% if request.GET.ordering == "updated_asc" %} selected{% endif %}>Oldest</option>
-            <option value="price"{% if request.GET.ordering == "price" %} selected{% endif %}>Price: Low to High</option>
-            <option value="-price"{% if request.GET.ordering == "-price" %} selected{% endif %}>Price: High to Low</option>
-            <option value="name"{% if request.GET.ordering == "name" %} selected{% endif %}>Name: A-Z</option>
-            <option value="-name"{% if request.GET.ordering == "-name" %} selected{% endif %}>Name: Z-A</option>
-          </select>
-        </label>
-        <label class="pp-filter-field">
-          <span class="pp-filter-label">Per page</span>
-          <select name="per_page">
-            <option value="6"{% if request.GET.per_page == "6" or not request.GET.per_page %} selected{% endif %}>6</option>
-            <option value="12"{% if request.GET.per_page == "12" %} selected{% endif %}>12</option>
-            <option value="24"{% if request.GET.per_page == "24" %} selected{% endif %}>24</option>
-          </select>
-        </label>
-        <button class="pp-btn" type="submit">Apply</button>
-      </form>
-
-      {% if categories %}
-      <div class="pp-filter-row" aria-label="Category filters">
-        <a class="pp-chip pp-chip-link{% if not active_category %} is-active{% endif %}" href="{% url 'shop' %}">
-          All
-        </a>
-        {% for category in categories %}
-          <a
-            class="pp-chip pp-chip-link{% if active_category and active_category.id == category.id %} is-active{% endif %}"
-            href="{% url 'shop' %}?category={{ category.slug }}"
-          >
-            {{ category.name }}
-          </a>
-        {% endfor %}
-      </div>
-      {% endif %}
-
-      <div class="pp-product-grid">
-        {% for item in products %}
-        <article class="pp-product-card">
-          <a class="pp-product-card__media" href="{% url 'product_detail' slug=item.slug %}">
-            {% with card_image=item.images.first %}
-              {% if card_image %}
-                <img src="{{ card_image.image.url }}" alt="{{ card_image.alt_text|default:item.name }}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='{{ product_fallback }}';">
-              {% else %}
-                <img src="{{ product_fallback }}" alt="{{ item.name }}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='{{ product_fallback }}';">
-              {% endif %}
-            {% endwith %}
-          </a>
-          <div class="pp-product-card__body">
-            {% with category=item.categories.first %}
-              {% if category %}
-                <span class="pp-chip">{{ category.name }}</span>
-              {% endif %}
-            {% endwith %}
-            <h3>{{ item.name }}</h3>
-            <p class="pp-muted">{{ item.short_description|default:item.description|truncatechars:120 }}</p>
-            <div class="pp-product-card__price">
-              {% with tier=item.price_tiers.first %}
-                {% if tier %}
-                  <strong>{{ tier.currency }} {{ tier.price|intcomma }}</strong>
-                  <span>for {{ tier.min_quantity }}+ pcs</span>
-                {% elif item.price %}
-                  <strong>{{ item.currency }} {{ item.price|intcomma }}</strong>
-                  <span>per unit</span>
-                {% else %}
-                  <strong>On request</strong>
-                {% endif %}
-              {% endwith %}
-            </div>
-            <div class="pp-product-card__actions">
-              <button class="pp-btn" type="button" data-add-to-cart data-product-id="{{ item.id }}">Add to cart</button>
-              <a class="pp-btn ghost" href="{% url 'product_detail' slug=item.slug %}">View details</a>
-            </div>
-          </div>
-        </article>
-        {% endfor %}
-      </div>
-
-      {% if pagination.total_pages > 1 %}
-      <nav class="pp-pagination" aria-label="Catalog pagination">
-        {% if pagination.has_prev %}
-          <a class="pp-btn ghost" href="?{% if pagination.querystring %}{{ pagination.querystring }}&{% endif %}page={{ pagination.prev_page }}&per_page={{ pagination.per_page }}">Previous</a>
-        {% endif %}
-        <span>Page {{ pagination.page }} of {{ pagination.total_pages }}</span>
-        {% if pagination.has_next %}
-          <a class="pp-btn ghost" href="?{% if pagination.querystring %}{{ pagination.querystring }}&{% endif %}page={{ pagination.next_page }}&per_page={{ pagination.per_page }}">Next</a>
-        {% endif %}
-      </nav>
-      {% endif %}
-    </div>
-  </section>
-  {% else %}
-  <section class="pp-section pp-section--surface" id="catalog" data-section data-animate>
-    <div class="container">
-      <div class="pp-empty-state">
-        {% if active_category %}
-          <p>No products found in {{ active_category.name }} yet.</p>
-          <a class="pp-btn primary" href="{% url 'shop' %}">View all products</a>
-        {% elif request.GET.q %}
-          <p>No products match "{{ request.GET.q }}". Try a different search.</p>
-          <a class="pp-btn primary" href="{% url 'shop' %}">Clear search</a>
-        {% elif product %}
-          <p>No other products available yet. Check back soon for more listings.</p>
-          <a class="pp-btn primary" href="{% url 'shop' %}">Back to shop</a>
-        {% else %}
-          <p>No products available yet. Add products in admin or run <code>python manage.py load_products</code>.</p>
-          <a class="pp-btn primary" href="/admin/">Go to admin</a>
-        {% endif %}
-      </div>
-    </div>
-  </section>
-  {% endif %}
-
-  {% if product %}
-  <section class="pp-section" id="gallery" data-section data-animate>
+  <section class="pp-section" id="gallery" data-section>
     <div class="container">
       <div class="pp-section__header">
         <h2>Product gallery</h2>
@@ -398,7 +246,6 @@
                     decoding="async"
                     width="880"
                     height="1100"
-                    onerror="this.onerror=null;this.src='{{ product_fallback }}';"
                   >
                 </button>
                 <span class="pp-gallery__hint">Tap to zoom</span>
@@ -424,7 +271,6 @@
                   decoding="async"
                   width="240"
                   height="320"
-                  onerror="this.onerror=null;this.src='{{ product_fallback }}';"
                 >
               </button>
             {% endfor %}
@@ -435,18 +281,17 @@
               class="pp-gallery__main pp-skeleton"
               type="button"
               data-gallery-main
-              data-modal-image="{% static 'assets/images/products/d2pro1.jpeg' %}"
+              data-modal-image="{{ product_fallback }}"
               data-modal-alt="{{ product.name }}"
               aria-label="Open image preview"
             >
               <img
-                src="{% static 'assets/images/products/d2pro1.jpeg' %}"
+                src="{{ product_fallback }}"
                 alt="{{ product.name }}"
                 loading="eager"
                 decoding="async"
                 width="880"
                 height="1100"
-                onerror="this.onerror=null;this.src='{{ product_fallback }}';"
               >
             </button>
             <span class="pp-gallery__hint">Tap to zoom</span>
@@ -456,7 +301,7 @@
     </div>
   </section>
 
-  <section class="pp-section" id="pricing" data-section data-animate>
+  <section class="pp-section" id="pricing" data-section>
     <div class="container">
       <div class="pp-section__header">
         <h2>Wholesale tiers</h2>
@@ -474,7 +319,7 @@
           <tbody>
             {% if product.price_tiers.exists %}
               {% for tier in product.price_tiers.all %}
-                <tr class="pp-tier-row {% if forloop.last %}is-highlight{% endif %}">
+                <tr class="pp-tier-row" data-min="{{ tier.min_quantity }}" data-price="{{ tier.price }}">
                   <td>
                     <span class="pp-qty">{{ tier.min_quantity }} pieces</span>
                     {% if tier.label %}
@@ -489,7 +334,7 @@
                 </tr>
               {% endfor %}
             {% elif product.price %}
-              <tr class="pp-tier-row">
+              <tr class="pp-tier-row" data-min="1" data-price="{{ product.price }}">
                 <td>Single unit</td>
                 <td><span class="pp-price">{{ product.currency }} {{ product.price|intcomma }}</span></td>
               </tr>
@@ -504,7 +349,7 @@
     </div>
   </section>
 
-  <section class="pp-section" id="details" data-section data-animate>
+  <section class="pp-section" id="details" data-section>
     <div class="container">
       <div class="pp-section__header">
         <h2>Product details</h2>
@@ -569,7 +414,7 @@
     </div>
   </section>
 
-  <section class="pp-section" id="benefits" data-section data-animate>
+  <section class="pp-section" id="benefits" data-section>
     <div class="container">
       <div class="pp-section__header">
         <h2>Why distributors choose D2pro</h2>
@@ -598,7 +443,7 @@
     </div>
   </section>
 
-  <section class="pp-section" id="request" data-section data-animate>
+  <section class="pp-section" id="request" data-section>
     <div class="container">
       <div class="pp-request">
         <div class="pp-request__copy">
@@ -607,7 +452,7 @@
         </div>
         <div class="pp-request__actions">
           <button class="pp-btn primary" type="button" data-modal-target="quote">Request quote</button>
-          <a class="pp-btn ghost" href="{% url 'contact' %}">Contact</a>
+          <a class="pp-btn ghost" href="/contact/">Contact</a>
         </div>
       </div>
     </div>
@@ -622,6 +467,69 @@
       </div>
     </div>
   </div>
+  {% else %}
+  <section class="pp-empty">
+    <div class="container">
+      <nav class="pp-breadcrumb" aria-label="Breadcrumb">
+        <a href="{% url 'home' %}">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="{% url 'products' %}">Products</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Catalog</span>
+      </nav>
+      <h1 class="pp-hero__title">Product catalog</h1>
+      <p class="pp-hero__lead">Browse our premium collection of smart home security solutions.</p>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if products %}
+  <section id="catalog" class="pp-section" data-section>
+    <div class="container">
+      <div class="pp-section__header">
+        <h2>Related products</h2>
+        <p class="pp-muted">Explore other distributor-ready smart lock options.</p>
+      </div>
+
+      <div class="pp-catalog">
+        {% for item in products %}
+        <article class="pp-product-card">
+          <a class="pp-product-card__media" href="{% url 'product_detail_products' slug=item.slug %}">
+            {% with card_image=item.images.first %}
+              <img src="{{ card_image.image.url|default:product_fallback }}" alt="{{ item.name }}" loading="lazy" onerror="this.onerror=null;this.src='{{ product_fallback }}';">
+            {% endwith %}
+            {% if item.stock_quantity == 0 %}
+              <span class="pp-product-card__badge">Out of stock</span>
+            {% endif %}
+          </a>
+          <div class="pp-product-card__body">
+            <div class="pp-product-card__meta">
+              {% for cat in item.categories.all|slice:":1" %}
+                <span class="pp-chip">{{ cat.name }}</span>
+              {% endfor %}
+            </div>
+            <h3>
+              <a href="{% url 'product_detail_products' slug=item.slug %}">{{ item.name }}</a>
+            </h3>
+            <p>{{ item.short_description|default:item.description|truncatechars:90 }}</p>
+            <div class="pp-product-card__footer">
+              <span class="pp-price">
+                {% if item.price_tiers.exists %}
+                  {{ item.currency }} {{ item.price_tiers.first.price|intcomma }}
+                {% elif item.price %}
+                  {{ item.currency }} {{ item.price|intcomma }}
+                {% else %}
+                  On request
+                {% endif %}
+              </span>
+              <button class="pp-btn" data-add-to-cart data-product-id="{{ item.id }}">Add</button>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
   {% endif %}
 
   <template id="quote-form-template">
@@ -659,33 +567,97 @@
       <button class="pp-btn primary" type="submit">Send request</button>
     </form>
   </template>
-
 </main>
 
-{% endblock %}
-
-{% block scripts %}
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var bar = document.querySelector('[data-purchase-bar]');
     var hero = document.getElementById('overview');
-    if (!bar || !hero || typeof IntersectionObserver === 'undefined') {
-      return;
+    if (bar && hero && typeof IntersectionObserver !== 'undefined') {
+      bar.classList.add('is-floating');
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          bar.classList.toggle('is-visible', !entry.isIntersecting);
+        });
+      }, { rootMargin: '-80px 0px 0px 0px', threshold: 0.1 });
+      observer.observe(hero);
     }
 
-    bar.classList.add('is-floating');
+    var qtyInput = document.getElementById('pp-qty');
+    var tierRows = Array.prototype.slice.call(document.querySelectorAll('.pp-tier-row'));
+    function highlightTier() {
+      if (!qtyInput || !tierRows.length) return;
+      var qty = parseInt(qtyInput.value || '1', 10);
+      var activeRow = null;
+      tierRows.forEach(function (row) {
+        var minQty = parseInt(row.getAttribute('data-min') || '0', 10);
+        if (qty >= minQty) {
+          activeRow = row;
+        }
+        row.classList.remove('is-highlight');
+      });
+      if (activeRow) activeRow.classList.add('is-highlight');
+    }
+    if (qtyInput) {
+      qtyInput.addEventListener('input', highlightTier);
+      highlightTier();
+    }
 
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          bar.classList.remove('is-visible');
-        } else {
-          bar.classList.add('is-visible');
+    var galleryMain = document.querySelector('[data-gallery-main] img');
+    var galleryButtons = document.querySelectorAll('[data-gallery-thumb]');
+    galleryButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var src = btn.getAttribute('data-preview-src');
+        var alt = btn.getAttribute('data-preview-alt');
+        if (galleryMain && src) {
+          galleryMain.src = src;
+          galleryMain.alt = alt || '';
+        }
+        galleryButtons.forEach(function (b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+      });
+    });
+
+    function openModal(contentNode, ariaLabel) {
+      var overlay = document.createElement('div');
+      overlay.className = 'pp-modal is-open';
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-label', ariaLabel || 'Dialog');
+      overlay.innerHTML = '<div class="pp-modal__dialog"><button class="pp-modal__close" type="button" aria-label="Close">&times;</button><div class="pp-modal__content"></div></div>';
+      document.body.appendChild(overlay);
+      var content = overlay.querySelector('.pp-modal__content');
+      content.appendChild(contentNode);
+      overlay.querySelector('.pp-modal__close').addEventListener('click', function () { overlay.remove(); });
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.remove(); });
+      document.addEventListener('keydown', function esc(e) {
+        if (e.key === 'Escape') {
+          overlay.remove();
+          document.removeEventListener('keydown', esc);
         }
       });
-    }, { rootMargin: '-80px 0px 0px 0px', threshold: 0.1 });
+      var firstInput = overlay.querySelector('input, textarea, button');
+      if (firstInput) firstInput.focus();
+    }
 
-    observer.observe(hero);
+    document.querySelectorAll('[data-modal-target="quote"]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var tpl = document.getElementById('quote-form-template');
+        if (!tpl) return;
+        openModal(tpl.content.cloneNode(true), 'Request quote');
+      });
+    });
+
+    document.querySelectorAll('[data-gallery-main]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var src = btn.getAttribute('data-modal-image');
+        var alt = btn.getAttribute('data-modal-alt') || 'Product image';
+        if (!src) return;
+        var figure = document.createElement('figure');
+        figure.innerHTML = '<img src="' + src + '" alt="' + alt + '">';
+        openModal(figure, 'Image preview');
+      });
+    });
   });
 </script>
 {% endblock %}

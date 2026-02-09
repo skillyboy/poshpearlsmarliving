@@ -1,0 +1,54 @@
+﻿{% extends "base.html" %}
+{% load static %}
+
+{% block title %}FAQ - PoshPearl{% endblock %}
+{% block body_class %}pp-light pp-faq{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/info-pages.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/faq.css' %}?v=20260207">
+{% endblock %}
+
+{% block content %}
+<section class="pp-shell">
+    <div class="container">
+        <div class="pp-info-hero">
+            <p class="pp-pill"><i class="fa-solid fa-circle-question"></i> FAQ</p>
+            <h1 class="pp-section-title">Frequently Asked Questions</h1>
+            <p class="pp-section-subtitle">Everything you need to know about shopping with PoshPearl.</p>
+        </div>
+
+        <div class="pp-card pp-info-card">
+            <button class="pp-faq-question" type="button">How do I place an order?</button>
+            <div class="pp-faq-answer">Browse our catalog, add items to cart, and checkout. You can shop as a guest or create an account.</div>
+
+            <button class="pp-faq-question" type="button">What payment methods do you accept?</button>
+            <div class="pp-faq-answer">We accept Paystack-supported cards and bank transfers.</div>
+
+            <button class="pp-faq-question" type="button">How can I track my order?</button>
+            <div class="pp-faq-answer">Use our tracking page with your order ID and email address.</div>
+
+            <button class="pp-faq-question" type="button">Do you offer bulk discounts?</button>
+            <div class="pp-faq-answer">Yes, wholesale partners get tiered pricing and priority support.</div>
+        </div>
+
+        <div class="pp-info-actions" style="margin-top: 18px;">
+            <a class="pp-btn-primary" href="{% url 'contact' %}">Contact support</a>
+            <a class="pp-btn-secondary" href="{% url 'support' %}">Help center</a>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll('.pp-faq-question').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            btn.classList.toggle('is-open');
+            const answer = btn.nextElementSibling;
+            if (answer) {
+                answer.classList.toggle('is-open');
+            }
+        });
+    });
+</script>
+{% endblock %}

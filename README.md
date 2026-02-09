@@ -58,6 +58,21 @@ PAYSTACK_CALLBACK_URL=
 
 You can place the values above in a `.env` file in the project root, and the app will load them on startup.
 
+## Email (Order confirmation)
+
+By default, emails are printed to the console. To configure SMTP, set:
+
+```
+SITE_URL=http://localhost:8000
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+DEFAULT_FROM_EMAIL=no-reply@poshpearl.com
+EMAIL_HOST=smtp.yourprovider.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=your_user
+EMAIL_HOST_PASSWORD=your_password
+EMAIL_USE_TLS=true
+```
+
 ## Payment (Paystack)
 
 Set the following environment variables before running the server:

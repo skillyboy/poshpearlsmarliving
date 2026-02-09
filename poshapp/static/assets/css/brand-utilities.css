@@ -1,0 +1,87 @@
+/* ===================
+   BRAND UTILITY CLASSES
+   =================== */
+
+/* Text Colors - Burgundy & Gold */
+.text-gold {
+    color: var(--pp-gold) !important;
+}
+
+.text-gold-light {
+    color: var(--pp-gold-light) !important;
+}
+
+.text-gold-dark {
+    color: var(--pp-gold-dark) !important;
+}
+
+.text-burgundy {
+    color: var(--pp-burgundy) !important;
+}
+
+.text-burgundy-light {
+    color: var(--pp-burgundy-light) !important;
+}
+
+.text-burgundy-dark {
+    color: var(--pp-burgundy-dark) !important;
+}
+
+/* Background Colors */
+.bg-gold {
+    background-color: var(--pp-gold) !important;
+    color: var(--pp-charcoal) !important;
+}
+
+.bg-gold-light {
+    background-color: var(--pp-gold-light) !important;
+    color: var(--pp-charcoal) !important;
+}
+
+.bg-burgundy {
+    background-color: var(--pp-burgundy) !important;
+    color: var(--pp-white) !important;
+}
+
+.bg-burgundy-light {
+    background-color: var(--pp-burgundy-light) !important;
+    color: var(--pp-white) !important;
+}
+
+.bg-burgundy-dark {
+    background-color: var(--pp-burgundy-dark) !important;
+    color: var(--pp-white) !important;
+}
+
+/* Border Colors */
+.border-gold {
+    border-color: var(--pp-gold) !important;
+}
+
+.border-burgundy {
+    border-color: var(--pp-burgundy) !important;
+}
+
+/* Badge Variants */
+.badge-gold {
+    background-color: var(--pp-gold) !important;
+    color: var(--pp-charcoal) !important;
+    font-weight: 600;
+    padding: 0.35em 0.65em;
+}
+
+.badge-burgundy {
+    background-color: var(--pp-burgundy) !important;
+    color: var(--pp-white) !important;
+    font-weight: 600;
+    padding: 0.35em 0.65em;
+}
+
+/* Hover Effects */
+.hover-gold:hover {
+    color: var(--pp-gold) !important;
+}
+
+.hover-burgundy:hover {
+    color: var(--pp-burgundy) !important;
+}

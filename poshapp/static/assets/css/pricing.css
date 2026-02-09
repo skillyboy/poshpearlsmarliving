@@ -1,0 +1,39 @@
+﻿.pp-pricing-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-bottom: 24px;
+}
+
+.pp-pricing-card {
+  padding: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.pp-pricing-card ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #6b4a4a;
+}
+
+.pp-pricing-price {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #5c2e2e;
+}
+
+.pp-pricing-card.is-featured {
+  border: 1px solid rgba(92, 46, 46, 0.35);
+  box-shadow: 0 20px 36px rgba(92, 46, 46, 0.18);
+}
+
+.pp-pricing-faq {
+  padding: 20px;
+}
+
+.pp-pricing-faq-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}

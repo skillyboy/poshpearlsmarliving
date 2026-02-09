@@ -1,0 +1,71 @@
+﻿{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}My Wishlist - PoshPearl{% endblock %}
+{% block body_class %}pp-light pp-wishlist{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/wishlist-page.css' %}?v=20260207">
+{% endblock %}
+
+{% block content %}
+<section class="pp-shell">
+    {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
+    <div class="container">
+        <div class="pp-commerce-header">
+            <div>
+                <p class="pp-pill"><i class="fa-solid fa-heart"></i> Wishlist</p>
+                <h1 class="pp-section-title">My Wishlist</h1>
+                <p class="pp-section-subtitle">Save items for later and add them to your cart anytime.</p>
+            </div>
+            <a class="pp-btn-secondary" href="{% url 'products' %}">Browse products</a>
+        </div>
+
+        {% if is_guest %}
+        <div class="pp-card pp-wishlist-empty">
+            <h2>Sign in to save your favorites</h2>
+            <p class="pp-muted">Create an account to keep your wishlist synced.</p>
+            <div class="pp-status-actions">
+                <a class="pp-btn-primary" href="/accounts/login/?next=/wishlist/">Sign in</a>
+                <a class="pp-btn-secondary" href="{% url 'products' %}">Browse products</a>
+            </div>
+        </div>
+        {% elif wishlist_items %}
+        <div class="pp-wishlist-grid" data-wishlist-grid>
+            {% for item in wishlist_items %}
+            {% with product=item.product %}
+            <div class="pp-card pp-wishlist-card" data-wishlist-item="{{ product.id }}">
+                {% with hero_image=product.images.first %}
+                {% if hero_image %}
+                <img src="{{ hero_image.image.url }}" alt="{{ product.name }}" loading="lazy" decoding="async"
+                    onerror="this.onerror=null;this.src='{{ product_fallback }}';">
+                {% else %}
+                <img src="{{ product_fallback }}" alt="{{ product.name }}" loading="lazy" decoding="async">
+                {% endif %}
+                {% endwith %}
+
+                <div>
+                    <strong>{{ product.name }}</strong>
+                    <div class="pp-muted">NGN {{ product.price|intcomma }}</div>
+                </div>
+
+                <div class="pp-wishlist-actions">
+                    <a class="pp-btn-primary" href="{% url 'product_detail_products' product.slug %}">View details</a>
+                    <button class="pp-btn-secondary" data-wishlist-remove data-product-id="{{ product.id }}">Remove</button>
+                </div>
+            </div>
+            {% endwith %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="pp-card pp-wishlist-empty">
+            <h2>Your wishlist is empty</h2>
+            <p class="pp-muted">Save products to review or purchase later.</p>
+            <a class="pp-btn-primary" href="{% url 'products' %}">Browse products</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

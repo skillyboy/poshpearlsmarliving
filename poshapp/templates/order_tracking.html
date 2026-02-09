@@ -1,0 +1,123 @@
+﻿{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}Track Order - PoshPearl{% endblock %}
+{% block body_class %}pp-light pp-track-order{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/track-order.css' %}?v=20260207">
+{% endblock %}
+
+{% block content %}
+<section class="pp-shell">
+    <div class="container">
+        <div class="pp-track-hero">
+            <div>
+                <p class="pp-pill"><i class="fa-solid fa-location-dot"></i> Order Tracking</p>
+                <h1 class="pp-section-title">Track your order</h1>
+                <p class="pp-section-subtitle">Enter your order number and email to see the latest status.</p>
+            </div>
+            <div class="pp-track-search">
+                <form method="post" action="{% url 'track_order' %}" class="pp-card pp-track-form">
+                    {% csrf_token %}
+                    {% if tracking_error %}
+                    <div class="pp-track-alert is-error">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span>{{ tracking_error }}</span>
+                    </div>
+                    {% endif %}
+                    <label class="pp-track-label" for="{{ form.order_number.id_for_label }}">Order number</label>
+                    {{ form.order_number }}
+                    {% if form.order_number.errors %}
+                    <div class="pp-track-error">{{ form.order_number.errors|striptags }}</div>
+                    {% endif %}
+
+                    <label class="pp-track-label" for="{{ form.email.id_for_label }}">Email address</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <div class="pp-track-error">{{ form.email.errors|striptags }}</div>
+                    {% endif %}
+
+                    <button class="pp-btn-primary" type="submit">Check status</button>
+                    <p class="pp-muted">Need help? <a href="{% url 'support' %}">Contact support</a>.</p>
+                </form>
+            </div>
+        </div>
+
+        <div class="pp-track-grid">
+            <div class="pp-card pp-track-panel">
+                <div class="pp-track-panel__header">
+                    <h2>Popular help topics</h2>
+                    <span class="pp-muted">Guides for setup and troubleshooting</span>
+                </div>
+                <div class="pp-track-topics">
+                    <article>
+                        <h3>Getting started</h3>
+                        <p>Guides for setting up your smart devices.</p>
+                    </article>
+                    <article>
+                        <h3>Managing devices</h3>
+                        <p>Learn how to manage your devices and automations.</p>
+                    </article>
+                    <article>
+                        <h3>Account and billing</h3>
+                        <p>Payment questions and order updates.</p>
+                    </article>
+                    <article>
+                        <h3>Troubleshooting</h3>
+                        <p>Fix common issues in minutes.</p>
+                    </article>
+                </div>
+                <div class="pp-track-links">
+                    <a class="pp-btn-secondary" href="{% url 'support' %}"><i class="fa-solid fa-headset"></i> Live Chat</a>
+                    <a class="pp-btn-secondary" href="mailto:support@poshpearl.com"><i class="fa-solid fa-envelope"></i> Email Support</a>
+                    <a class="pp-btn-secondary" href="tel:+2348001234567"><i class="fa-solid fa-phone"></i> Call Support</a>
+                </div>
+            </div>
+
+            <aside class="pp-card pp-track-summary">
+                {% if order %}
+                <div class="pp-track-summary__header">
+                    <h2>Order #{{ order.id }}</h2>
+                    <span class="pp-badge is-gold">{{ order.get_status_display }}</span>
+                </div>
+                <div class="pp-track-summary__meta">
+                    <div>
+                        <span>Payment</span>
+                        <strong>{{ order.get_payment_status_display }}</strong>
+                    </div>
+                    <div>
+                        <span>Placed</span>
+                        <strong>{{ order.created_at|date:"M d, Y" }}</strong>
+                    </div>
+                </div>
+                <div class="pp-divider"></div>
+                <div class="pp-track-items">
+                    {% for item in order.items.all %}
+                    <div class="pp-track-item">
+                        <div>
+                            <strong>{{ item.product|default:"Product" }}</strong>
+                            <span>{{ item.quantity }} x {{ item.currency }} {{ item.unit_price|intcomma }}</span>
+                        </div>
+                        <strong>{{ item.currency }} {{ item.line_total|intcomma }}</strong>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="pp-divider"></div>
+                <div class="pp-track-total">
+                    <span>Total</span>
+                    <strong>{{ order.currency }} {{ order.subtotal|intcomma }}</strong>
+                </div>
+                {% else %}
+                <div class="pp-track-empty">
+                    <h2>No order loaded</h2>
+                    <p class="pp-muted">Submit the form to view an order summary.</p>
+                </div>
+                {% endif %}
+            </aside>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ product.name }} - PoshPearl{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'assets/css/products.css' %}?v=20260205">
+<link rel="stylesheet" href="{% static 'assets/css/product-detail.css' %}?v=20260205">
+{% endblock %}
+
+{% block body_class %}pp-light pp-products pp-product-detail{% endblock %}
+
+{% block content %}
+<main class="pp-detail">
+  {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
+
+  <section class="pp-detail__hero">
+    <div class="container">
+      <nav class="pp-products__breadcrumb" aria-label="Breadcrumb">
+        <a href="{% url 'home' %}">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="{% url 'products' %}">Products</a>
+        {% if product.categories.exists %}
+          <span aria-hidden="true">/</span>
+          <span>{{ product.categories.first.name }}</span>
+        {% endif %}
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{{ product.name }}</span>
+      </nav>
+
+      <div class="pp-detail__layout">
+        <aside class="pp-detail__filters">
+          <div class="pp-products__filters-header">
+            <h3>Filters</h3>
+            <a href="{% url 'products' %}" class="pp-products__reset">Reset</a>
+          </div>
+          <div class="pp-products__filter-group">
+            <h4>Category</h4>
+            <div class="pp-products__checklist">
+              {% for category in categories %}
+              <label class="pp-products__check">
+                <input type="checkbox" {% if product.categories.all|length and category in product.categories.all %}checked{% endif %}>
+                <span>{{ category.name }}</span>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="pp-products__filter-group">
+            <h4>Availability</h4>
+            <label class="pp-products__check">
+              <input type="checkbox" {% if product.stock_quantity > 0 %}checked{% endif %}>
+              <span>In stock</span>
+            </label>
+          </div>
+          <div class="pp-products__filter-group">
+            <h4>Compatibility</h4>
+            <div class="pp-products__checklist">
+              <label class="pp-products__check"><input type="checkbox" checked><span>Alexa</span></label>
+              <label class="pp-products__check"><input type="checkbox"><span>Google</span></label>
+              <label class="pp-products__check"><input type="checkbox" checked><span>App Control</span></label>
+            </div>
+          </div>
+        </aside>
+
+        <section class="pp-detail__summary">
+          <div class="pp-detail__media" data-gallery>
+            {% with hero_image=product.images.first %}
+            <div class="pp-detail__main" data-gallery-main data-modal-image="{{ hero_image.image.url|default:product_fallback }}" data-modal-alt="{{ product.name }}">
+              <img src="{{ hero_image.image.url|default:product_fallback }}" alt="{{ product.name }}" loading="eager" decoding="async">
+            </div>
+            {% endwith %}
+
+            <div class="pp-detail__thumbs">
+              {% for image in product.images.all|slice:":4" %}
+              <button class="pp-detail__thumb{% if forloop.first %} is-active{% endif %}" type="button"
+                data-gallery-thumb data-preview-src="{{ image.image.url }}" data-preview-alt="{{ image.alt_text|default:product.name }}">
+                <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" loading="lazy" decoding="async">
+              </button>
+              {% endfor %}
+              {% if not product.images.exists %}
+              <button class="pp-detail__thumb is-active" type="button">
+                <img src="{{ product_fallback }}" alt="{{ product.name }}">
+              </button>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="pp-detail__info">
+            <div class="pp-detail__badge">
+              {% if product.stock_quantity > 0 %}In stock{% else %}Limited Pre-order{% endif %}
+            </div>
+            <h1>{{ product.name }}</h1>
+            <div class="pp-detail__rating">
+              <span>★★★★★</span>
+              <span>4.8 (36 reviews)</span>
+            </div>
+
+            <div class="pp-detail__price-row">
+              <div class="pp-detail__price">
+                {% if product.price_tiers.exists %}
+                  {{ product.currency }} {{ product.price_tiers.first.price|intcomma }}
+                {% elif product.price %}
+                  {{ product.currency }} {{ product.price|intcomma }}
+                {% else %}
+                  On request
+                {% endif %}
+              </div>
+              {% if product.compare_at_price %}
+              <div class="pp-detail__save">Save {{ product.currency }} {{ product.compare_at_price|intcomma }}</div>
+              {% endif %}
+            </div>
+
+            {% if product.compare_at_price %}
+              <div class="pp-detail__retail">Retail price: {{ product.currency }} {{ product.compare_at_price|intcomma }}</div>
+            {% endif %}
+
+            <div class="pp-detail__actions">
+              <button class="pp-products__btn pp-products__btn--primary" type="button">
+                {% if product.stock_quantity > 0 %}Buy now{% else %}Pre-order now{% endif %}
+              </button>
+              <button class="pp-products__btn pp-products__btn--ghost" type="button">Request installation</button>
+              <button class="pp-products__btn pp-products__btn--ghost" type="button" data-modal-target="quote">Add to quote</button>
+            </div>
+
+            <div class="pp-detail__tags">
+              <span class="pp-product-chip">Fingerprint</span>
+              <span class="pp-product-chip">NFC</span>
+              <span class="pp-product-chip">App Control</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <section class="pp-detail__tabs">
+    <div class="container">
+      <nav class="pp-detail__tablist">
+        <a href="#overview">Overview</a>
+        <a href="#features" class="is-active">Key Features</a>
+        <a href="#specs">Specs</a>
+        <a href="#box">What’s in the box</a>
+        <a href="#support">Installation & Support</a>
+        <a href="#reviews">Reviews</a>
+      </nav>
+
+      <div class="pp-detail__content">
+        <div class="pp-detail__col">
+          <section id="overview">
+            <h2>Overview</h2>
+            <p>{{ product.description|default:"Premium biometric access control built for modern smart homes." }}</p>
+          </section>
+
+          <section id="features">
+            <h2>Key Features</h2>
+            <ul>
+              <li>Fingerprint + palm recognition</li>
+              <li>PIN + RFID + NFC access</li>
+              <li>Secure smartphone app control</li>
+              <li>Auto-lock + anti-spoof tech</li>
+              <li>Alexa and Google Assistant ready</li>
+            </ul>
+          </section>
+        </div>
+
+        <aside class="pp-detail__aside">
+          <div class="pp-detail__specs" id="specs">
+            <h3>Specs</h3>
+            <div><span>Model</span><strong>{{ product.sku|default:"D2Pro" }}</strong></div>
+            <div><span>Dimensions</span><strong>137 × 46mm</strong></div>
+            <div><span>Weight</span><strong>216g</strong></div>
+            <div><span>Connectivity</span><strong>Wi‑Fi + App</strong></div>
+          </div>
+          <div class="pp-detail__reviews" id="reviews">
+            <h3>Reviews</h3>
+            <div class="pp-detail__review-row"><span>5★</span><span class="pp-detail__bar"></span><span>515</span></div>
+            <div class="pp-detail__review-row"><span>4★</span><span class="pp-detail__bar"></span><span>535</span></div>
+            <div class="pp-detail__review-row"><span>3★</span><span class="pp-detail__bar"></span><span>333</span></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <template id="quote-form-template">
+    <form class="pp-products__quote" data-validate>
+      <div class="pp-products__field">
+        <label for="quote-name">Full name</label>
+        <input id="quote-name" name="name" type="text" required>
+      </div>
+      <div class="pp-products__field">
+        <label for="quote-email">Email address</label>
+        <input id="quote-email" name="email" type="email" required>
+      </div>
+      <div class="pp-products__field">
+        <label for="quote-qty">Estimated quantity</label>
+        <input id="quote-qty" name="quantity" type="number" min="1" placeholder="e.g. 100">
+      </div>
+      <button class="pp-products__btn pp-products__btn--primary" type="submit">Send request</button>
+    </form>
+  </template>
+</main>
+
+<script>
+  (function () {
+    const main = document.querySelector('[data-gallery-main] img');
+    const thumbs = document.querySelectorAll('[data-gallery-thumb]');
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener('click', () => {
+        const src = thumb.getAttribute('data-preview-src');
+        const alt = thumb.getAttribute('data-preview-alt');
+        if (main && src) {
+          main.src = src;
+          main.alt = alt || '';
+        }
+        thumbs.forEach((t) => t.classList.remove('is-active'));
+        thumb.classList.add('is-active');
+      });
+    });
+  })();
+</script>
+{% endblock %}

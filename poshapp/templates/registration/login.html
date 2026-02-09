@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+
+{% block title %}Login - PoshPearl{% endblock %}
+
+{% block content %}
+<section class="pp-auth">
+    <div class="pp-auth__shell container">
+        <div class="pp-auth__panel">
+            <div class="pp-auth__brand">
+                <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="PoshPearl" height="44" loading="lazy">
+                <span>PoshPearl Smart Living</span>
+            </div>
+            <h1>Welcome back</h1>
+            <p class="pp-auth__lead">Securely manage your smart home in one place.</p>
+            <div class="pp-auth__feature">
+                <span class="pp-auth__icon"><i class="fa-solid fa-shield-halved"></i></span>
+                <span>Encrypted access</span>
+            </div>
+            <div class="pp-auth__feature">
+                <span class="pp-auth__icon"><i class="fa-solid fa-sliders"></i></span>
+                <span>Device control</span>
+            </div>
+            <div class="pp-auth__feature">
+                <span class="pp-auth__icon"><i class="fa-solid fa-bell"></i></span>
+                <span>Real-time alerts</span>
+            </div>
+        </div>
+
+        <div class="pp-auth__card">
+            <div class="pp-auth__card-header">
+                <h2>Log in</h2>
+                <p>Enter your details to continue.</p>
+            </div>
+
+            {% if form.errors %}
+            <div class="pp-auth__alert" role="alert">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Incorrect email or password. Try again.</span>
+            </div>
+            {% endif %}
+
+            <form method="post" class="pp-auth__form">
+                {% csrf_token %}
+                <div class="pp-auth__field">
+                    <label for="{{ form.username.id_for_label }}">Email address</label>
+                    <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+                        value="{{ form.username.value|default:'' }}" placeholder="Email address" required>
+                </div>
+
+                <div class="pp-auth__field">
+                    <label for="{{ form.password.id_for_label }}">Password</label>
+                    <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
+                        placeholder="Password" required>
+                </div>
+
+                <div class="pp-auth__meta">
+                    <label class="pp-auth__checkbox">
+                        <input type="checkbox" name="remember_me">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="{% url 'password_reset' %}">Forgot password?</a>
+                </div>
+
+                <input type="hidden" name="next" value="{{ next }}">
+
+                <button type="submit" class="pp-auth__primary">
+                    Log in
+                </button>
+
+                <div class="pp-auth__divider"><span>or</span></div>
+
+                <button type="button" class="pp-auth__google" aria-label="Continue with Google">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" aria-hidden="true">
+                    Continue with Google
+                </button>
+
+                <p class="pp-auth__footer">
+                    New here? <a href="{% url 'track_order' %}">Create an account</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</section>
+
+<style>
+    .pp-auth {
+        padding: clamp(32px, 6vw, 80px) 0;
+        background:
+            radial-gradient(900px 420px at 10% 0%, rgba(92, 46, 46, 0.25), transparent 60%),
+            radial-gradient(900px 420px at 90% 0%, rgba(245, 166, 35, 0.18), transparent 60%),
+            linear-gradient(180deg, #f6f1f1 0%, #ece6e6 100%);
+        color: #3d1f1f;
+    }
+
+    .pp-auth__shell {
+        display: grid;
+        gap: clamp(24px, 4vw, 48px);
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        align-items: stretch;
+    }
+
+    .pp-auth__panel {
+        padding: clamp(24px, 4vw, 40px);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.75);
+        box-shadow: 0 20px 50px rgba(61, 31, 31, 0.12);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .pp-auth__panel::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(120deg, rgba(245, 166, 35, 0.12), rgba(92, 46, 46, 0.08));
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .pp-auth__brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 24px;
+    }
+
+    .pp-auth__panel h1 {
+        position: relative;
+        z-index: 1;
+        margin: 0 0 8px;
+        font-size: clamp(28px, 4vw, 40px);
+    }
+
+    .pp-auth__lead {
+        position: relative;
+        z-index: 1;
+        color: #6b4a4a;
+        font-size: 1.05rem;
+        margin-bottom: 24px;
+    }
+
+    .pp-auth__feature {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        font-weight: 500;
+        color: #4b2a2a;
+    }
+
+    .pp-auth__icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: rgba(245, 166, 35, 0.2);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #7a4545;
+    }
+
+    .pp-auth__card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 24px;
+        padding: clamp(24px, 4vw, 36px);
+        box-shadow: 0 20px 50px rgba(61, 31, 31, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .pp-auth__card-header h2 {
+        margin: 0 0 6px;
+        font-size: 1.6rem;
+        color: #3d1f1f;
+    }
+
+    .pp-auth__card-header p {
+        margin: 0 0 18px;
+        color: #6b4a4a;
+    }
+
+    .pp-auth__alert {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(239, 68, 68, 0.08);
+        color: #b91c1c;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        padding: 10px 12px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        font-size: 0.95rem;
+    }
+
+    .pp-auth__form {
+        display: grid;
+        gap: 14px;
+    }
+
+    .pp-auth__field label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #3d1f1f;
+    }
+
+    .pp-auth__field input {
+        width: 100%;
+        border: 1px solid rgba(122, 69, 69, 0.35);
+        border-radius: 14px;
+        padding: 12px 14px;
+        background: #fff;
+        font-size: 1rem;
+        color: #3d1f1f;
+    }
+
+    .pp-auth__field input:focus-visible {
+        outline: 2px solid rgba(245, 166, 35, 0.4);
+        border-color: #f5a623;
+    }
+
+    .pp-auth__meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+        color: #6b4a4a;
+    }
+
+    .pp-auth__checkbox {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+    }
+
+    .pp-auth__primary {
+        width: 100%;
+        border: none;
+        border-radius: 14px;
+        padding: 12px 16px;
+        background: linear-gradient(135deg, #5c2e2e, #7a4545);
+        color: #fff;
+        font-weight: 600;
+        font-size: 1rem;
+        box-shadow: 0 10px 24px rgba(92, 46, 46, 0.25);
+        transition: transform 150ms ease, box-shadow 150ms ease;
+    }
+
+    .pp-auth__primary:hover,
+    .pp-auth__primary:focus-visible {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 30px rgba(92, 46, 46, 0.3);
+    }
+
+    .pp-auth__divider {
+        position: relative;
+        text-align: center;
+        color: #9a7b7b;
+        font-size: 0.85rem;
+        margin: 4px 0;
+    }
+
+    .pp-auth__divider::before,
+    .pp-auth__divider::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 40%;
+        height: 1px;
+        background: rgba(122, 69, 69, 0.2);
+    }
+
+    .pp-auth__divider::before { left: 0; }
+    .pp-auth__divider::after { right: 0; }
+
+    .pp-auth__google {
+        width: 100%;
+        border: 1px solid rgba(122, 69, 69, 0.25);
+        border-radius: 14px;
+        padding: 10px 16px;
+        background: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-weight: 600;
+        color: #3d1f1f;
+    }
+
+    .pp-auth__google img {
+        width: 18px;
+        height: 18px;
+    }
+
+    .pp-auth__footer {
+        text-align: center;
+        font-size: 0.9rem;
+        color: #6b4a4a;
+        margin-top: 4px;
+    }
+
+    @media (max-width: 768px) {
+        .pp-auth__shell {
+            grid-template-columns: 1fr;
+        }
+        .pp-auth__panel {
+            order: 2;
+        }
+        .pp-auth__card {
+            order: 1;
+        }
+    }
+</style>
+{% endblock %}

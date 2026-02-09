@@ -1,0 +1,23 @@
+﻿.pp-faq-question {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 12px 0;
+  font-weight: 600;
+  color: #5c2e2e;
+  cursor: pointer;
+}
+
+.pp-faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  color: #6b4a4a;
+  transition: max-height 0.3s ease;
+}
+
+.pp-faq-question.is-open + .pp-faq-answer,
+.pp-faq-answer.is-open {
+  max-height: 200px;
+  margin-bottom: 8px;
+}

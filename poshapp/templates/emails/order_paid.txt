@@ -1,0 +1,18 @@
+{% load humanize %}
+Hello {{ order.full_name }},
+
+Your payment was confirmed for order #{{ order.id }}.
+Status: {{ order.get_status_display }}
+Payment: {{ order.get_payment_status_display }}
+
+Items:
+{% for item in items %}
+- {{ item.product }} x {{ item.quantity }} ({{ item.currency }} {{ item.line_total|intcomma }})
+{% endfor %}
+
+Total: {{ order.currency }} {{ order.amount|intcomma }}
+
+Track your order:
+{{ site_url }}/track-order/
+
+Thank you for shopping with us.

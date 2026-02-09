@@ -1,0 +1,171 @@
+/* ========================================
+   BUTTON STYLING FIXES
+   Fixes boxy button appearance on index and navbar
+   ======================================== */
+
+/* Enhanced Gold CTA Button */
+.btn-gold,
+a.btn-gold,
+button.btn-gold {
+    background: linear-gradient(135deg, #F5A623, #ffb84d) !important;
+    color: #1a1a1a !important;
+    font-weight: 700 !important;
+    padding: 0.875rem 2.25rem !important;
+    border-radius: 16px !important;
+    border: none !important;
+    transition: all 0.2s ease-in-out !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.875rem !important;
+    box-shadow: 0 6px 20px rgba(245, 166, 35, 0.35) !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-gold:hover,
+a.btn-gold:hover,
+button.btn-gold:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 10px 30px rgba(245, 166, 35, 0.6) !important;
+    background: linear-gradient(135deg, #d99419, #F5A623) !important;
+    color: #ffffff !important;
+}
+
+.btn-gold:active {
+    transform: translateY(-1px) !important;
+}
+
+/* Gold Outline Button - Become a Partner */
+.btn-outline-primary {
+    background: transparent !important;
+    color: #F5A623 !important;
+    font-weight: 700 !important;
+    padding: 0.875rem 2.25rem !important;
+    border-radius: 16px !important;
+    border: 2.5px solid #F5A623 !important;
+    transition: all 0.2s ease-in-out !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.875rem !important;
+    box-shadow: 0 4px 12px rgba(245, 166, 35, 0.15) !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #F5A623, #ffb84d) !important;
+    color: #1a1a1a !important;
+    border-color: #ffb84d !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 25px rgba(245, 166, 35, 0.5) !important;
+}
+
+/* Navbar Action Buttons - Wishlist & Cart */
+.pp-wishlist-toggle,
+.pp-cart-toggle {
+    position: relative !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 48px !important;
+    height: 48px !important;
+    background: linear-gradient(135deg, #5C2E2E, #3d1f1f) !important;
+    border: 2px solid rgba(245, 166, 35, 0.4) !important;
+    border-radius: 14px !important;
+    color: #F5A623 !important;
+    font-size: 1.125rem !important;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25) !important;
+    text-decoration: none !important;
+}
+
+.pp-wishlist-toggle:hover,
+.pp-cart-toggle:hover {
+    background: linear-gradient(135deg, #7a4545, #5C2E2E) !important;
+    border-color: #F5A623 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 18px rgba(245, 166, 35, 0.5) !important;
+    color: #ffb84d !important;
+}
+
+/* Cart/Wishlist Counter Badge */
+.pp-cart-count,
+.wishlist-counter {
+    position: absolute !important;
+    top: -8px !important;
+    right: -8px !important;
+    min-width: 24px !important;
+    height: 24px !important;
+    background: #F5A623 !important;
+    color: #1a1a1a !important;
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px !important;
+    box-shadow: 0 3px 12px rgba(245, 166, 35, 0.7) !important;
+    border: 2.5px solid #3d1f1f !important;
+}
+
+/* Account & Login Buttons - Match Style */
+.pp-account-btn,
+.pp-login-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem 1.25rem !important;
+    background: linear-gradient(135deg, #5C2E2E, #3d1f1f) !important;
+    border: 1.5px solid rgba(245, 166, 35, 0.3) !important;
+    border-radius: 12px !important;
+    color: #F5A623 !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease-in-out !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    white-space: nowrap;
+}
+
+.pp-account-btn:hover,
+.pp-login-btn:hover {
+    background: linear-gradient(135deg, #7a4545, #5C2E2E) !important;
+    border-color: #F5A623 !important;
+    transform: translateY(-2px) !important;
+    color: #ffb84d !important;
+    box-shadow: 0 4px 15px rgba(245, 166, 35, 0.4) !important;
+}
+
+/* Large Button Variant */
+.btn-lg {
+    padding: 1rem 2.5rem !important;
+    font-size: 1rem !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+
+    .btn-gold,
+    .btn-outline-primary {
+        padding: 0.75rem 1.75rem !important;
+        font-size: 0.8125rem !important;
+    }
+
+    .btn-lg {
+        padding: 0.875rem 2rem !important;
+        font-size: 0.9375rem !important;
+    }
+
+    .pp-wishlist-toggle,
+    .pp-cart-toggle {
+        width: 44px !important;
+        height: 44px !important;
+        font-size: 1rem !important;
+    }
+}

@@ -11,3 +11,6 @@ typing-inspection==0.4.2
 typing_extensions==4.15.0
 tzdata==2025.3
 requests==2.32.3
+whitenoise==6.8.2
+python-decouple==3.8
+psycopg2-binary==2.9.10

@@ -8,6 +8,8 @@ from ninja.errors import HttpError
 from .models import CartItem, Category, Order, OrderItem, Product
 from .cart import add_item, cart_summary, get_cart as get_cart_for_request
 from .payments import PaystackError, initialize_paystack_transaction
+from .emails import send_order_received_email, send_welcome_new_user_email
+from .views import _get_or_create_user_from_checkout
 from .schemas import (
     CartItemIn,
     CartItemOut,
@@ -179,8 +181,20 @@ def create_order(request, payload: CheckoutIn):
         raise HttpError(400, "Cart is empty.")
 
     with transaction.atomic():
+        # Get or create user from checkout data
+        user_for_order = request.user if request.user.is_authenticated else None
+        is_new_user = False
+        password_reset_url = None
+        
+        if not request.user.is_authenticated:
+            user_for_order, is_new_user, password_reset_url = _get_or_create_user_from_checkout(
+                payload.email,
+                payload.full_name,
+                payload.phone,
+            )
+        
         order = Order.objects.create(
-            user=request.user if request.user.is_authenticated else None,
+            user=user_for_order,
             full_name=payload.full_name,
             email=payload.email,
             phone=payload.phone,
@@ -212,6 +226,12 @@ def create_order(request, payload: CheckoutIn):
             )
         cart.items.all().delete()
 
+    # Send welcome email for new users or standard order email
+    if is_new_user and password_reset_url:
+        send_welcome_new_user_email(order.user, order, password_reset_url)
+    else:
+        send_order_received_email(order)
+
     return OrderOut(
         id=order.id,
         items=items_out,
@@ -229,8 +249,20 @@ def init_payment(request, payload: CheckoutIn):
         raise HttpError(400, "Cart is empty.")
 
     with transaction.atomic():
+        # Get or create user from checkout data
+        user_for_order = request.user if request.user.is_authenticated else None
+        is_new_user = False
+        password_reset_url = None
+        
+        if not request.user.is_authenticated:
+            user_for_order, is_new_user, password_reset_url = _get_or_create_user_from_checkout(
+                payload.email,
+                payload.full_name,
+                payload.phone,
+            )
+        
         order = Order.objects.create(
-            user=request.user if request.user.is_authenticated else None,
+            user=user_for_order,
             full_name=payload.full_name,
             email=payload.email,
             phone=payload.phone,
@@ -262,6 +294,12 @@ def init_payment(request, payload: CheckoutIn):
         )
         order.payment_reference = payment["reference"]
         order.save(update_fields=["payment_reference"])
+        
+        # Send welcome email for new users or standard order email
+        if is_new_user and password_reset_url:
+            send_welcome_new_user_email(order.user, order, password_reset_url)
+        else:
+            send_order_received_email(order)
     except PaystackError:
         order.payment_status = "failed"
         order.save(update_fields=["payment_status"])

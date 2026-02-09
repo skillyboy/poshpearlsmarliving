@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Compare Products - PoshPearl{% endblock %}
+
+{% block content %}
+<main class="py-5">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'products' %}">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Compare</li>
+            </ol>
+        </nav>
+
+        <!-- Header -->
+        <div class="row mb-5">
+            <div class="col">
+                <h1 class="h2 fw-bold text-gradient-gold">Product Comparison</h1>
+                <p class="text-secondary">Compare up to 4 products side-by-side to find the perfect fit</p>
+            </div>
+            <div class="col-auto">
+                <a href="{% url 'products' %}" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-plus me-2"></i>
+                    Add More Products
+                </a>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="text-center py-5" style="display: none;">
+            <div class="card glass-effect border-0 p-5">
+                <i class="fa-solid fa-code-compare fa-3x text-gold mb-3"></i>
+                <h3 class="h4 mb-3">No Products to Compare</h3>
+                <p class="text-secondary mb-4">Add products from the shop to start comparing</p>
+                <a href="{% url 'products' %}" class="btn btn-gold">
+                    <i class="fa-solid fa-shopping-bag me-2"></i>
+                    Browse Products
+                </a>
+            </div>
+        </div>
+
+        <!-- Comparison Table -->
+        <div id="comparisonTable" class="table-responsive" style="display: none;">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="bg-burgundy text-white" style="width: 150px;">Feature</th>
+                        <th id="productHeader1" class="bg-burgundy-light text-white text-center"></th>
+                        <th id="productHeader2" class="bg-burgundy-light text-white text-center"></th>
+                        <th id="productHeader3" class="bg-burgundy-light text-white text-center"></th>
+                        <th id="productHeader4" class="bg-burgundy-light text-white text-center"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Product Images -->
+                    <tr>
+                        <td class="fw-bold">Product</td>
+                        <td id="productImage1" class="text-center"></td>
+                        <td id="productImage2" class="text-center"></td>
+                        <td id="productImage3" class="text-center"></td>
+                        <td id="productImage4" class="text-center"></td>
+                    </tr>
+
+                    <!-- Price -->
+                    <tr>
+                        <td class="fw-bold">Price</td>
+                        <td id="productPrice1" class="text-center text-gold fw-bold"></td>
+                        <td id="productPrice2" class="text-center text-gold fw-bold"></td>
+                        <td id="productPrice3" class="text-center text-gold fw-bold"></td>
+                        <td id="productPrice4" class="text-center text-gold fw-bold"></td>
+                    </tr>
+
+                    <!-- Stock -->
+                    <tr>
+                        <td class="fw-bold">Availability</td>
+                        <td id="productStock1" class="text-center"></td>
+                        <td id="productStock2" class="text-center"></td>
+                        <td id="productStock3" class="text-center"></td>
+                        <td id="productStock4" class="text-center"></td>
+                    </tr>
+
+                    <!-- Description -->
+                    <tr>
+                        <td class="fw-bold">Description</td>
+                        <td id="productDesc1" class="small"></td>
+                        <td id="productDesc2" class="small"></td>
+                        <td id="productDesc3" class="small"></td>
+                        <td id="productDesc4" class="small"></td>
+                    </tr>
+
+                    <!-- Actions -->
+                    <tr>
+                        <td class="fw-bold">Actions</td>
+                        <td id="productActions1" class="text-center"></td>
+                        <td id="productActions2" class="text-center"></td>
+                        <td id="productActions3" class="text-center"></td>
+                        <td id="productActions4" class="text-center"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Actions -->
+        <div id="comparisonActions" class="mt-4 text-center" style="display: none;">
+            <button id="clearAll" class="btn btn-outline-danger">
+                <i class="fa-solid fa-trash me-2"></i>
+                Clear All
+            </button>
+        </div>
+
+    </div>
+</main>
+
+<script src="{% static 'assets/js/compare.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,87 @@
+﻿{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}My Account - PoshPearl{% endblock %}
+{% block body_class %}pp-light pp-account{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/account.css' %}?v=20260207">
+{% endblock %}
+
+{% block content %}
+<section class="pp-shell">
+    <div class="container">
+        <div class="pp-account-layout">
+            <aside class="pp-card pp-account-sidebar">
+                <div class="pp-account-user">
+                    <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="User">
+                    <div>
+                        <strong>Hi, {{ user.first_name|default:user.username }}</strong>
+                        <div class="pp-muted">{{ user.email }}</div>
+                    </div>
+                </div>
+                <nav class="pp-account-nav">
+                    <a class="is-active" href="{% url 'dashboard' %}"><i class="fa-solid fa-house"></i> Dashboard</a>
+                    <a href="{% url 'user_orders' %}"><i class="fa-solid fa-receipt"></i> Orders</a>
+                    <a href="{% url 'wishlist' %}"><i class="fa-solid fa-heart"></i> Wishlist</a>
+                    <a href="{% url 'track_order' %}"><i class="fa-solid fa-truck"></i> Track order</a>
+                </nav>
+                <a class="pp-btn-secondary" href="{% url 'products' %}">Browse products</a>
+            </aside>
+
+            <main>
+                <div class="pp-commerce-header">
+                    <div>
+                        <p class="pp-pill"><i class="fa-solid fa-user"></i> Account</p>
+                        <h1 class="pp-section-title">Welcome back, {{ user.first_name|default:user.username }}</h1>
+                        <p class="pp-section-subtitle">Manage your orders and account settings.</p>
+                    </div>
+                </div>
+
+                <div class="pp-account-grid-2">
+                    <div class="pp-card pp-account-card">
+                        <h3>Order summary</h3>
+                        <p class="pp-muted">Total orders: {{ order_count|default:0 }}</p>
+                        {% if recent_orders %}
+                        <div class="pp-order-tag">Active: {{ recent_orders.0.get_status_display }}</div>
+                        {% else %}
+                        <div class="pp-order-tag">No active orders</div>
+                        {% endif %}
+                    </div>
+                    <div class="pp-card pp-account-card">
+                        <h3>Support</h3>
+                        <p class="pp-muted">Need help with your order?</p>
+                        <a class="pp-btn-secondary" href="{% url 'support' %}">Get support</a>
+                    </div>
+                </div>
+
+                <div class="pp-card pp-account-card" style="margin-top: 20px;">
+                    <div class="pp-commerce-header">
+                        <h2>Recent orders</h2>
+                        <a class="pp-btn-secondary" href="{% url 'user_orders' %}">View all</a>
+                    </div>
+                    {% if recent_orders %}
+                    <div class="pp-order-list">
+                        {% for order in recent_orders %}
+                        <div class="pp-order-row">
+                            <div>
+                                <strong>Order #{{ order.id }}</strong>
+                                <div class="pp-order-meta">{{ order.created_at|date:"M d, Y" }}</div>
+                            </div>
+                            <div class="pp-order-tag">{{ order.get_status_display }}</div>
+                            <div class="pp-order-total">{{ order.currency }} {{ order.subtotal|intcomma }}</div>
+                            <a class="pp-btn-secondary" href="{% url 'user_order_detail' order.id %}">View</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="pp-muted">No orders yet.</p>
+                    {% endif %}
+                </div>
+            </main>
+        </div>
+    </div>
+</section>
+{% endblock %}

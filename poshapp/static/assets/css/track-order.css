@@ -1,0 +1,132 @@
+﻿.pp-track-hero {
+  display: grid;
+  gap: 24px;
+  align-items: center;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  margin-bottom: 32px;
+}
+
+.pp-track-search {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pp-track-form {
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.pp-track-label {
+  font-weight: 600;
+  color: #5c2e2e;
+  margin-top: 6px;
+}
+
+.pp-track-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.pp-track-alert.is-error {
+  background: rgba(220, 38, 38, 0.12);
+  color: #7f1d1d;
+}
+
+.pp-track-error {
+  color: #b91c1c;
+  font-size: 0.85rem;
+}
+
+.pp-track-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+}
+
+.pp-track-panel__header {
+  padding: 20px 20px 0;
+}
+
+.pp-track-topics {
+  padding: 14px 20px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.pp-track-topics article {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(92, 46, 46, 0.12);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.pp-track-links {
+  padding: 16px 20px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pp-track-summary {
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+  height: fit-content;
+}
+
+.pp-track-summary__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pp-track-summary__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  font-size: 0.9rem;
+  color: #6b4a4a;
+}
+
+.pp-track-items {
+  display: grid;
+  gap: 10px;
+}
+
+.pp-track-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 0.95rem;
+}
+
+.pp-track-item span {
+  display: block;
+  color: #6b4a4a;
+  font-size: 0.85rem;
+}
+
+.pp-track-total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+}
+
+.pp-track-empty {
+  text-align: center;
+  padding: 24px 0;
+}
+
+@media (max-width: 980px) {
+  .pp-track-hero,
+  .pp-track-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

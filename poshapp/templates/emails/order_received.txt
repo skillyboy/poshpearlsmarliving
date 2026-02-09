@@ -1,0 +1,18 @@
+{% load humanize %}
+Hello {{ order.full_name }},
+
+Thanks for your order. Your order number is #{{ order.id }}.
+Status: {{ order.get_status_display }}
+Payment: {{ order.get_payment_status_display }}
+
+Items:
+{% for item in items %}
+- {{ item.product }} x {{ item.quantity }} ({{ item.currency }} {{ item.line_total|intcomma }})
+{% endfor %}
+
+Subtotal: {{ order.currency }} {{ order.subtotal|intcomma }}
+
+Track your order:
+{{ site_url }}/track-order/
+
+If you need help, reply to this email.

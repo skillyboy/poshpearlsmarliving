@@ -1,62 +1,121 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% load humanize %}
 {% load static %}
 
-{% block title %}Cart{% endblock %}
-{% block body_class %}pp-cart{% endblock %}
+{% block title %}Your Cart - PoshPearl{% endblock %}
+{% block body_class %}pp-light pp-cart-page{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/commerce.css' %}?v=20260207">
+{% endblock %}
 
 {% block content %}
-{% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
-<section class="pp-section pp-cart-page" data-cart-page>
+<section class="pp-shell">
+    {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
     <div class="container">
-        <div class="pp-section__header">
-            <h1>Your cart</h1>
-            <p>Review items before checking out.</p>
+        <div class="pp-commerce-header">
+            <div>
+                <p class="pp-pill"><i class="fa-solid fa-bag-shopping"></i> Cart</p>
+                <h1 class="pp-section-title">Your Cart</h1>
+                <p class="pp-section-subtitle">Review your items and proceed to checkout.</p>
+            </div>
+            <a class="pp-btn-secondary" href="{% url 'products' %}">Continue shopping</a>
         </div>
 
         {% if cart.items %}
-        <div class="pp-cart-layout">
+        <div class="pp-commerce-grid">
             <div class="pp-cart-list">
                 {% for item in cart.items %}
-                <article class="pp-cart-item" data-cart-item data-item-id="{{ item.id }}">
+                <div class="pp-cart-item" data-cart-item data-item-id="{{ item.id }}">
                     <div class="pp-cart-item__media">
-                        <img src="{{ item.image|default:product_fallback }}" alt="{{ item.name }}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='{{ product_fallback }}';">
+                        <img src="{{ item.image|default:product_fallback }}" alt="{{ item.name }}" loading="lazy" decoding="async"
+                            onerror="this.onerror=null;this.src='{{ product_fallback }}';">
                     </div>
-                    <div class="pp-cart-item__details">
-                        <h3>{{ item.name }}</h3>
-                        <span class="pp-cart-item__price" data-unit-price="{{ item.unit_price }}">{{ item.currency }} {{ item.unit_price|intcomma }}</span>
-                        <div class="pp-cart-item__controls">
-                            <div class="pp-qty-control" data-qty-control>
-                                <button type="button" data-qty-dec aria-label="Decrease quantity">-</button>
-                                <input type="number" min="1" value="{{ item.quantity }}" data-qty-input>
-                                <button type="button" data-qty-inc aria-label="Increase quantity">+</button>
-                            </div>
-                            <button class="pp-cart-remove" type="button" data-cart-remove>Remove</button>
+                    <div>
+                        <div class="pp-cart-item__title">{{ item.name }}</div>
+                        <div class="pp-cart-item__meta">{{ item.currency }} {{ item.unit_price|intcomma }} per unit</div>
+                        <div class="pp-qty" aria-label="Quantity">
+                            <button type="button" data-qty-dec>-</button>
+                            <input type="number" min="1" value="{{ item.quantity }}" data-qty-input data-unit-price="{{ item.unit_price }}">
+                            <button type="button" data-qty-inc>+</button>
                         </div>
+                        <button class="pp-cart-remove" type="button" data-cart-remove>Remove</button>
                     </div>
-                    <div class="pp-cart-item__total">
-                        <span>Total</span>
-                        <strong data-line-total>{{ item.currency }} {{ item.line_total|intcomma }}</strong>
+                    <div class="pp-cart-item__total" data-line-total data-currency="{{ item.currency }}">
+                        <span class="pp-muted">Total</span>
+                        <strong>{{ item.currency }} {{ item.line_total|intcomma }}</strong>
                     </div>
-                </article>
+                </div>
                 {% endfor %}
             </div>
-            <aside class="pp-cart-summary">
-                <h2>Order summary</h2>
-                <div class="pp-summary-row">
+
+            <aside class="pp-card pp-summary-card">
+                <h2>Summary</h2>
+                <div class="pp-summary-line">
                     <span>Subtotal</span>
-                    <strong data-cart-page-subtotal>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong>
+                    <strong>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong>
                 </div>
-                <a class="pp-btn primary" href="{% url 'checkout' %}">Proceed to checkout</a>
-                <a class="pp-btn ghost" href="{% url 'shop' %}">Continue shopping</a>
+                <div class="pp-summary-line">
+                    <span>Delivery estimate</span>
+                    <span>Calculated at checkout</span>
+                </div>
+                <div class="pp-divider"></div>
+                <div class="pp-summary-total">
+                    <span>Total</span>
+                    <strong>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong>
+                </div>
+                <div class="pp-summary-actions">
+                    <a class="pp-btn-primary" href="{% url 'checkout' %}">Proceed to checkout</a>
+                    <a class="pp-btn-secondary" href="{% url 'track_order' %}">Track an order</a>
+                </div>
             </aside>
         </div>
         {% else %}
-        <div class="pp-empty-state">
-            <p>Your cart is empty.</p>
-            <a class="pp-btn primary" href="{% url 'shop' %}">Browse products</a>
+        <div class="pp-card pp-status-card">
+            <div class="pp-status-icon"><i class="fa-solid fa-basket-shopping"></i></div>
+            <h2>Your cart is empty</h2>
+            <p class="pp-muted">Browse products and add items to your cart.</p>
+            <div class="pp-status-actions">
+                <a class="pp-btn-primary" href="{% url 'products' %}">Browse products</a>
+            </div>
         </div>
         {% endif %}
     </div>
 </section>
+
+<script>
+    document.querySelectorAll('[data-cart-item]').forEach(item => {
+        const qtyInput = item.querySelector('[data-qty-input]');
+        const qtyDec = item.querySelector('[data-qty-dec]');
+        const qtyInc = item.querySelector('[data-qty-inc]');
+        const lineTotalEl = item.querySelector('[data-line-total]');
+        const unitPrice = parseFloat(qtyInput.dataset.unitPrice) || 0;
+
+        const updateLineTotal = () => {
+            const qty = parseInt(qtyInput.value, 10) || 1;
+            const total = qty * unitPrice;
+            const currency = lineTotalEl.dataset.currency || "NGN";
+            lineTotalEl.innerHTML = `<span class="pp-muted">Total</span><strong>${currency} ${total.toLocaleString()}</strong>`;
+        };
+
+        qtyDec?.addEventListener('click', () => {
+            let val = parseInt(qtyInput.value, 10) || 1;
+            if (val > 1) {
+                qtyInput.value = val - 1;
+                updateLineTotal();
+            }
+        });
+
+        qtyInc?.addEventListener('click', () => {
+            let val = parseInt(qtyInput.value, 10) || 1;
+            qtyInput.value = val + 1;
+            updateLineTotal();
+        });
+
+        qtyInput?.addEventListener('change', updateLineTotal);
+    });
+</script>
 {% endblock %}
+
+

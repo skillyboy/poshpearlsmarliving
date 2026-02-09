@@ -37,20 +37,51 @@ def cart_summary(cart):
         .all()
     )
     for item in cart_items:
-        image = item.product.images.first()
-        unit_price = int(item.unit_price)
-        line_total = int(item.line_total)
-        currency = item.currency or item.product.currency or currency
-        subtotal += line_total
+        product = item.product
+        if not product or not getattr(product, "is_active", True):
+            item.delete()
+            continue
+
+        unit_price = item.unit_price
+        if unit_price is None:
+            unit_price = price_for_product(product)
+            if unit_price is None:
+                item.delete()
+                continue
+            item.unit_price = unit_price
+            item.currency = item.currency or product.currency
+            item.save(update_fields=["unit_price", "currency", "updated_at"])
+
+        try:
+            unit_price_value = int(unit_price)
+        except (TypeError, ValueError):
+            fallback_price = price_for_product(product)
+            if fallback_price is None:
+                item.delete()
+                continue
+            item.unit_price = fallback_price
+            item.currency = item.currency or product.currency
+            item.save(update_fields=["unit_price", "currency", "updated_at"])
+            unit_price_value = int(fallback_price)
+
+        raw_line_total = getattr(item, "line_total", None)
+        try:
+            line_total_value = int(raw_line_total)
+        except (TypeError, ValueError):
+            line_total_value = unit_price_value * item.quantity
+
+        image = product.images.first()
+        currency = item.currency or product.currency or currency
+        subtotal += line_total_value
         items.append(
             {
                 "id": item.id,
                 "product_id": item.product_id,
-                "name": item.product.name,
+                "name": product.name,
                 "quantity": item.quantity,
-                "unit_price": unit_price,
+                "unit_price": unit_price_value,
                 "currency": currency,
-                "line_total": line_total,
+                "line_total": line_total_value,
                 "image": image.image.url if image else None,
             }
         )

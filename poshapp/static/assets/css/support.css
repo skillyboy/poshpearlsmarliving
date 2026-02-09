@@ -1,0 +1,56 @@
+﻿/* =====================================================
+   Support Page
+   ===================================================== */
+
+.pp-support-hero {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.pp-support-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid rgba(92, 46, 46, 0.15);
+}
+
+.pp-support-search input {
+  border: none;
+  outline: none;
+  width: 100%;
+}
+
+.pp-support-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.pp-support-card {
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.pp-support-articles {
+  margin-top: 20px;
+  display: grid;
+  gap: 10px;
+}
+
+.pp-support-article {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(92, 46, 46, 0.12);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.pp-track-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

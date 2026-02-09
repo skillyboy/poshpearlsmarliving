@@ -183,9 +183,9 @@ body.pp-checkout {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    border: 1px solid var(--pp-border);
-    background: var(--pp-surface);
-    color: var(--pp-text);
+    border: 1px solid var(--pp-primary);
+    background: var(--pp-primary);
+    color: #fff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -194,7 +194,7 @@ body.pp-checkout {
 
 .theme-toggle:hover,
 .theme-toggle:focus-visible {
-    border-color: var(--pp-primary);
+    border-color: var(--pp-primary-dark);
     transform: translateY(-1px);
     outline: none;
 }
@@ -202,9 +202,9 @@ body.pp-checkout {
 .nav-toggle {
     width: 44px;
     height: 40px;
-    border: 1px solid var(--pp-border);
+    border: 1px solid var(--pp-primary);
     border-radius: 999px;
-    background: var(--pp-surface);
+    background: var(--pp-primary);
     display: none;
     align-items: center;
     justify-content: center;
@@ -215,7 +215,7 @@ body.pp-checkout {
 .nav-toggle__bar {
     width: 18px;
     height: 2px;
-    background: var(--pp-text);
+    background: #fff;
     display: block;
     border-radius: 999px;
     transition: transform var(--pp-transition), opacity var(--pp-transition);
@@ -518,6 +518,126 @@ body.cart-open .pp-cart-drawer__panel {
     padding: var(--pp-space-3);
     text-align: center;
     box-shadow: var(--pp-shadow);
+}
+
+/* Checkout refresh */
+.pp-checkout-page .pp-checkout-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: var(--pp-space-4);
+    padding: var(--pp-space-4);
+    border-radius: var(--pp-radius-lg);
+    background:
+        radial-gradient(circle at 10% 10%, rgba(244, 176, 0, 0.16), transparent 60%),
+        radial-gradient(circle at 90% 20%, rgba(95, 30, 44, 0.18), transparent 55%),
+        var(--pp-surface);
+    border: 1px solid var(--pp-border);
+    box-shadow: var(--pp-shadow);
+    margin-bottom: var(--pp-space-4);
+}
+
+.pp-checkout-page .pp-checkout-hero__copy h1 {
+    margin: 8px 0 8px;
+    font-size: clamp(2rem, 3vw, 2.75rem);
+}
+
+.pp-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--pp-primary);
+    background: rgba(95, 30, 44, 0.12);
+}
+
+.pp-checkout-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: var(--pp-space-2);
+    color: var(--pp-muted);
+    font-size: 0.9rem;
+}
+
+.pp-checkout-trust i {
+    color: var(--pp-primary);
+    margin-right: 6px;
+}
+
+.pp-checkout-hero__steps {
+    display: grid;
+    gap: 12px;
+    align-content: center;
+}
+
+.pp-step {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--pp-border);
+    background: var(--pp-surface-alt);
+}
+
+.pp-step span {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(95, 30, 44, 0.12);
+    color: var(--pp-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.pp-step small {
+    display: block;
+    color: var(--pp-muted);
+}
+
+.pp-step.is-active {
+    border-color: rgba(95, 30, 44, 0.4);
+    background: rgba(95, 30, 44, 0.08);
+}
+
+.pp-checkout-card {
+    background: var(--pp-surface);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-lg);
+    padding: var(--pp-space-3);
+    box-shadow: var(--pp-shadow);
+}
+
+.pp-checkout-page .pp-form .pp-field input,
+.pp-checkout-page .pp-form .pp-field textarea {
+    border-radius: 12px;
+    border: 1px solid rgba(95, 30, 44, 0.2);
+    background: rgba(255, 255, 255, 0.9);
+    transition: border-color var(--pp-transition), box-shadow var(--pp-transition);
+}
+
+.pp-checkout-page .pp-form .pp-field input:focus-visible,
+.pp-checkout-page .pp-form .pp-field textarea:focus-visible {
+    outline: none;
+    border-color: var(--pp-primary);
+    box-shadow: 0 0 0 3px rgba(95, 30, 44, 0.12);
+}
+
+.pp-checkout-page .pp-cart-summary {
+    position: sticky;
+    top: 120px;
+    border-radius: var(--pp-radius-lg);
+}
+
+@media (max-width: 900px) {
+    .pp-checkout-page .pp-checkout-hero {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 900px) {

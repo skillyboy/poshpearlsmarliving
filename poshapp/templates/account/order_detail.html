@@ -1,0 +1,95 @@
+﻿{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}Order #{{ order.id }} - PoshPearl{% endblock %}
+{% block body_class %}pp-light pp-account{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/account.css' %}?v=20260207">
+{% endblock %}
+
+{% block content %}
+<section class="pp-shell">
+    <div class="container">
+        <div class="pp-account-layout">
+            <aside class="pp-card pp-account-sidebar">
+                <div class="pp-account-user">
+                    <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="User">
+                    <div>
+                        <strong>Hi, {{ user.first_name|default:user.username }}</strong>
+                        <div class="pp-muted">{{ user.email }}</div>
+                    </div>
+                </div>
+                <nav class="pp-account-nav">
+                    <a href="{% url 'dashboard' %}"><i class="fa-solid fa-house"></i> Dashboard</a>
+                    <a class="is-active" href="{% url 'user_orders' %}"><i class="fa-solid fa-receipt"></i> Orders</a>
+                    <a href="{% url 'wishlist' %}"><i class="fa-solid fa-heart"></i> Wishlist</a>
+                    <a href="{% url 'track_order' %}"><i class="fa-solid fa-truck"></i> Track order</a>
+                </nav>
+            </aside>
+
+            <main>
+                <div class="pp-commerce-header">
+                    <div>
+                        <p class="pp-pill"><i class="fa-solid fa-receipt"></i> Order detail</p>
+                        <h1 class="pp-section-title">Order #{{ order.id }}</h1>
+                        <p class="pp-section-subtitle">Placed on {{ order.created_at|date:"F d, Y - g:i A" }}</p>
+                    </div>
+                </div>
+
+                <div class="pp-account-grid-2">
+                    <div class="pp-card pp-account-card">
+                        <h3>Status</h3>
+                        <div class="pp-order-tag">{{ order.get_status_display }}</div>
+                        <div class="pp-muted" style="margin-top: 8px;">Payment: {{ order.get_payment_status_display }}</div>
+                    </div>
+                    <div class="pp-card pp-account-card">
+                        <h3>Total</h3>
+                        <div class="pp-order-total">{{ order.currency }} {{ order.amount|intcomma }}</div>
+                        <div class="pp-muted" style="margin-top: 8px;">Subtotal: {{ order.currency }} {{ order.subtotal|intcomma }}</div>
+                    </div>
+                </div>
+
+                <div class="pp-card pp-account-card" style="margin-top: 20px;">
+                    <h2>Items</h2>
+                    <div class="pp-order-list">
+                        {% for item in order.items.all %}
+                        <div class="pp-order-row">
+                            <div>
+                                <strong>{{ item.product.name|default:"Product" }}</strong>
+                                <div class="pp-order-meta">{{ item.quantity }} x {{ item.currency }} {{ item.unit_price|intcomma }}</div>
+                            </div>
+                            <div class="pp-order-total">{{ item.currency }} {{ item.line_total|intcomma }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="pp-account-grid-2" style="margin-top: 20px;">
+                    <div class="pp-card pp-account-card">
+                        <h3>Delivery address</h3>
+                        <p class="pp-muted" style="white-space: pre-line;">{{ order.address }}</p>
+                        <p class="pp-muted">Phone: {{ order.phone }}</p>
+                    </div>
+                    <div class="pp-card pp-account-card">
+                        <h3>Payment info</h3>
+                        {% if order.payment_reference %}
+                        <p class="pp-muted">Reference: {{ order.payment_reference }}</p>
+                        {% endif %}
+                        {% if order.paid_at %}
+                        <p class="pp-muted">Paid on: {{ order.paid_at|date:"F d, Y - g:i A" }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="pp-status-actions" style="margin-top: 18px;">
+                    <a class="pp-btn-secondary" href="{% url 'user_orders' %}">Back to orders</a>
+                    <a class="pp-btn-secondary" href="{% url 'track_order' %}">Track order</a>
+                </div>
+            </main>
+        </div>
+    </div>
+</section>
+{% endblock %}

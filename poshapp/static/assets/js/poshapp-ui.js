@@ -37,7 +37,7 @@
     };
     const csrfToken = getCookie('csrftoken');
 
-    const cartToggle = qs('[data-cart-toggle]');
+    const cartToggleButtons = qsa('[data-cart-toggle]');
     const cartDrawer = qs('[data-cart-drawer]');
     const cartBackdrop = qs('[data-cart-backdrop]');
     const cartClose = qs('[data-cart-close]');
@@ -61,8 +61,10 @@
         if (cartBackdrop) cartBackdrop.hidden = true;
     };
 
-    cartToggle?.addEventListener('click', () => {
-        body.classList.contains('cart-open') ? closeCart() : openCart();
+    cartToggleButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            body.classList.contains('cart-open') ? closeCart() : openCart();
+        });
     });
     cartClose?.addEventListener('click', closeCart);
     cartBackdrop?.addEventListener('click', closeCart);
@@ -525,6 +527,10 @@
         window.addEventListener('load', () => {
             setTimeout(() => body.classList.remove('is-loading'), 160);
         });
+    }
+
+    if (body.classList.contains('cart-page')) {
+        openCart();
     }
 
     refreshCart();
