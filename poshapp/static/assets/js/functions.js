@@ -582,10 +582,17 @@ function setupActiveNavigation() {
 }
 
 function setupThemeToggle() {
+    const body = document.body;
+    const root = document.documentElement;
+    if (body && body.classList.contains('pp-light')) {
+        // Force light and skip toggling on public/light pages
+        root.setAttribute('data-theme', 'light');
+        try { localStorage.setItem('pp-theme', 'light'); } catch (e) {}
+        return; // stop here: no dark toggle on light pages
+    }
     const toggle = document.getElementById('themeToggle');
     if (!toggle) return;
 
-    const root = document.documentElement;
     const text = toggle.querySelector('.theme-toggle-text');
     const icon = toggle.querySelector('i');
     const stored = localStorage.getItem('pp-theme');

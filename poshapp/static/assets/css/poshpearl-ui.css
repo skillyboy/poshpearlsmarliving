@@ -1,0 +1,259 @@
+/* poshpearl-ui.css */
+
+/* 1) Design Tokens */
+:root{
+  --pp-bg: #fbf6f5;
+  --pp-text: #241d1b;
+  --pp-muted: rgba(36, 29, 27, .62);
+
+  --pp-wine: #6A3438;
+  --pp-wine-2: #7A3B40;
+  --pp-wine-soft: rgba(106, 52, 56, .14);
+
+  --pp-gold: #C7A277;
+  --pp-gold-soft: rgba(199, 162, 119, .18);
+
+  --pp-card: rgba(255,255,255,.62);
+  --pp-card-strong: rgba(255,255,255,.78);
+  --pp-border: rgba(36,29,27,.10);
+
+  --pp-shadow: 0 18px 60px rgba(19, 12, 10, .10);
+  --pp-shadow-soft: 0 10px 30px rgba(19, 12, 10, .08);
+
+  --pp-radius-lg: 22px;
+  --pp-radius-md: 16px;
+  --pp-radius-sm: 12px;
+
+  --pp-blur: blur(10px);
+  --pp-container: 1180px;
+}
+
+/* 2) Global Base */
+*{ box-sizing: border-box; }
+html, body{ height: 100%; }
+body{
+  margin: 0;
+  color: var(--pp-text);
+  background: transparent;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue", sans-serif;
+}
+
+/* 3) Background Waves (the signature look) */
+.pp-page-bg{
+  position: relative;
+  isolation: isolate;
+}
+.pp-page-bg::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(1100px 600px at 75% 20%, rgba(106,52,56,.13), transparent 60%),
+    radial-gradient(900px 550px at 20% 10%, rgba(199,162,119,.22), transparent 55%),
+    radial-gradient(900px 600px at 65% 85%, rgba(199,162,119,.14), transparent 60%),
+    linear-gradient(180deg, #fbf6f5 0%, #f6eeec 100%);
+}
+.pp-page-bg::after{
+  content:"";
+  position: fixed;
+  inset: -40px;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255,255,255,.035) 0px,
+      rgba(255,255,255,.035) 12px,
+      transparent 12px,
+      transparent 34px
+    );
+  opacity: .35;
+  pointer-events: none;
+}
+
+/* 4) Container Helper */
+.pp-container{
+  width: min(var(--pp-container), calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* 5) Glass Card Utility */
+.pp-glass{
+  background: var(--pp-card);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-lg);
+  box-shadow: var(--pp-shadow-soft);
+  backdrop-filter: var(--pp-blur);
+  -webkit-backdrop-filter: var(--pp-blur);
+}
+
+/* 6) Navbar Upgrade */
+.pp-navbar{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255,255,255,.50);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(36,29,27,.07);
+}
+.pp-navbar .pp-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+}
+.pp-navbar a{
+  color: rgba(36,29,27,.72);
+  text-decoration: none;
+  font-weight: 500;
+}
+.pp-navbar a:hover{ color: rgba(36,29,27,.92); }
+
+/* 7) Buttons */
+.pp-btn{
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 11px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
+}
+.pp-btn:active{ transform: translateY(1px); }
+
+.pp-btn-primary{
+  background: linear-gradient(180deg, var(--pp-wine), var(--pp-wine-2));
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(106,52,56,.25);
+}
+.pp-btn-primary:hover{
+  box-shadow: 0 18px 40px rgba(106,52,56,.30);
+}
+
+.pp-btn-ghost{
+  background: rgba(255,255,255,.55);
+  border-color: rgba(106,52,56,.22);
+  color: var(--pp-wine);
+}
+.pp-btn-ghost:hover{
+  background: rgba(255,255,255,.72);
+  border-color: rgba(106,52,56,.30);
+}
+
+/* 8) Inputs */
+.pp-input{
+  width: 100%;
+  height: 46px;
+  border-radius: 999px;
+  border: 1px solid rgba(36,29,27,.10);
+  background: rgba(255,255,255,.70);
+  padding: 0 16px;
+  outline: none;
+  box-shadow: 0 10px 28px rgba(19,12,10,.06);
+}
+.pp-input:focus{
+  border-color: rgba(106,52,56,.35);
+  box-shadow: 0 16px 40px rgba(106,52,56,.10);
+}
+
+/* 9) Chips / Badges */
+.pp-chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid rgba(36,29,27,.08);
+  background: rgba(255,255,255,.55);
+  color: rgba(36,29,27,.72);
+}
+.pp-badge{
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  background: rgba(106,52,56,.92);
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(0,0,0,.15);
+}
+
+/* 10) Product Cards (matches your catalog mockup) */
+.pp-card{
+  background: var(--pp-card-strong);
+  border: 1px solid rgba(36,29,27,.10);
+  border-radius: var(--pp-radius-lg);
+  box-shadow: var(--pp-shadow);
+  overflow: hidden;
+  backdrop-filter: var(--pp-blur);
+  -webkit-backdrop-filter: var(--pp-blur);
+}
+
+.pp-card-media{
+  position: relative;
+  background:
+    radial-gradient(450px 220px at 60% 30%, rgba(199,162,119,.18), transparent 60%),
+    rgba(255,255,255,.55);
+  padding: 18px;
+}
+.pp-card-media img{
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 18px 26px rgba(0,0,0,.10));
+}
+.pp-card-body{
+  padding: 14px 16px 16px;
+}
+.pp-card-title{
+  margin: 0 0 6px;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+.pp-card-sub{
+  margin: 0 0 12px;
+  color: var(--pp-muted);
+  font-size: 13px;
+  line-height: 1.45;
+  min-height: 38px;
+}
+.pp-price{
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+.pp-actions{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+.pp-actions .pp-btn{
+  border-radius: 14px;
+  padding: 11px 14px;
+}
+
+/* 11) Filters Panel (left sidebar like mockup) */
+.pp-filter-panel{
+  padding: 16px;
+}
+.pp-filter-title{
+  font-size: 16px;
+  margin: 0 0 14px;
+}
+.pp-divider{
+  height: 1px;
+  background: rgba(36,29,27,.08);
+  margin: 14px 0;
+}
+
+/* 12) Responsive */
+@media (max-width: 980px){
+  .pp-actions{ grid-template-columns: 1fr; }
+}

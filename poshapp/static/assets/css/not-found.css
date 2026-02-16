@@ -1,12 +1,12 @@
 ﻿.pp-not-found-card {
   text-align: center;
-  padding: 32px 20px;
+  padding: 36px 24px;
 }
 
 .pp-not-found-card h1 {
   font-size: 4rem;
   margin-bottom: 8px;
-  color: #5c2e2e;
+  color: var(--pp-accent);
 }
 
 .pp-not-found-actions {
@@ -15,4 +15,33 @@
   gap: 12px;
   flex-wrap: wrap;
   margin-top: 16px;
+}
+
+
+.pp-not-found-search {
+  margin: 16px auto 8px;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-border);
+}
+
+.pp-not-found-search input {
+  border: none;
+  outline: none;
+  width: 100%;
+  background: transparent;
+  color: var(--pp-text);
+}
+
+body.pp-light .pp-not-found-card {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(92, 46, 46, 0.12);
+  border-radius: 24px;
+  box-shadow: 0 22px 44px rgba(61, 31, 31, 0.12);
+  backdrop-filter: blur(10px);
 }

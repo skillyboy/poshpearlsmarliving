@@ -6,6 +6,10 @@
     --pp-space-5: 40px;
     --pp-space-6: 48px;
     --pp-space-7: 56px;
+    --pp-page-top: 0px;
+    --pp-section-y: 36px;
+    --pp-section-y-lg: 48px;
+    --pp-card-gap: 20px;
     --pp-text-14: 0.875rem;
     --pp-text-16: 1rem;
     --pp-text-18: 1.125rem;
@@ -35,15 +39,16 @@
 }
 
 body {
-    background: var(--pp-surface-alt);
+    background: var(--pp-bg-gradient, #fbf6f5);
     color: var(--pp-text);
-    font-family: "Manrope", "Poppins", sans-serif;
+    font-family: "Inter", "Outfit", "Manrope", "Poppins", sans-serif;
+    margin: 0;
 }
 
 h1,
 h2,
 h3 {
-    font-family: "Fraunces", "Manrope", serif;
+    font-family: "Outfit", "Inter", "Manrope", sans-serif;
     letter-spacing: -0.01em;
 }
 
@@ -158,8 +163,30 @@ body.pp-checkout {
     transition: border-color var(--pp-transition), transform var(--pp-transition);
 }
 
+.pp-wishlist-toggle {
+    position: relative;
+    width: 44px;
+    height: 40px;
+    border-radius: 999px;
+    border: 1px solid var(--pp-border);
+    background: var(--pp-surface);
+    color: var(--pp-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color var(--pp-transition), transform var(--pp-transition);
+    text-decoration: none;
+}
+
 .pp-cart-toggle:hover,
 .pp-cart-toggle:focus-visible {
+    border-color: var(--pp-primary);
+    transform: translateY(-1px);
+    outline: none;
+}
+
+.pp-wishlist-toggle:hover,
+.pp-wishlist-toggle:focus-visible {
     border-color: var(--pp-primary);
     transform: translateY(-1px);
     outline: none;
@@ -740,6 +767,10 @@ body.cart-open .pp-cart-drawer__panel {
     border-radius: 12px;
     min-width: 220px;
     font-size: var(--pp-text-14);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .pp-toast.success {
@@ -748,6 +779,31 @@ body.cart-open .pp-cart-drawer__panel {
 
 .pp-toast.error {
     border-left-color: #EF4444;
+}
+
+.pp-toast__action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(92, 46, 46, 0.2);
+    background: rgba(255, 255, 255, 0.7);
+    color: var(--pp-primary);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.pp-toast__text {
+    flex: 1;
+}
+
+.pp-toast__action:hover,
+.pp-toast__action:focus-visible {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(92, 46, 46, 0.35);
 }
 
 :root.js [data-animate] {
@@ -803,4 +859,188 @@ body.cart-open .pp-cart-drawer__panel {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
+}
+
+/* Base container after removing Bootstrap */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.pp-section {
+    padding: var(--pp-section-y) 0;
+}
+
+.pp-section-lg {
+    padding: var(--pp-section-y-lg) 0;
+}
+
+/* Remove top padding only for the first page wrapper section */
+#main-content > .pp-section {
+    padding-top: 0;
+}
+
+#main-content > :first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+#main-content > :first-child > :first-child {
+    margin-top: 0;
+}
+
+main#main-content {
+    padding-top: 0;
+    margin-top: 0;
+}
+
+main#main-content > .container:first-child {
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.pp-home__hero,
+.pp-products__hero,
+.pp-hero,
+.pp-detail__hero,
+.pp-shell {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+.pp-stack-sm {
+    margin-bottom: var(--pp-space-2);
+}
+
+.pp-stack-md {
+    margin-bottom: var(--pp-space-4);
+}
+
+.pp-stack-lg {
+    margin-bottom: var(--pp-space-5);
+}
+
+.pp-mt-md {
+    margin-top: var(--pp-space-4);
+}
+
+@media (min-width: 1024px) {
+    .container {
+        padding: 0 32px;
+    }
+}
+
+/* ============================================
+   Mockup Alignment Overrides (Global UI)
+   ============================================ */
+.site-header {
+    padding: 0;
+}
+
+.header-inner {
+    padding: 12px 0;
+}
+
+.main-nav {
+    gap: 14px;
+}
+
+.main-nav a {
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 999px;
+}
+
+.header-actions {
+    gap: 10px;
+}
+
+.pp-cart-toggle,
+.pp-wishlist-toggle {
+    width: 42px;
+    height: 40px;
+    border-radius: 14px;
+    box-shadow: 0 10px 24px rgba(61, 31, 31, 0.08);
+}
+
+.pp-cart-count,
+.wishlist-counter {
+    min-width: 18px;
+    height: 18px;
+    line-height: 18px;
+    font-size: 0.7rem;
+}
+
+.site-footer {
+    padding: 48px 0 32px;
+}
+
+.site-footer a {
+    text-decoration: none;
+}
+
+/* =====================================================
+   Light theme alignment overrides (global)
+   ===================================================== */
+body.pp-light {
+    background: var(--pp-bg-gradient, #fbf6f5);
+    color: var(--pp-text);
+    font-family: "Inter", "Outfit", "Manrope", "Poppins", sans-serif;
+}
+
+body.pp-light .site-header {
+    background: rgba(255, 255, 255, 0.92);
+    border-bottom: 1px solid rgba(92, 46, 46, 0.12);
+    backdrop-filter: blur(12px);
+}
+
+body.pp-light .main-nav a {
+    color: #3d1f1f;
+}
+
+body.pp-light .main-nav a:hover,
+body.pp-light .main-nav a:focus-visible,
+body.pp-light .main-nav a.is-active {
+    color: #5c2e2e;
+    background: rgba(92, 46, 46, 0.1);
+}
+
+body.pp-light .header-actions {
+    gap: 12px;
+}
+
+body.pp-light .pp-cart-toggle,
+body.pp-light .pp-wishlist-toggle {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(92, 46, 46, 0.18);
+    color: #5c2e2e;
+    box-shadow: 0 12px 26px rgba(61, 31, 31, 0.08);
+}
+
+body.pp-light .pp-cart-count,
+body.pp-light .wishlist-counter {
+    background: #c7a277;
+    color: #3d1f1f;
+}
+
+.pp-icon {
+    display: block;
+}
+
+body.pp-light .pp-btn.primary {
+    background: #5c2e2e;
+    border-color: #5c2e2e;
+    box-shadow: 0 12px 24px rgba(92, 46, 46, 0.22);
+}
+
+body.pp-light .pp-btn.ghost {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(92, 46, 46, 0.18);
+    color: #5c2e2e;
+}
+
+body.pp-light .theme-toggle {
+    display: none;
 }

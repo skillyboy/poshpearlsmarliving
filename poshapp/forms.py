@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
 import re
@@ -52,3 +54,25 @@ class OrderTrackingForm(forms.Form):
             attrs={"class": "pp-input", "placeholder": "you@example.com"}
         ),
     )
+
+
+class SignUpForm(UserCreationForm):
+    username = forms.EmailField(
+        label="Email address",
+        widget=forms.EmailInput(
+            attrs={"class": "pp-input", "placeholder": "Email address"}
+        ),
+    )
+
+    class Meta:
+        model = get_user_model()
+        fields = ("username", "password1", "password2")
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        email = self.cleaned_data.get("username", "")
+        user.username = email
+        user.email = email
+        if commit:
+            user.save()
+        return user

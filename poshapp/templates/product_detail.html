@@ -5,8 +5,8 @@
 {% block title %}{{ product.name }} - PoshPearl{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/products.css' %}?v=20260205">
-<link rel="stylesheet" href="{% static 'assets/css/product-detail.css' %}?v=20260205">
+<link rel="stylesheet" href="{% static 'assets/css/products.css' %}?v=20260216.1">
+<link rel="stylesheet" href="{% static 'assets/css/product-detail.css' %}?v=20260216.1">
 {% endblock %}
 
 {% block body_class %}pp-light pp-products pp-product-detail{% endblock %}
@@ -106,21 +106,47 @@
                   On request
                 {% endif %}
               </div>
-              {% if product.compare_at_price %}
+              {% if tier_savings %}
+              <div class="pp-detail__save">Save {{ product.currency }} {{ tier_savings|intcomma }}</div>
+              {% elif product.compare_at_price %}
               <div class="pp-detail__save">Save {{ product.currency }} {{ product.compare_at_price|intcomma }}</div>
               {% endif %}
             </div>
+
+            {% if first_tier_max %}
+              <div class="pp-detail__tier-note">First {{ first_tier_max }} units only</div>
+            {% endif %}
 
             {% if product.compare_at_price %}
               <div class="pp-detail__retail">Retail price: {{ product.currency }} {{ product.compare_at_price|intcomma }}</div>
             {% endif %}
 
+            {% if price_tier_ranges %}
+            <div class="pp-detail__tier-list">
+              {% for tier in price_tier_ranges %}
+              <div class="pp-detail__tier">
+                <span>
+                  {% if tier.max %}
+                    {{ tier.min }}–{{ tier.max }} units
+                  {% else %}
+                    {{ tier.min }}+ units
+                  {% endif %}
+                </span>
+                <strong>{{ tier.currency }} {{ tier.price|intcomma }}</strong>
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+
             <div class="pp-detail__actions">
-              <button class="pp-products__btn pp-products__btn--primary" type="button">
-                {% if product.stock_quantity > 0 %}Buy now{% else %}Pre-order now{% endif %}
+              <button class="pp-products__btn pp-products__btn--primary" type="button" data-add-to-cart data-product-id="{{ product.id }}">
+                {% if product.stock_quantity > 0 %}Add to cart{% else %}Pre-order now{% endif %}
+              </button>
+              <button class="pp-products__btn pp-products__btn--ghost" type="button" data-wishlist-toggle data-product-id="{{ product.id }}">
+                <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                <span>Add to wishlist</span>
               </button>
               <button class="pp-products__btn pp-products__btn--ghost" type="button">Request installation</button>
-              <button class="pp-products__btn pp-products__btn--ghost" type="button" data-modal-target="quote">Add to quote</button>
             </div>
 
             <div class="pp-detail__tags">
@@ -183,23 +209,6 @@
     </div>
   </section>
 
-  <template id="quote-form-template">
-    <form class="pp-products__quote" data-validate>
-      <div class="pp-products__field">
-        <label for="quote-name">Full name</label>
-        <input id="quote-name" name="name" type="text" required>
-      </div>
-      <div class="pp-products__field">
-        <label for="quote-email">Email address</label>
-        <input id="quote-email" name="email" type="email" required>
-      </div>
-      <div class="pp-products__field">
-        <label for="quote-qty">Estimated quantity</label>
-        <input id="quote-qty" name="quantity" type="number" min="1" placeholder="e.g. 100">
-      </div>
-      <button class="pp-products__btn pp-products__btn--primary" type="submit">Send request</button>
-    </form>
-  </template>
 </main>
 
 <script>

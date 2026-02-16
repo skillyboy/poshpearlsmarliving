@@ -5,11 +5,11 @@
 {% block title %}Compare Products - PoshPearl{% endblock %}
 
 {% block content %}
-<main class="py-5">
+<main class="pp-section">
     <div class="container">
 
         <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb" class="mb-4">
+        <nav aria-label="breadcrumb" class="pp-stack-md">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'products' %}">Shop</a></li>
@@ -18,7 +18,7 @@
         </nav>
 
         <!-- Header -->
-        <div class="row mb-5">
+        <div class="row pp-stack-lg">
             <div class="col">
                 <h1 class="h2 fw-bold text-gradient-gold">Product Comparison</h1>
                 <p class="text-secondary">Compare up to 4 products side-by-side to find the perfect fit</p>
@@ -32,7 +32,7 @@
         </div>
 
         <!-- Empty State -->
-        <div id="emptyState" class="text-center py-5" style="display: none;">
+        <div id="emptyState" class="text-center pp-section" style="display: none;">
             <div class="card glass-effect border-0 p-5">
                 <i class="fa-solid fa-code-compare fa-3x text-gold mb-3"></i>
                 <h3 class="h4 mb-3">No Products to Compare</h3>
@@ -106,7 +106,7 @@
         </div>
 
         <!-- Actions -->
-        <div id="comparisonActions" class="mt-4 text-center" style="display: none;">
+        <div id="comparisonActions" class="pp-mt-md text-center" style="display: none;">
             <button id="clearAll" class="btn btn-outline-danger">
                 <i class="fa-solid fa-trash me-2"></i>
                 Clear All

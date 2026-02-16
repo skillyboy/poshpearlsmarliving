@@ -2,6 +2,13 @@
     document.documentElement.classList.replace('no-js', 'js');
     const root = document.documentElement;
     const body = document.body;
+    // Force light mode globally (no theme toggle)
+    root.setAttribute('data-theme', 'light');
+    try {
+        localStorage.setItem('pp-theme', 'light');
+    } catch (e) {
+        // Ignore storage errors.
+    }
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const qs = (sel, scope = document) => scope.querySelector(sel);
@@ -16,11 +23,21 @@
         }[match]));
 
     const toastRoot = qs('#toast-root');
-    const showToast = (message, type = 'info') => {
+    const showToast = (message, type = 'info', action) => {
         if (!toastRoot) return;
         const toast = document.createElement('div');
         toast.className = `pp-toast ${type}`;
-        toast.textContent = message;
+        const text = document.createElement('span');
+        text.className = 'pp-toast__text';
+        text.textContent = message;
+        toast.appendChild(text);
+        if (action?.label && action?.href) {
+            const link = document.createElement('a');
+            link.className = 'pp-toast__action';
+            link.href = action.href;
+            link.textContent = action.label;
+            toast.appendChild(link);
+        }
         toastRoot.appendChild(toast);
         setTimeout(() => toast.remove(), 3200);
     };
@@ -40,7 +57,7 @@
     const cartToggleButtons = qsa('[data-cart-toggle]');
     const cartDrawer = qs('[data-cart-drawer]');
     const cartBackdrop = qs('[data-cart-backdrop]');
-    const cartClose = qs('[data-cart-close]');
+    const cartCloseButtons = qsa('[data-cart-close]');
     const cartItemsEl = qs('[data-cart-items]');
     const cartSubtotalEl = qs('[data-cart-subtotal]');
     const cartCountEls = qsa('[data-cart-count]');
@@ -66,7 +83,7 @@
             body.classList.contains('cart-open') ? closeCart() : openCart();
         });
     });
-    cartClose?.addEventListener('click', closeCart);
+    cartCloseButtons.forEach((btn) => btn.addEventListener('click', closeCart));
     cartBackdrop?.addEventListener('click', closeCart);
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape' && body.classList.contains('cart-open')) closeCart();
@@ -200,7 +217,7 @@
             });
             updateCartCount(data);
             renderCartDrawer(data);
-            showToast('Added to cart.', 'success');
+            showToast('Added to cart.', 'success', { label: 'View cart', href: '/cart/' });
             openCart();
         } catch (error) {
             showToast(error.message || 'Unable to add item.', 'error');
@@ -281,17 +298,8 @@
     };
 
     if (themeToggle) {
-        let stored = null;
-        try {
-            stored = localStorage.getItem('pp-theme');
-        } catch (e) {
-            stored = null;
-        }
-        setTheme(stored || 'light');
-        themeToggle.addEventListener('click', () => {
-            const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            setTheme(next);
-        });
+        setTheme('light');
+        themeToggle.setAttribute('aria-pressed', 'false');
     }
 
     const header = qs('[data-sticky-header]');

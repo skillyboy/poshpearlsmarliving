@@ -137,3 +137,38 @@
         font-size: 0.75rem;
     }
 }
+
+/* Light theme alignment */
+body.pp-light #compareBar {
+    background: rgba(255, 255, 255, 0.9);
+    border-top: 1px solid rgba(92, 46, 46, 0.18);
+    box-shadow: 0 -12px 30px rgba(61, 31, 31, 0.12);
+}
+
+body.pp-light #compareBar .compare-info {
+    color: #3d1f1f;
+}
+
+body.pp-light #compareBar .compare-count {
+    background: #c7a277;
+    color: #3d1f1f;
+}
+
+body.pp-light .compare-checkbox {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(92, 46, 46, 0.18);
+    color: #5c2e2e;
+}
+
+body.pp-light .compare-checkbox label {
+    color: #5c2e2e;
+}
+
+body.pp-light #comparisonTable table {
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(92, 46, 46, 0.12);
+}
+
+body.pp-light #comparisonTable tbody tr:nth-child(even) {
+    background: rgba(92, 46, 46, 0.04);
+}

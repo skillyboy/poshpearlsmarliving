@@ -15,11 +15,12 @@
   padding: 20px;
   display: grid;
   gap: 12px;
+  box-shadow: var(--pp-shadow);
 }
 
 .pp-track-label {
   font-weight: 600;
-  color: #5c2e2e;
+  color: var(--pp-accent);
   margin-top: 6px;
 }
 
@@ -60,10 +61,11 @@
 }
 
 .pp-track-topics article {
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(92, 46, 46, 0.12);
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-border);
   border-radius: 14px;
   padding: 12px;
+  box-shadow: var(--pp-shadow);
 }
 
 .pp-track-links {
@@ -78,6 +80,7 @@
   display: grid;
   gap: 12px;
   height: fit-content;
+  box-shadow: var(--pp-shadow);
 }
 
 .pp-track-summary__header {
@@ -91,7 +94,7 @@
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 12px;
   font-size: 0.9rem;
-  color: #6b4a4a;
+  color: var(--pp-muted);
 }
 
 .pp-track-items {
@@ -108,7 +111,7 @@
 
 .pp-track-item span {
   display: block;
-  color: #6b4a4a;
+  color: var(--pp-muted);
   font-size: 0.85rem;
 }
 

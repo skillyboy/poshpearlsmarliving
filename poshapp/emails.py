@@ -59,13 +59,14 @@ def send_payment_confirmed_email(order):
     return sent
 
 
-def send_welcome_new_user_email(user, order, password_reset_url):
-    """Send welcome email to auto-created users with password reset link."""
+def send_welcome_new_user_email(user, order, temp_password, password_reset_url):
+    """Send welcome email to auto-created users with temporary password and reset link."""
     context = {
         "user": user,
         "order": order,
         "items": order.items.select_related("product"),
         "site_url": settings.SITE_URL,
+        "temp_password": temp_password,
         "password_reset_url": password_reset_url,
     }
     sent = _send_email(

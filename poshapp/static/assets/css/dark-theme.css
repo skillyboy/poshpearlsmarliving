@@ -1,3 +1,4 @@
+/* IMPORTANT: Dark theme must only apply when html[data-theme="dark"] */
 /**
  * PoshPearl 2026 Dark Theme - Bootstrap 5 Integration
  * Works seamlessly with Bootstrap 5.3.3 components
@@ -6,7 +7,7 @@
 /* ============================================
    🎨 BOOTSTRAP DARK MODE VARIABLES
    ============================================ */
-:root {
+html[data-theme="dark"]{
   /* Override Bootstrap variables */
   --bs-body-bg: #1a1614;
   --bs-body-color: #ffffff;
@@ -40,23 +41,23 @@
 }
 
 /* Set dark mode on HTML */
-html {
+html[data-theme="dark"]{
   color-scheme: dark;
 }
 
 /* ============================================
    🌙 BASE BOOTSTRAP OVERRIDES
    ============================================ */
-body {
+html[data-theme="dark"] body{
   background: var(--bg-primary) !important;
   color: var(--text-primary) !important;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
 }
 
 /* ============================================
    🃏 BOOTSTRAP CARDS
    ============================================ */
-.card {
+html[data-theme="dark"] .card{
   background: rgba(255, 255, 255, 0.05) !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -66,35 +67,35 @@ body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.card:hover {
+html[data-theme="dark"] .card:hover{
   transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(244, 176, 0, 0.2);
   border-color: var(--gold) !important;
 }
 
-.card-header {
+html[data-theme="dark"] .card-header{
   background: rgba(255, 255, 255, 0.03) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: var(--text-primary) !important;
 }
 
-.card-body {
+html[data-theme="dark"] .card-body{
   color: var(--text-secondary);
 }
 
-.card-title {
+html[data-theme="dark"] .card-title{
   color: var(--text-primary) !important;
   font-weight: 700;
 }
 
-.card-text {
+html[data-theme="dark"] .card-text{
   color: var(--text-secondary) !important;
 }
 
 /* ============================================
    🔘 BOOTSTRAP BUTTONS
    ============================================ */
-.btn {
+html[data-theme="dark"] .btn{
   border-radius: 0.75rem !important;
   padding: 0.75rem 1.5rem !important;
   font-weight: 600 !important;
@@ -102,48 +103,48 @@ body {
   border: none !important;
 }
 
-.btn-primary {
+html[data-theme="dark"] .btn-primary{
   background: linear-gradient(135deg, var(--gold), var(--gold-light)) !important;
   color: var(--bg-primary) !important;
   box-shadow: 0 4px 20px var(--gold-glow);
 }
 
-.btn-primary:hover {
+html[data-theme="dark"] .btn-primary:hover{
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 6px 30px var(--gold-glow);
   background: linear-gradient(135deg, var(--gold-light), var(--gold)) !important;
 }
 
-.btn-secondary {
+html[data-theme="dark"] .btn-secondary{
   background: rgba(255, 255, 255, 0.08) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: var(--text-primary) !important;
 }
 
-.btn-secondary:hover {
+html[data-theme="dark"] .btn-secondary:hover{
   background: rgba(255, 255, 255, 0.12) !important;
   border-color: var(--gold) !important;
   transform: translateY(-2px);
 }
 
-.btn-outline-primary {
+html[data-theme="dark"] .btn-outline-primary{
   border: 2px solid var(--gold) !important;
   color: var(--gold) !important;
   background: transparent !important;
 }
 
-.btn-outline-primary:hover {
+html[data-theme="dark"] .btn-outline-primary:hover{
   background: var(--gold) !important;
   color: var(--bg-primary) !important;
   transform: translateY(-2px);
 }
 
-.btn-lg {
+html[data-theme="dark"] .btn-lg{
   padding: 1rem 2rem !important;
   font-size: 1.125rem !important;
 }
 
-.btn-sm {
+html[data-theme="dark"] .btn-sm{
   padding: 0.5rem 1rem !important;
   font-size: 0.875rem !important;
 }
@@ -151,8 +152,7 @@ body {
 /* ============================================
    📝 BOOTSTRAP FORMS
    ============================================ */
-.form-control,
-.form-select {
+html[data-theme="dark"] .form-control, html[data-theme="dark"] .form-select{
   background: rgba(255, 255, 255, 0.05) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 0.75rem !important;
@@ -160,42 +160,41 @@ body {
   padding: 0.75rem 1rem !important;
 }
 
-.form-control:focus,
-.form-select:focus {
+html[data-theme="dark"] .form-control:focus, html[data-theme="dark"] .form-select:focus{
   background: rgba(255, 255, 255, 0.08) !important;
   border-color: var(--gold) !important;
   box-shadow: 0 0 0 0.25rem rgba(244, 176, 0, 0.15) !important;
   color: var(--text-primary) !important;
 }
 
-.form-control::placeholder {
+html[data-theme="dark"] .form-control::placeholder{
   color: var(--text-muted) !important;
 }
 
-.form-label {
+html[data-theme="dark"] .form-label{
   color: var(--text-secondary) !important;
   font-weight: 500 !important;
   margin-bottom: 0.5rem;
 }
 
-.form-check-input {
+html[data-theme="dark"] .form-check-input{
   background-color: rgba(255, 255, 255, 0.1) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
-.form-check-input:checked {
+html[data-theme="dark"] .form-check-input:checked{
   background-color: var(--gold) !important;
   border-color: var(--gold) !important;
 }
 
-.form-check-label {
+html[data-theme="dark"] .form-check-label{
   color: var(--text-secondary) !important;
 }
 
 /* ============================================
    🧭 BOOTSTRAP NAVIGATION
    ============================================ */
-.navbar {
+html[data-theme="dark"] .navbar{
   background: rgba(26, 22, 20, 0.95) !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -203,85 +202,84 @@ body {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
-.navbar-brand {
+html[data-theme="dark"] .navbar-brand{
   color: var(--text-primary) !important;
   font-weight: 700;
 }
 
-.nav-link {
+html[data-theme="dark"] .nav-link{
   color: var(--text-secondary) !important;
   transition: all 0.3s;
   padding: 0.5rem 1rem !important;
   border-radius: 0.5rem;
 }
 
-.nav-link:hover,
-.nav-link:focus {
+html[data-theme="dark"] .nav-link:hover, html[data-theme="dark"] .nav-link:focus{
   color: var(--text-primary) !important;
   background: rgba(255, 255, 255, 0.05);
 }
 
-.nav-link.active {
+html[data-theme="dark"] .nav-link.active{
   color: var(--gold) !important;
   background: rgba(244, 176, 0, 0.1);
 }
 
-.navbar-toggler {
+html[data-theme="dark"] .navbar-toggler{
   border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-.navbar-toggler-icon {
+html[data-theme="dark"] .navbar-toggler-icon{
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
 }
 
 /* ============================================
    🍞 BOOTSTRAP BREADCRUMB
    ============================================ */
-.breadcrumb {
+html[data-theme="dark"] .breadcrumb{
   background: transparent !important;
   margin-bottom: 1.5rem;
 }
 
-.breadcrumb-item {
+html[data-theme="dark"] .breadcrumb-item{
   color: var(--text-secondary) !important;
 }
 
-.breadcrumb-item.active {
+html[data-theme="dark"] .breadcrumb-item.active{
   color: var(--text-primary) !important;
 }
 
-.breadcrumb-item+.breadcrumb-item::before {
+html[data-theme="dark"] .breadcrumb-item+.breadcrumb-item::before{
   color: var(--text-muted) !important;
 }
 
 /* ============================================
    🔔 BOOTSTRAP ALERTS
    ============================================ */
-.alert {
+html[data-theme="dark"] .alert{
   border-radius: 1rem !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   backdrop-filter: blur(20px);
 }
 
-.alert-success {
+html[data-theme="dark"] .alert-success{
   background: rgba(16, 185, 129, 0.15) !important;
   color: #6ee7b7 !important;
   border-color: rgba(16, 185, 129, 0.3) !important;
 }
 
-.alert-warning {
+html[data-theme="dark"] .alert-warning{
   background: rgba(245, 158, 11, 0.15) !important;
   color: #fcd34d !important;
   border-color: rgba(245, 158, 11, 0.3) !important;
 }
 
-.alert-danger {
+html[data-theme="dark"] .alert-danger{
   background: rgba(239, 68, 68, 0.15) !important;
   color: #fca5a5 !important;
   border-color: rgba(239, 68, 68, 0.3) !important;
 }
 
-.alert-info {
+html[data-theme="dark"] .alert-info{
   background: rgba(59, 130, 246, 0.15) !important;
   color: #93c5fd !important;
   border-color: rgba(59, 130, 246, 0.3) !important;
@@ -290,18 +288,18 @@ body {
 /* ============================================
    🏷️ BOOTSTRAP BADGES
    ============================================ */
-.badge {
+html[data-theme="dark"] .badge{
   padding: 0.35rem 0.75rem !important;
   border-radius: 2rem !important;
   font-weight: 600 !important;
 }
 
-.badge.bg-primary {
+html[data-theme="dark"] .badge.bg-primary{
   background: linear-gradient(135deg, var(--gold), var(--gold-light)) !important;
   color: var(--bg-primary) !important;
 }
 
-.badge.bg-secondary {
+html[data-theme="dark"] .badge.bg-secondary{
   background: rgba(255, 255, 255, 0.15) !important;
   color: var(--text-primary) !important;
 }
@@ -309,27 +307,27 @@ body {
 /* ============================================
    📋 BOOTSTRAP TABLES
    ============================================ */
-.table {
+html[data-theme="dark"] .table{
   color: var(--text-secondary) !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-.table thead th {
+html[data-theme="dark"] .table thead th{
   background: rgba(255, 255, 255, 0.05) !important;
   color: var(--text-primary) !important;
   border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important;
   font-weight: 600;
 }
 
-.table tbody tr {
+html[data-theme="dark"] .table tbody tr{
   border-color: rgba(255, 255, 255, 0.05) !important;
 }
 
-.table tbody tr:hover {
+html[data-theme="dark"] .table tbody tr:hover{
   background: rgba(255, 255, 255, 0.03) !important;
 }
 
-.table-dark {
+html[data-theme="dark"] .table-dark{
   --bs-table-bg: rgba(255, 255, 255, 0.03);
   --bs-table-striped-bg: rgba(255, 255, 255, 0.05);
   --bs-table-hover-bg: rgba(255, 255, 255, 0.08);
@@ -338,33 +336,22 @@ body {
 /* ============================================
    🎨 TYPOGRAPHY
    ============================================ */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
+html[data-theme="dark"] h1, html[data-theme="dark"] h2, html[data-theme="dark"] h3, html[data-theme="dark"] h4, html[data-theme="dark"] h5, html[data-theme="dark"] h6, html[data-theme="dark"] .h1, html[data-theme="dark"] .h2, html[data-theme="dark"] .h3, html[data-theme="dark"] .h4, html[data-theme="dark"] .h5, html[data-theme="dark"] .h6{
   color: var(--text-primary) !important;
-  font-family: 'Outfit', 'Inter', sans-serif !important;
+  font-family: "Outfit", "Inter", sans-serif !important;
   font-weight: 700;
 }
 
-p {
+html[data-theme="dark"] p{
   color: var(--text-secondary) !important;
   line-height: 1.7;
 }
 
-.text-muted {
+html[data-theme="dark"] .text-muted{
   color: var(--text-muted) !important;
 }
 
-.lead {
+html[data-theme="dark"] .lead{
   color: var(--text-secondary) !important;
   font-size: 1.25rem;
 }
@@ -372,46 +359,46 @@ p {
 /* ============================================
    📦 BOOTSTRAP MODALS
    ============================================ */
-.modal-content {
+html[data-theme="dark"] .modal-content{
   background: var(--bg-secondary) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 1rem !important;
   backdrop-filter: blur(20px);
 }
 
-.modal-header {
+html[data-theme="dark"] .modal-header{
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-.modal-footer {
+html[data-theme="dark"] .modal-footer{
   border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-.modal-title {
+html[data-theme="dark"] .modal-title{
   color: var(--text-primary) !important;
 }
 
-.btn-close {
+html[data-theme="dark"] .btn-close{
   filter: invert(1) grayscale(100%) brightness(200%);
 }
 
 /* ============================================
    📊 BOOTSTRAP PROGRESS
    ============================================ */
-.progress {
+html[data-theme="dark"] .progress{
   background: rgba(255, 255, 255, 0.1) !important;
   border-radius: 1rem !important;
   height: 1rem;
 }
 
-.progress-bar {
+html[data-theme="dark"] .progress-bar{
   background: linear-gradient(90deg, var(--gold), var(--gold-light)) !important;
 }
 
 /* ============================================
    🔽 BOOTSTRAP DROPDOWNS
    ============================================ */
-.dropdown-menu {
+html[data-theme="dark"] .dropdown-menu{
   background: rgba(42, 35, 32, 0.95) !important;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -419,23 +406,22 @@ p {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-.dropdown-item {
+html[data-theme="dark"] .dropdown-item{
   color: var(--text-secondary) !important;
   transition: all 0.3s;
 }
 
-.dropdown-item:hover,
-.dropdown-item:focus {
+html[data-theme="dark"] .dropdown-item:hover, html[data-theme="dark"] .dropdown-item:focus{
   background: rgba(255, 255, 255, 0.08) !important;
   color: var(--text-primary) !important;
 }
 
-.dropdown-item.active {
+html[data-theme="dark"] .dropdown-item.active{
   background: rgba(244, 176, 0, 0.15) !important;
   color: var(--gold) !important;
 }
 
-.dropdown-divider {
+html[data-theme="dark"] .dropdown-divider{
   border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
@@ -444,7 +430,7 @@ p {
    ============================================ */
 
 /* Glassmorphism utility */
-.glass-effect {
+html[data-theme="dark"] .glass-effect{
   background: rgba(255, 255, 255, 0.05) !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -453,7 +439,7 @@ p {
 }
 
 /* Gold gradient text */
-.text-gradient-gold {
+html[data-theme="dark"] .text-gradient-gold{
   background: linear-gradient(135deg, var(--gold), var(--gold-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -461,7 +447,7 @@ p {
 }
 
 /* Hero section utility */
-.hero-section {
+html[data-theme="dark"] .hero-section{
   min-height: 80vh;
   display: flex;
   align-items: center;
@@ -474,11 +460,11 @@ p {
    📱 RESPONSIVE UTILITIES
    ============================================ */
 @media (max-width: 768px) {
-  .btn {
+  html[data-theme="dark"] .btn{
     padding: 0.625rem 1.25rem !important;
   }
 
-  .btn-lg {
+  html[data-theme="dark"] .btn-lg{
     padding: 0.875rem 1.75rem !important;
   }
 }
@@ -508,31 +494,31 @@ p {
   }
 }
 
-.animate-fade-in {
+html[data-theme="dark"] .animate-fade-in{
   animation: fadeIn 0.6s ease-out;
 }
 
-.animate-slide-up {
+html[data-theme="dark"] .animate-slide-up{
   animation: slideUp 0.8s ease-out;
 }
 
 /* ============================================
    🎨 SCROLLBAR
    ============================================ */
-::-webkit-scrollbar {
+html[data-theme="dark"] ::-webkit-scrollbar{
   width: 12px;
 }
 
-::-webkit-scrollbar-track {
+html[data-theme="dark"] ::-webkit-scrollbar-track{
   background: var(--bg-primary);
 }
 
-::-webkit-scrollbar-thumb {
+html[data-theme="dark"] ::-webkit-scrollbar-thumb{
   background: rgba(244, 176, 0, 0.3);
   border-radius: 6px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{
   background: rgba(244, 176, 0, 0.5);
 }
 
@@ -541,9 +527,7 @@ p {
    ============================================ */
 @media (prefers-reduced-motion: reduce) {
 
-  *,
-  *::before,
-  *::after {
+  html[data-theme="dark"] *, html[data-theme="dark"] *::before, html[data-theme="dark"] *::after{
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

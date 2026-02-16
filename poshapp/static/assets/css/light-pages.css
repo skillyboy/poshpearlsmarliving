@@ -3,6 +3,45 @@
    Applies when body has .pp-light
    ===================================================== */
 
+:root {
+  --pp-bg-color: #fbf6f5;
+  --pp-bg-gradient:
+    radial-gradient(1200px 520px at 70% 20%, rgba(92, 46, 46, 0.12), transparent 60%),
+    radial-gradient(1100px 520px at 18% 10%, rgba(197, 142, 79, 0.18), transparent 55%),
+    radial-gradient(900px 520px at 65% 90%, rgba(197, 142, 79, 0.12), transparent 60%),
+    linear-gradient(180deg, #fbf6f5 0%, #f3eaea 100%);
+}
+
+html {
+  background: var(--pp-bg-color) !important;
+}
+
+/* Ensure the root canvas is always the light gradient */
+html,
+body {
+  background: var(--pp-bg-gradient) !important;
+  background-color: var(--pp-bg-color) !important;
+}
+
+/* Hard guard: every light page uses the creamy gradient, even if other CSS leaks */
+html:not([data-theme="dark"]) body {
+  background: var(--pp-bg-gradient) !important;
+  background-color: var(--pp-bg-color) !important;
+  color: #3d1f1f !important;
+}
+
+/* Extra guard against any stray dark backgrounds */
+html:not([data-theme="dark"]) body.pp-light,
+html:not([data-theme="dark"]) body.pp-home,
+html:not([data-theme="dark"]) body.pp-products,
+html:not([data-theme="dark"]) body.pp-product-detail,
+html:not([data-theme="dark"]) body.pp-cart,
+html:not([data-theme="dark"]) body.pp-checkout {
+  background: var(--pp-bg-gradient) !important;
+  background-color: var(--pp-bg-color) !important;
+  color: #3d1f1f !important;
+}
+
 body.pp-light {
   --pp-text: #3d1f1f;
   --pp-muted: #5a3b3b;
@@ -14,11 +53,38 @@ body.pp-light {
   --pp-border: rgba(92, 46, 46, 0.16);
   --pp-shadow: 0 22px 44px rgba(61, 31, 31, 0.12);
   --pp-radius: 20px;
+  --bg-primary: #fbf6f5;
+  --bg-secondary: #f3eaea;
+  --pp-bg-color: #fbf6f5;
+  --pp-bg-gradient: var(--pp-bg-gradient);
+  --text-primary: #3d1f1f;
+  --text-secondary: #5a3b3b;
   position: relative;
-  background: radial-gradient(1200px 520px at 12% 0%, rgba(92, 46, 46, 0.18), transparent 60%),
-              radial-gradient(1200px 520px at 88% 0%, rgba(245, 166, 35, 0.18), transparent 60%),
-              linear-gradient(180deg, #f8f2f2 0%, #efe6e6 100%) !important;
+  background: var(--pp-bg-gradient) !important;
+  background-color: var(--pp-bg-color) !important;
   color: var(--pp-text) !important;
+}
+
+/* Disable any extra page-bg overlays so all light pages share one background */
+body.pp-light.pp-page-bg::before,
+body.pp-light.pp-page-bg::after {
+  content: none !important;
+}
+
+/* Hard fallback: force light background on key public pages even if pp-light is missing */
+body.pp-home,
+body.pp-products,
+body.pp-product-detail,
+body.pp-pricing,
+body.pp-support,
+body.pp-auth,
+body.pp-track,
+body.pp-track-order,
+body.pp-notfound,
+body.pp-verify {
+  background: var(--pp-bg-gradient) !important;
+  background-color: #fbf6f5 !important;
+  color: var(--pp-text, #3d1f1f) !important;
 }
 
 body.pp-light::before {
@@ -26,9 +92,20 @@ body.pp-light::before {
   position: fixed;
   inset: 0;
   background: url("../images/bg.png") center/cover no-repeat;
-  opacity: 0.08;
+  opacity: 0.05;
   pointer-events: none;
   z-index: 0;
+}
+
+/* Guard against system dark mode or persisted dark theme on light pages */
+html[data-theme="dark"] body.pp-light {
+  background: var(--pp-bg-gradient) !important;
+  background-color: var(--pp-bg-color) !important;
+  color: #3d1f1f !important;
+}
+
+html[data-theme="dark"] body.pp-light::before {
+  opacity: 0.06;
 }
 
 body.pp-light > * {
@@ -79,8 +156,20 @@ body.pp-light .pp-wishlist-toggle {
   color: var(--pp-accent);
 }
 
+body.pp-light .card {
+  background: var(--pp-surface) !important;
+  border: 1px solid var(--pp-border) !important;
+  box-shadow: var(--pp-shadow);
+  backdrop-filter: none !important;
+}
+
+body.pp-light .text-muted,
+body.pp-light .text-secondary {
+  color: var(--pp-muted) !important;
+}
+
 .pp-shell {
-  padding: clamp(32px, 7vw, 72px) 0;
+  padding: var(--pp-page-top) 0 var(--pp-section-y-lg);
 }
 
 .pp-section-title {
@@ -99,14 +188,15 @@ body.pp-light .pp-wishlist-toggle {
 
 body.pp-light .pp-card,
 body.pp-light .pp-panel {
-  background: var(--pp-surface);
+  background: var(--pp-surface-soft);
   border: 1px solid var(--pp-border);
   border-radius: var(--pp-radius);
   box-shadow: var(--pp-shadow);
+  backdrop-filter: blur(10px);
 }
 
 body.pp-light .pp-card.soft {
-  background: var(--pp-surface-soft);
+  background: var(--pp-surface);
 }
 
 .pp-card__body {
@@ -192,6 +282,22 @@ body.pp-light .pp-btn-secondary {
 
 body.pp-light .pp-muted {
   color: var(--pp-muted);
+}
+
+/* Ensure navbar text is readable on light header */
+body.pp-light .site-header {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+body.pp-light .main-nav a {
+  color: #3d1f1f !important;
+}
+
+body.pp-light .main-nav a:hover,
+body.pp-light .main-nav a:focus-visible,
+body.pp-light .main-nav a.is-active {
+  color: #5c2e2e !important;
+  background: rgba(92, 46, 46, 0.10);
 }
 
 body.pp-light .pp-divider {

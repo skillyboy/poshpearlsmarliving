@@ -5,9 +5,17 @@ Welcome to PoshPearl! We've created an account for you to make it easier to trac
 Your order #{{ order.id }} has been received and is being processed.
 
 TO ACCESS YOUR ACCOUNT:
-Set your password here: {{ password_reset_url }}
+Login with:
+Email: {{ user.email }}
+Temporary password: {{ temp_password }}
 
-Once you set your password, you can:
+Please change your password after login:
+{{ site_url }}/accounts/password_change/
+
+Prefer to reset instead? Use this secure link:
+{{ password_reset_url }}
+
+Once you change your password, you can:
 - View your order history at {{ site_url }}/account/orders/
 - Track your orders anytime
 - Faster checkout on future purchases

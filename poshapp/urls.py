@@ -18,6 +18,8 @@ urlpatterns = [
     path("track-order/", views.track_order, name="track_order"),
     path("support/", views.support, name="support"),
     path("contact/", views.contact, name="contact"),
+    path("health/", views.health, name="health"),
+    path("accounts/signup/", views.signup_view, name="signup"),
     # User dashboard
     path("account/", views.dashboard_view, name="dashboard"),
     path("account/orders/", views.user_orders_view, name="user_orders"),

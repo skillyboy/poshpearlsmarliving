@@ -5,7 +5,8 @@
 {% block title %}PoshPearl Smart Living{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/home.css' %}?v=20260205">
+<link rel="stylesheet" href="{% static 'assets/css/home.css' %}?v=20260216.1">
+<link rel="stylesheet" href="{% static 'assets/css/poshpearl-ui.css' %}?v=20260216.1">
 {% endblock %}
 
 {% block body_class %}pp-light pp-home{% endblock %}
@@ -16,13 +17,13 @@
 
   <section class="pp-home__hero">
     <div class="container pp-home__hero-grid">
-      <div class="pp-home__hero-copy">
-        <p class="pp-home__eyebrow">Upgrade to smart living</p>
-        <h1>Smarter security and effortless control</h1>
-        <p>Experience seamless home automation and security solutions built for modern living.</p>
+      <div class="pp-home__hero-copy pp-glass">
+        <p class="pp-home__eyebrow">Making life easy. Making homes smart.</p>
+        <h1>Smart security, access, and comfort in one</h1>
+        <p>PoshPearl SmartLiving delivers trusted smart locks, gate systems, automated curtains, and connected sensors that keep your home or business safer, simpler, and more convenient.</p>
         <div class="pp-home__hero-actions">
-          <a class="pp-btn-gold" href="{% url 'contact' %}">Book Consultation</a>
-          <a class="pp-btn-ghost" href="{% url 'products' %}">Explore our products</a>
+          <a class="pp-btn pp-btn-primary" href="{% url 'contact' %}">Book Consultation</a>
+          <a class="pp-btn pp-btn-ghost" href="{% url 'products' %}">Explore our solutions</a>
         </div>
       </div>
       <div class="pp-home__hero-media">
@@ -34,22 +35,22 @@
 
   <section class="pp-home__features">
     <div class="container">
-      <h2>Transform your home into a smart home.</h2>
+      <h2>Live safer, easier, and more connected.</h2>
       <div class="pp-home__feature-grid">
         <div class="pp-home__feature-card">
           <i class="fa-solid fa-shield-halved"></i>
           <h3>Smart Security</h3>
-          <p>Fingerprint locks, cameras, and sensors.</p>
+          <p>Premium smart locks, gate control, and sensors that protect what matters.</p>
         </div>
         <div class="pp-home__feature-card">
           <i class="fa-solid fa-bell"></i>
-          <h3>Smart Alerts</h3>
-          <p>Real‑time notifications for your home.</p>
+          <h3>Smart Access</h3>
+          <p>Keyless entry, visitor management, and remote control for doors and gates.</p>
         </div>
         <div class="pp-home__feature-card">
           <i class="fa-solid fa-sliders"></i>
-          <h3>Full Control</h3>
-          <p>Manage everything from one app.</p>
+          <h3>Smart Comfort</h3>
+          <p>Automated curtains and tailored automations that keep spaces comfortable and efficient.</p>
         </div>
       </div>
     </div>
@@ -57,7 +58,7 @@
 
   <section class="pp-home__trust">
     <div class="container">
-      <p>Trusted by thousands of Nigerians</p>
+      <p>Trusted by homes, estates, offices, and businesses across Nigeria</p>
       <div class="pp-home__logos">
         <span>Zenith</span>
         <span>FCMB</span>
@@ -83,14 +84,14 @@
           {% endwith %}
           <h3>{{ product.name }}</h3>
           <p>{{ product.short_description|default:product.description|truncatechars:80 }}</p>
-          <a class="pp-btn-ghost" href="{% url 'product_detail_products' product.slug %}">Camera →</a>
+          <a class="pp-btn pp-btn-ghost" href="{% url 'product_detail_products' product.slug %}">View details →</a>
         </article>
         {% empty %}
         <article class="pp-home__device-card">
           <img src="{{ product_fallback }}" alt="Smart device">
           <h3>Smart Locks</h3>
           <p>Reliable access with biometric security.</p>
-          <a class="pp-btn-ghost" href="{% url 'products' %}">Explore →</a>
+          <a class="pp-btn pp-btn-ghost" href="{% url 'products' %}">Explore →</a>
         </article>
         {% endfor %}
       </div>
@@ -112,7 +113,7 @@
             <li>Basic automations</li>
             <li>Email support</li>
           </ul>
-          <button class="pp-btn-ghost">Get started</button>
+          <button class="pp-btn pp-btn-ghost">Get started</button>
         </article>
         <article class="pp-home__plan is-featured">
           <h3>Pro</h3>
@@ -122,7 +123,7 @@
             <li>Smart automations</li>
             <li>Priority support</li>
           </ul>
-          <button class="pp-btn-gold">Get started</button>
+          <button class="pp-btn pp-btn-primary">Get started</button>
         </article>
         <article class="pp-home__plan">
           <h3>Enterprise</h3>
@@ -132,7 +133,7 @@
             <li>Dedicated account</li>
             <li>Custom integrations</li>
           </ul>
-          <button class="pp-btn-ghost">Contact us</button>
+          <button class="pp-btn pp-btn-ghost">Contact us</button>
         </article>
       </div>
     </div>
@@ -167,8 +168,8 @@
         <h2>404</h2>
         <p>Oops! Page not found.</p>
         <div class="pp-home__notfound-actions">
-          <a class="pp-btn-gold" href="{% url 'home' %}">Go back home</a>
-          <a class="pp-btn-ghost" href="{% url 'support' %}">Search</a>
+          <a class="pp-btn pp-btn-primary" href="{% url 'home' %}">Go back home</a>
+          <a class="pp-btn pp-btn-ghost" href="{% url 'support' %}">Search</a>
         </div>
       </div>
     </div>

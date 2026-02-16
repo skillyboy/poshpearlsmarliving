@@ -74,7 +74,7 @@
 /* ===================
    GLOBAL BRAND BASE
    =================== */
-body {
+html[data-theme="dark"] body {
     background: var(--pp-charcoal) !important;
     color: var(--pp-off-white) !important;
 }
@@ -89,7 +89,7 @@ a:focus-visible {
 }
 
 /* Bootstrap global tokens for full-site theme consistency */
-:root {
+html[data-theme="dark"] body {
     --bs-body-bg: var(--pp-charcoal);
     --bs-body-color: var(--pp-off-white);
     --bs-body-color-rgb: 249, 250, 251;

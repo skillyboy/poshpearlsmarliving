@@ -84,6 +84,7 @@ class ProductPriceTier(models.Model):
     min_quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=12, decimal_places=0)
     currency = models.CharField(max_length=3, default="NGN")
+    label = models.CharField(max_length=120, blank=True)
 
     class Meta:
         ordering = ["min_quantity"]
@@ -186,6 +187,9 @@ class Order(models.Model):
     payment_method = models.CharField(max_length=64, blank=True)
 
     notes = models.TextField(blank=True)
+
+    confirmation_sent_at = models.DateTimeField(null=True, blank=True)
+    payment_confirmation_sent_at = models.DateTimeField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

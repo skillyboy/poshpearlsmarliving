@@ -27,7 +27,7 @@ class Command(BaseCommand):
                     "video call support, and abnormal activity reminders. Built for secure, "
                     "high-traffic residential and commercial doors with app management."
                 ),
-                "price": 150000,
+                "price": 320000,
                 "currency": "NGN",
                 "stock_quantity": 100,
                 "is_active": True,
@@ -44,6 +44,7 @@ class Command(BaseCommand):
             "video call support, and abnormal activity reminders. Built for secure, "
             "high-traffic residential and commercial doors with app management."
         )
+        product.price = 320000
         product.currency = "NGN"
         product.is_active = True
         product.is_featured = True
@@ -51,8 +52,8 @@ class Command(BaseCommand):
         product.categories.add(category)
 
         price_tiers = [
-            {"min_quantity": 10, "price": 280000},
-            {"min_quantity": 100, "price": 250000},
+            {"min_quantity": 1, "price": 320000},
+            {"min_quantity": 20, "price": 280000},
         ]
         for tier in price_tiers:
             ProductPriceTier.objects.update_or_create(
@@ -61,7 +62,6 @@ class Command(BaseCommand):
                 defaults={
                     "price": tier["price"],
                     "currency": "NGN",
-                    "label": "Distributor",
                 },
             )
 
@@ -107,7 +107,7 @@ class Command(BaseCommand):
                 image=image_name,
                 alt_text=f"{product.name} image {index + 1}",
                 is_primary=index == 0,
-                sort_order=index,
+                display_order=index,
             )
 
         self.stdout.write(self.style.SUCCESS("Loaded D2pro product data."))

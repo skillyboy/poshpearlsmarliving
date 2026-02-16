@@ -34,6 +34,11 @@ SECRET_KEY=your-generated-secret-key-here
 - `SECRET_KEY` - Django secret key (required, generate new one)
 - `DEBUG` - Set to `False` in production
 - `ALLOWED_HOSTS` - Comma-separated domain names
+- `CSRF_TRUSTED_ORIGINS` - Comma-separated HTTPS origins
+- `SECURE_SSL_REDIRECT` - `True` in production
+- `SESSION_COOKIE_SECURE` - `True` in production
+- `CSRF_COOKIE_SECURE` - `True` in production
+- `SECURE_HSTS_SECONDS` - e.g., `31536000`
 
 **Paystack:**
 - `PAYSTACK_SECRET_KEY` - Paystack secret key
@@ -50,52 +55,37 @@ SECRET_KEY=your-generated-secret-key-here
 **Site:**
 - `SITE_URL` - Full site URL (e.g., https://yourdomain.com)
 
+**Database:**
+- `DATABASE_URL` - Railway Postgres URL (or any Postgres connection string)
+
+**Media (S3):**
+- `AWS_STORAGE_BUCKET_NAME`
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_S3_REGION_NAME`
+- Optional: `AWS_S3_CUSTOM_DOMAIN` or `AWS_S3_ENDPOINT_URL`
+
+**Observability (optional):**
+- `SENTRY_DSN`
+- `SENTRY_TRACES_SAMPLE_RATE`
+
 ## Database Migration
 
 ### SQLite to PostgreSQL
 
-1. **Install PostgreSQL** on your production server
+1. **Provision PostgreSQL** (Railway plugin or your own server)
 
-2. **Create database and user:**
-```sql
-CREATE DATABASE poshpearl;
-CREATE USER poshpearl_user WITH PASSWORD 'your_password';
-ALTER ROLE poshpearl_user SET client_encoding TO 'utf8';
-ALTER ROLE poshpearl_user SET default_transaction_isolation TO 'read committed';
-ALTER ROLE poshpearl_user SET timezone TO 'UTC';
-GRANT ALL PRIVILEGES ON DATABASE poshpearl TO poshpearl_user;
+2. **Set `DATABASE_URL`** in your environment:
+```
+DATABASE_URL=postgresql://user:password@host:5432/dbname
 ```
 
-3. **Update `.env` with PostgreSQL credentials:**
-```
-DB_ENGINE=django.db.backends.postgresql
-DB_NAME=poshpearl
-DB_USER=poshpearl_user
-DB_PASSWORD=your_password
-DB_HOST=localhost
-DB_PORT=5432
-```
-
-4. **Update `settings.py`** to use environment database config:
-```python
-DATABASES = {
-    'default': {
-        'ENGINE': config('DB_ENGINE', default='django.db.backends.sqlite3'),
-        'NAME': config('DB_NAME', default=BASE_DIR / 'db.sqlite3'),
-        'USER': config('DB_USER', default=''),
-        'PASSWORD': config('DB_PASSWORD', default=''),
-        'HOST': config('DB_HOST', default=''),
-        'PORT': config('DB_PORT', default=''),
-    }
-}
-```
-
-5. **Run migrations:**
+3. **Run migrations:**
 ```bash
 python manage.py migrate
 ```
 
-6. **Create superuser:**
+4. **Create superuser:**
 ```bash
 python manage.py createsuperuser
 ```
@@ -109,6 +99,18 @@ python manage.py collectstatic --noinput
 ```
 
 This will gather all static files into the `staticfiles/` directory for WhiteNoise to serve.
+
+## Media Files (S3)
+
+If you are using S3 for media uploads, set the AWS environment variables and ensure
+`AWS_STORAGE_BUCKET_NAME` is present. Media URLs will point to your bucket or custom domain.
+
+## Media Files (Railway Volume)
+
+If you prefer a Railway volume:
+- Create a volume and mount it at `/app/media`.
+- Django will serve `/media/` from that volume.
+- This is fine for MVPs; for higher traffic, use S3 or a CDN.
 
 ## Deployment Steps
 
@@ -146,9 +148,11 @@ gunicorn project.wsgi:application --bind 0.0.0.0:$PORT
 #### Railway
 
 1. Connect your GitHub repository
-2. Add environment variables in Settings → Variables
-3. Railway will auto-detect Django and deploy
-4. Run migrations via Railway CLI or dashboard console
+2. Add environment variables in Settings ? Variables
+3. Set start command:
+   `gunicorn project.wsgi:application --bind 0.0.0.0:$PORT`
+4. Railway will auto-detect Django and deploy
+5. Run migrations via Railway CLI or dashboard console
 
 #### Heroku
 
@@ -186,6 +190,8 @@ heroku run python manage.py createsuperuser
 - [ ] Database credentials secured
 - [ ] Paystack live keys (not test keys)
 - [ ] Email credentials secured
+- [ ] `CSRF_TRUSTED_ORIGINS` configured
+- [ ] Secure cookies enabled
 - [ ] `.env` file in `.gitignore`
 
 ## Post-Deployment
@@ -205,8 +211,8 @@ heroku run python manage.py createsuperuser
 
 **Database connection errors:**
 - Verify PostgreSQL is running
-- Check database credentials in `.env`
-- Ensure database and user exist
+- Check `DATABASE_URL` in `.env` or platform variables
+- Ensure database exists and credentials are valid
 
 **Email not sending:**
 - Check SMTP credentials

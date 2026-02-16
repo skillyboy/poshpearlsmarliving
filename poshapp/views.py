@@ -1,20 +1,24 @@
 import json
+import logging
+from django.conf import settings
+from django.contrib.auth import login
 from django.contrib.auth.tokens import default_token_generator
 from django.db import models, transaction
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-from .forms import CheckoutForm, OrderTrackingForm
+from .forms import CheckoutForm, OrderTrackingForm, SignUpForm
 from .models import Category, Order, OrderItem, Product, User
 from .cart import cart_summary, get_cart
 from .payments import (
     PaystackError,
+    build_paystack_metadata,
+    get_paystack_callback_url,
     initialize_paystack_transaction,
     verify_paystack_signature,
     verify_paystack_transaction,
@@ -24,6 +28,8 @@ from .emails import (
     send_payment_confirmed_email,
     send_welcome_new_user_email,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def _get_shop_queryset(request, exclude_id=None):
@@ -137,19 +143,14 @@ def _get_shop_queryset(request, exclude_id=None):
 def _get_or_create_user_from_checkout(email, full_name, phone):
     """
     Get existing user by email or create a new one.
-    Returns (user, is_new_user, password_reset_url)
+    Returns (user, is_new_user, temp_password, password_reset_url)
     """
     user = User.objects.filter(email__iexact=email).first()
     if user:
-        return user, False, None
+        return user, False, None, None
     
-    # Create new user with unusable password
-    username_base = email.split("@")[0]
-    username = username_base
-    counter = 1
-    while User.objects.filter(username=username).exists():
-        username = f"{username_base}{counter}"
-        counter += 1
+    # Create new user using email as username (consistent with signup form)
+    username = email
     
     # Parse full name into first and last
     name_parts = full_name.strip().split(maxsplit=1)
@@ -163,32 +164,21 @@ def _get_or_create_user_from_checkout(email, full_name, phone):
         last_name=last_name,
         phone_number=phone,
     )
-    user.set_unusable_password()
+    temp_password = User.objects.make_random_password(length=12)
+    user.set_password(temp_password)
     user.save()
-    
-    # Generate password reset token
+
     from django.conf import settings
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = default_token_generator.make_token(user)
     password_reset_url = f"{settings.SITE_URL}/accounts/reset/{uid}/{token}/"
-    
-    return user, True, password_reset_url
+
+    return user, True, temp_password, password_reset_url
 
 
 def _create_pending_order(request, form, summary):
     with transaction.atomic():
-        # Get or create user from checkout data
         user_for_order = request.user if request.user.is_authenticated else None
-        is_new_user = False
-        password_reset_url = None
-        
-        if not request.user.is_authenticated:
-            user_for_order, is_new_user, password_reset_url = _get_or_create_user_from_checkout(
-                form.cleaned_data["email"],
-                form.cleaned_data["full_name"],
-                form.cleaned_data["phone"],
-            )
-        
         order = Order.objects.create(
             user=user_for_order,
             full_name=form.cleaned_data["full_name"],
@@ -200,6 +190,7 @@ def _create_pending_order(request, form, summary):
             amount=summary["subtotal"],
             currency=summary["currency"],
             payment_status="pending",
+            payment_method="paystack",
         )
         for item in get_cart(request).items.select_related("product"):
             OrderItem.objects.create(
@@ -209,7 +200,18 @@ def _create_pending_order(request, form, summary):
                 unit_price=item.unit_price,
                 currency=item.currency,
             )
-    return order, is_new_user, password_reset_url
+        temp_password = None
+        password_reset_url = None
+        is_new_user = False
+        if not request.user.is_authenticated:
+            user_for_order, is_new_user, temp_password, password_reset_url = _get_or_create_user_from_checkout(
+                form.cleaned_data["email"],
+                form.cleaned_data["full_name"],
+                form.cleaned_data["phone"],
+            )
+            order.user = user_for_order
+            order.save(update_fields=["user"])
+    return order, is_new_user, temp_password, password_reset_url
 
 
 @ensure_csrf_cookie
@@ -246,6 +248,36 @@ def product_detail(request, slug):
         slug=slug,
         is_active=True,
     )
+    tiers = list(product.price_tiers.all())
+    tier_ranges = []
+    tier_savings = None
+    first_tier_max = None
+    if tiers:
+        for idx, tier in enumerate(tiers):
+            next_min = tiers[idx + 1].min_quantity if idx + 1 < len(tiers) else None
+            max_qty = next_min if next_min else None
+            tier_ranges.append(
+                {
+                    "min": tier.min_quantity,
+                    "max": max_qty,
+                    "price": tier.price,
+                    "currency": tier.currency,
+                }
+            )
+        if len(tiers) > 1 and tiers[1].price < tiers[0].price:
+            tier_savings = tiers[0].price - tiers[1].price
+            first_tier_max = tiers[1].min_quantity
+    else:
+        # Fallback tiering for D2Pro when tiers are missing.
+        slug_lower = (product.slug or "").lower()
+        name_lower = (product.name or "").lower()
+        if "d2pro" in slug_lower or "d2pro" in name_lower:
+            tier_ranges = [
+                {"min": 1, "max": 19, "price": 320000, "currency": "NGN"},
+                {"min": 20, "max": None, "price": 280000, "currency": "NGN"},
+            ]
+            tier_savings = 40000
+            first_tier_max = 19
     products, categories, active_category, pagination = _get_shop_queryset(
         request, exclude_id=product.id
     )
@@ -258,6 +290,9 @@ def product_detail(request, slug):
             "categories": categories,
             "active_category": active_category,
             "pagination": pagination,
+            "price_tier_ranges": tier_ranges,
+            "tier_savings": tier_savings,
+            "first_tier_max": first_tier_max,
         },
     )
 
@@ -325,28 +360,34 @@ def payment_initialize(request):
     if not form.is_valid():
         return render(request, "checkout.html", {"cart": summary, "form": form})
 
-    order, is_new_user, password_reset_url = _create_pending_order(request, form, summary)
+    order, is_new_user, temp_password, password_reset_url = _create_pending_order(request, form, summary)
     try:
-        callback_url = request.build_absolute_uri(reverse("payment_callback"))
+        callback_url = get_paystack_callback_url(request)
         payment = initialize_paystack_transaction(
             order,
             form.cleaned_data["email"],
             summary["subtotal"],
             summary["currency"],
             callback_url,
-            metadata={"order_id": order.id},
+            metadata=build_paystack_metadata(order),
         )
         order.payment_reference = payment["reference"]
         order.save(update_fields=["payment_reference"])
         
         # Send welcome email for new users or standard order email for existing
-        if is_new_user and password_reset_url:
-            send_welcome_new_user_email(order.user, order, password_reset_url)
+        if is_new_user and temp_password:
+            send_welcome_new_user_email(
+                order.user,
+                order,
+                temp_password,
+                password_reset_url,
+            )
         else:
             send_order_received_email(order)
         
         return redirect(payment["authorization_url"])
-    except PaystackError:
+    except PaystackError as exc:
+        logger.exception("Paystack initialization failed: %s", exc)
         order.payment_status = "failed"
         order.save(update_fields=["payment_status"])
         return render(
@@ -355,7 +396,11 @@ def payment_initialize(request):
             {
                 "cart": summary,
                 "form": form,
-                "payment_error": "Payment initialization failed. Please try again.",
+                "payment_error": (
+                    f"Payment initialization failed: {exc}"
+                    if settings.DEBUG
+                    else "Payment initialization failed. Please try again."
+                ),
                 "order_id": order.id,
             },
         )
@@ -367,8 +412,31 @@ def support(request):
 
 
 @ensure_csrf_cookie
+def signup_view(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            next_url = request.POST.get("next") or request.GET.get("next") or "home"
+            return redirect(next_url)
+    else:
+        form = SignUpForm()
+
+    next_url = request.GET.get("next", "")
+    return render(request, "registration/signup.html", {"form": form, "next": next_url})
+
+
+@ensure_csrf_cookie
 def contact(request):
     return render(request, "contact.html")
+
+
+def health(request):
+    return JsonResponse({"status": "ok"})
 
 
 @ensure_csrf_cookie
@@ -451,7 +519,11 @@ def payment_callback(request):
         if amount_kobo:
             order.amount = amount_kobo // 100
         order.currency = data.get("currency") or order.currency
-        order.save(update_fields=["payment_status", "status", "paid_at", "amount", "currency"])
+        update_fields = ["payment_status", "status", "paid_at", "amount", "currency"]
+        if not order.payment_method:
+            order.payment_method = "paystack"
+            update_fields.append("payment_method")
+        order.save(update_fields=update_fields)
 
     send_payment_confirmed_email(order)
 
@@ -492,7 +564,11 @@ def payment_webhook(request):
                     if amount_kobo:
                         order.amount = amount_kobo // 100
                     order.currency = data.get("currency") or order.currency
-                    order.save(update_fields=["payment_status", "status", "paid_at", "amount", "currency"])
+                    update_fields = ["payment_status", "status", "paid_at", "amount", "currency"]
+                    if not order.payment_method:
+                        order.payment_method = "paystack"
+                        update_fields.append("payment_method")
+                    order.save(update_fields=update_fields)
 
                 send_payment_confirmed_email(order)
 
@@ -686,7 +762,7 @@ def wishlist_api_add(request):
         return JsonResponse({"error": "Authentication required"}, status=401)
     
     if request.method != "POST":
-        return JsonResponse({"error": "POST required"}, STATUS=405)
+        return JsonResponse({"error": "POST required"}, status=405)
     
     from .models import Wishlist, WishlistItem
     

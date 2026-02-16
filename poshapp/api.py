@@ -1,13 +1,19 @@
 from django.db import transaction
+import logging
+from django.conf import settings
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
 from ninja import NinjaAPI
 from ninja.errors import HttpError
 
 from .models import CartItem, Category, Order, OrderItem, Product
 from .cart import add_item, cart_summary, get_cart as get_cart_for_request
-from .payments import PaystackError, initialize_paystack_transaction
+from .payments import (
+    PaystackError,
+    build_paystack_metadata,
+    get_paystack_callback_url,
+    initialize_paystack_transaction,
+)
 from .emails import send_order_received_email, send_welcome_new_user_email
 from .views import _get_or_create_user_from_checkout
 from .schemas import (
@@ -27,6 +33,7 @@ from .schemas import (
 
 
 api = NinjaAPI(title="PoshPearl API", version="1.0")
+logger = logging.getLogger(__name__)
 
 
 def _serialize_product(product):
@@ -181,18 +188,7 @@ def create_order(request, payload: CheckoutIn):
         raise HttpError(400, "Cart is empty.")
 
     with transaction.atomic():
-        # Get or create user from checkout data
         user_for_order = request.user if request.user.is_authenticated else None
-        is_new_user = False
-        password_reset_url = None
-        
-        if not request.user.is_authenticated:
-            user_for_order, is_new_user, password_reset_url = _get_or_create_user_from_checkout(
-                payload.email,
-                payload.full_name,
-                payload.phone,
-            )
-        
         order = Order.objects.create(
             user=user_for_order,
             full_name=payload.full_name,
@@ -204,6 +200,7 @@ def create_order(request, payload: CheckoutIn):
             amount=summary["subtotal"],
             currency=summary["currency"],
             payment_status="pending",
+            payment_method="paystack",
         )
         items_out = []
         for item in cart.items.select_related("product"):
@@ -225,10 +222,26 @@ def create_order(request, payload: CheckoutIn):
                 )
             )
         cart.items.all().delete()
+        temp_password = None
+        password_reset_url = None
+        is_new_user = False
+        if not request.user.is_authenticated:
+            user_for_order, is_new_user, temp_password, password_reset_url = _get_or_create_user_from_checkout(
+                payload.email,
+                payload.full_name,
+                payload.phone,
+            )
+            order.user = user_for_order
+            order.save(update_fields=["user"])
 
     # Send welcome email for new users or standard order email
-    if is_new_user and password_reset_url:
-        send_welcome_new_user_email(order.user, order, password_reset_url)
+    if is_new_user and temp_password:
+        send_welcome_new_user_email(
+            order.user,
+            order,
+            temp_password,
+            password_reset_url,
+        )
     else:
         send_order_received_email(order)
 
@@ -249,18 +262,7 @@ def init_payment(request, payload: CheckoutIn):
         raise HttpError(400, "Cart is empty.")
 
     with transaction.atomic():
-        # Get or create user from checkout data
         user_for_order = request.user if request.user.is_authenticated else None
-        is_new_user = False
-        password_reset_url = None
-        
-        if not request.user.is_authenticated:
-            user_for_order, is_new_user, password_reset_url = _get_or_create_user_from_checkout(
-                payload.email,
-                payload.full_name,
-                payload.phone,
-            )
-        
         order = Order.objects.create(
             user=user_for_order,
             full_name=payload.full_name,
@@ -272,6 +274,7 @@ def init_payment(request, payload: CheckoutIn):
             amount=summary["subtotal"],
             currency=summary["currency"],
             payment_status="pending",
+            payment_method="paystack",
         )
         for item in cart.items.select_related("product"):
             OrderItem.objects.create(
@@ -281,29 +284,51 @@ def init_payment(request, payload: CheckoutIn):
                 unit_price=item.unit_price,
                 currency=item.currency,
             )
+        temp_password = None
+        password_reset_url = None
+        is_new_user = False
+        if not request.user.is_authenticated:
+            user_for_order, is_new_user, temp_password, password_reset_url = _get_or_create_user_from_checkout(
+                payload.email,
+                payload.full_name,
+                payload.phone,
+            )
+            order.user = user_for_order
+            order.save(update_fields=["user"])
 
     try:
-        callback_url = request.build_absolute_uri(reverse("payment_callback"))
+        callback_url = get_paystack_callback_url(request)
         payment = initialize_paystack_transaction(
             order,
             payload.email,
             summary["subtotal"],
             summary["currency"],
             callback_url,
-            metadata={"order_id": order.id},
+            metadata=build_paystack_metadata(order),
         )
         order.payment_reference = payment["reference"]
         order.save(update_fields=["payment_reference"])
         
         # Send welcome email for new users or standard order email
-        if is_new_user and password_reset_url:
-            send_welcome_new_user_email(order.user, order, password_reset_url)
+        if is_new_user and temp_password:
+            send_welcome_new_user_email(
+                order.user,
+                order,
+                temp_password,
+                password_reset_url,
+            )
         else:
             send_order_received_email(order)
-    except PaystackError:
+    except PaystackError as exc:
+        logger.exception("Paystack initialization failed: %s", exc)
         order.payment_status = "failed"
         order.save(update_fields=["payment_status"])
-        raise HttpError(400, "Payment initialization failed.")
+        message = (
+            f"Payment initialization failed: {exc}"
+            if settings.DEBUG
+            else "Payment initialization failed."
+        )
+        raise HttpError(400, message)
 
     return PaymentInitOut(
         order_id=order.id,

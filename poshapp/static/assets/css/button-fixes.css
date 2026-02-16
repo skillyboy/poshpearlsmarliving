@@ -84,6 +84,15 @@ button.btn-gold:hover {
     text-decoration: none !important;
 }
 
+/* Ensure navbar SVG icons render crisply */
+.pp-wishlist-toggle svg,
+.pp-cart-toggle svg,
+.pp-cart-close svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
 .pp-wishlist-toggle:hover,
 .pp-cart-toggle:hover {
     background: linear-gradient(135deg, #7a4545, #5C2E2E) !important;

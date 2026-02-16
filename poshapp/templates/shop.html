@@ -5,10 +5,10 @@
 {% block title %}{% if product %}{{ product.name }} - PoshPearl{% else %}Shop - PoshPearl{% endif %}{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/poshapp-shop.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/poshapp-shop.css' %}?v=20260216.1">
 {% endblock %}
 
-{% block body_class %}pp-shop{% endblock %}
+{% block body_class %}pp-light pp-shop{% endblock %}
 
 {% block content %}
 <main class="pp-main" id="top">

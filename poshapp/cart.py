@@ -20,11 +20,30 @@ def get_cart(request):
     return cart
 
 
-def price_for_product(product):
+def _is_d2pro(product):
+    """Lightweight matcher for D2Pro products when tiers are missing."""
+    slug = (getattr(product, "slug", "") or "").lower()
+    name = (getattr(product, "name", "") or "").lower()
+    return "d2pro" in slug or "d2pro" in name
+
+
+def price_for_product(product, quantity=None):
+    tiers = product.price_tiers.order_by("min_quantity")
+    if tiers.exists():
+        if quantity:
+            eligible = [tier for tier in tiers if tier.min_quantity <= quantity]
+            if eligible:
+                return eligible[-1].price
+        return tiers.first().price
+
     if product.price:
         return product.price
-    tier = product.price_tiers.order_by("min_quantity").first()
-    return tier.price if tier else None
+
+    # Fallback tiering for D2Pro when no tiers are configured in DB
+    if _is_d2pro(product):
+        qty = quantity or 1
+        return 280000 if qty >= 20 else 320000
+    return None
 
 
 def cart_summary(cart):
@@ -42,9 +61,13 @@ def cart_summary(cart):
             item.delete()
             continue
 
-        unit_price = item.unit_price
+        unit_price = price_for_product(product, item.quantity)
+        if unit_price is not None and unit_price != item.unit_price:
+            item.unit_price = unit_price
+            item.currency = item.currency or product.currency
+            item.save(update_fields=["unit_price", "currency", "updated_at"])
         if unit_price is None:
-            unit_price = price_for_product(product)
+            unit_price = price_for_product(product, item.quantity)
             if unit_price is None:
                 item.delete()
                 continue
@@ -55,7 +78,7 @@ def cart_summary(cart):
         try:
             unit_price_value = int(unit_price)
         except (TypeError, ValueError):
-            fallback_price = price_for_product(product)
+            fallback_price = price_for_product(product, item.quantity)
             if fallback_price is None:
                 item.delete()
                 continue
@@ -98,7 +121,7 @@ def add_item(cart, product_id, quantity):
     if quantity < 1:
         raise ValueError("Quantity must be at least 1.")
     product = get_object_or_404(Product, id=product_id, is_active=True)
-    unit_price = price_for_product(product)
+    unit_price = price_for_product(product, quantity)
     if unit_price is None:
         raise ValueError("Pricing not available for this product.")
     item, created = CartItem.objects.get_or_create(
