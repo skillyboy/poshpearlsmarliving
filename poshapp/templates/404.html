@@ -1,24 +1,24 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}About Us - PoshPearl{% endblock %}
 {% block body_class %}pp-light pp-about{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
-<link rel="stylesheet" href="{% static 'assets/css/info-pages.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v={{ STATIC_ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static 'assets/css/info-pages.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block content %}
 <section class="section">
     <div class="container">
-        <div class="text-center stack" style="max-width: 800px; margin: 0 auto;">
+        <div class="text-center stack pp-inline-b4dd3387">
             <p class="pp-pill"><i class="fa-solid fa-star"></i> About</p>
             <h1 class="pp-section-title">About PoshPearl SmartLiving</h1>
             <p class="text-muted">Making life easy. Making homes smart.</p>
         </div>
 
-        <div class="pp-card stack" style="margin-top: var(--space-8);">
+        <div class="pp-card stack pp-inline-baa54d7f">
             <h2>Who We Are</h2>
             <p class="text-muted">
                 PoshPearl SmartLiving is a modern lifestyle and smart home solutions company dedicated to making
@@ -35,7 +35,7 @@
             </p>
         </div>
 
-        <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-top: var(--space-6);">
+        <div class="grid pp-inline-a4c8ba47">
             <div class="pp-card">
                 <h3>Quality & Reliability</h3>
                 <p class="text-muted">Every product is selected to meet high performance standards for durability, ease
@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <div class="pp-card stack" style="margin-top: var(--space-6);">
+        <div class="pp-card stack pp-inline-89d613f6">
             <h2>Who We Serve</h2>
             <p class="text-muted">
                 We support residential homes, offices, estates, and commercial developments. We partner with
@@ -62,9 +62,9 @@
             </p>
         </div>
 
-        <div class="pp-card stack" style="margin-top: var(--space-6);">
+        <div class="pp-card stack pp-inline-89d613f6">
             <h2>What Sets Us Apart</h2>
-            <ul class="stack" style="padding-left: var(--space-6);">
+            <ul class="stack pp-inline-15db547f">
                 <li>Premium, curated smart products that are tested for performance and reliability</li>
                 <li>Solutions that blend security, access control, and comfort in one ecosystem</li>
                 <li>Tailored deployments for homes, offices, estates, and commercial spaces</li>
@@ -72,7 +72,7 @@
             </ul>
         </div>
 
-        <div class="flex" style="justify-content: center; margin-top: var(--space-6);">
+        <div class="flex pp-inline-4d1e96a4">
             <a class="pp-btn pp-btn--primary" href="{% url 'products' %}">Shop now</a>
             <a class="pp-btn pp-btn--secondary" href="{% url 'contact' %}">Contact us</a>
         </div>

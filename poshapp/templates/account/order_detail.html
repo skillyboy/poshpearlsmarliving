@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load humanize %}
 {% load static %}
 
@@ -6,59 +6,53 @@
 {% block body_class %}pp-light pp-account{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
-<link rel="stylesheet" href="{% static 'assets/css/account.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v={{ STATIC_ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static 'assets/css/account.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block content %}
 <section class="section">
     <div class="container">
         <!-- Account Layout -->
-        <div class="grid" style="grid-template-columns: 280px 1fr; gap: var(--space-8);">
+        <div class="grid pp-inline-f8efba58">
             <!-- Sidebar -->
-            <aside class="pp-card stack" style="height: fit-content;">
-                <div class="flex"
-                    style="align-items: center; gap: var(--space-4); padding-bottom: var(--space-4); border-bottom: 1px solid var(--color-border);">
-                    <div
-                        style="width: 48px; height: 48px; background: var(--color-primary); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: var(--text-xl);">
+            <aside class="pp-card stack pp-inline-353f1a35">
+                <div class="flex pp-inline-50f5de89">
+                    <div class="pp-inline-8628b551">
                         {{ user.first_name|default:user.username|first|upper }}
                     </div>
-                    <div class="stack" style="gap: 0;">
-                        <strong style="font-size: var(--text-lg);">Hi, {{ user.first_name|default:user.username
+                    <div class="stack pp-inline-ccfbcd22">
+                        <strong class="pp-inline-98534288">Hi, {{ user.first_name|default:user.username
                             }}</strong>
-                        <span class="text-muted" style="font-size: var(--text-sm);">{{ user.email }}</span>
+                        <span class="text-muted pp-inline-794f1c32">{{ user.email }}</span>
                     </div>
                 </div>
 
-                <nav class="stack" style="gap: var(--space-1);">
-                    <a href="{% url 'dashboard' %}" class="flex"
-                        style="align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); color: var(--color-text-muted); transition: all var(--transition-base);">
-                        <i class="fa-solid fa-house" style="width: 20px;"></i>
+                <nav class="stack pp-inline-18def58b">
+                    <a href="{% url 'dashboard' %}" class="flex pp-inline-db4ecfaa">
+                        <i class="fa-solid fa-house pp-inline-37ccaecd"></i>
                         <span>Dashboard</span>
                     </a>
-                    <a href="{% url 'user_orders' %}" class="flex"
-                        style="align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-primary); font-weight: 500;">
-                        <i class="fa-solid fa-receipt" style="width: 20px;"></i>
+                    <a href="{% url 'user_orders' %}" class="flex pp-inline-ed704a56">
+                        <i class="fa-solid fa-receipt pp-inline-37ccaecd"></i>
                         <span>Orders</span>
                     </a>
-                    <a href="{% url 'wishlist' %}" class="flex"
-                        style="align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); color: var(--color-text-muted); transition: all var(--transition-base);">
-                        <i class="fa-solid fa-heart" style="width: 20px;"></i>
+                    <a href="{% url 'wishlist' %}" class="flex pp-inline-db4ecfaa">
+                        <i class="fa-solid fa-heart pp-inline-37ccaecd"></i>
                         <span>Wishlist</span>
                     </a>
-                    <a href="{% url 'track_order' %}" class="flex"
-                        style="align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); color: var(--color-text-muted); transition: all var(--transition-base);">
-                        <i class="fa-solid fa-truck" style="width: 20px;"></i>
+                    <a href="{% url 'track_order' %}" class="flex pp-inline-db4ecfaa">
+                        <i class="fa-solid fa-truck pp-inline-37ccaecd"></i>
                         <span>Track order</span>
                     </a>
                 </nav>
             </aside>
 
             <!-- Main Content -->
-            <main class="stack" style="gap: var(--space-6);">
+            <div class="stack pp-inline-a5b66c03">
                 <!-- Header -->
-                <div class="stack" style="gap: var(--space-2);">
-                    <p class="pp-pill" style="width: fit-content;">
+                <div class="stack pp-inline-d9e896c6">
+                    <p class="pp-pill pp-inline-f86e96ff">
                         <i class="fa-solid fa-receipt"></i> Order detail
                     </p>
                     <h1 class="pp-section-title">Order #{{ order.id }}</h1>
@@ -66,26 +60,17 @@
                 </div>
 
                 <!-- Status & Total Cards -->
-                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+                <div class="grid pp-inline-e73c6a72">
                     <div class="pp-card stack">
                         <h3>Status</h3>
-                        <div class="flex" style="align-items: center; gap: var(--space-2);">
-                            <span class="pp-pill" style="background: 
-                                {% if order.status == 'delivered' %}var(--color-success)
-                                {% elif order.status == 'cancelled' %}var(--color-danger)
-                                {% elif order.status == 'paid' %}var(--color-accent)
-                                {% else %}var(--color-text-muted){% endif %}; 
-                                color: white; font-size: var(--text-base);">
+                        <div class="flex pp-inline-f0ece7fd">
+                            <span class="pp-pill pp-order-status pp-order-status--base {% if order.status == 'delivered' %}is-delivered{% elif order.status == 'cancelled' %}is-cancelled{% elif order.status == 'paid' %}is-paid{% else %}is-muted{% endif %}">
                                 {{ order.get_status_display }}
                             </span>
                         </div>
-                        <div class="flex" style="justify-content: space-between; margin-top: var(--space-2);">
+                        <div class="flex pp-inline-ff7998e5">
                             <span class="text-muted">Payment:</span>
-                            <span class="pp-pill" style="background: 
-                                {% if order.payment_status == 'paid' %}var(--color-success)
-                                {% elif order.payment_status == 'failed' %}var(--color-danger)
-                                {% else %}var(--color-accent){% endif %}; 
-                                color: white;">
+                            <span class="pp-pill pp-order-status {% if order.payment_status == 'paid' %}is-delivered{% elif order.payment_status == 'failed' %}is-cancelled{% else %}is-accent{% endif %}">
                                 {{ order.get_payment_status_display }}
                             </span>
                         </div>
@@ -93,10 +78,10 @@
 
                     <div class="pp-card stack">
                         <h3>Total</h3>
-                        <div style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-primary);">
+                        <div class="pp-inline-e1987301">
                             {{ order.currency }} {{ order.amount|intcomma }}
                         </div>
-                        <div class="flex" style="justify-content: space-between; margin-top: var(--space-2);">
+                        <div class="flex pp-inline-ff7998e5">
                             <span class="text-muted">Subtotal:</span>
                             <strong>{{ order.currency }} {{ order.subtotal|intcomma }}</strong>
                         </div>
@@ -106,22 +91,20 @@
                 <!-- Order Items -->
                 <div class="pp-card stack">
                     <h2>Items</h2>
-                    <div class="stack" style="gap: var(--space-3);">
+                    <div class="stack pp-inline-ab1aef76">
                         {% for item in order.items.all %}
-                        <div class="grid"
-                            style="grid-template-columns: 2fr 1fr auto; align-items: center; gap: var(--space-4); padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md);">
-                            <div class="stack" style="gap: var(--space-1);">
+                        <div class="grid pp-inline-20f46961">
+                            <div class="stack pp-inline-18def58b">
                                 <strong>{{ item.product.name|default:"Product" }}</strong>
-                                <span class="text-muted" style="font-size: var(--text-sm);">{{ item.quantity }} × {{
+                                <span class="text-muted pp-inline-794f1c32">{{ item.quantity }} x {{
                                     item.currency }} {{ item.unit_price|intcomma }}</span>
                             </div>
-                            <div style="text-align: right;">
+                            <div class="pp-inline-28bbfa87">
                                 <strong>{{ item.currency }} {{ item.line_total|intcomma }}</strong>
                             </div>
                             <div>
                                 {% if item.product %}
-                                <a href="{% url 'product_detail_products' item.product.slug %}"
-                                    class="pp-btn pp-btn--ghost" style="padding: var(--space-1) var(--space-2);">
+                                <a href="{% url 'product_detail_products' item.product.slug %}" class="pp-btn pp-btn--ghost pp-inline-c42de8d7">
                                     <i class="fa-solid fa-arrow-right"></i>
                                     <span class="sr-only">View product</span>
                                 </a>
@@ -133,14 +116,14 @@
                 </div>
 
                 <!-- Delivery & Payment Info -->
-                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+                <div class="grid pp-inline-e73c6a72">
                     <div class="pp-card stack">
                         <h3>Delivery address</h3>
-                        <div class="stack" style="gap: var(--space-1);">
-                            <p class="text-muted" style="white-space: pre-line; margin: 0;">{{ order.address }}</p>
-                            <p class="text-muted" style="margin: 0;"><strong>Phone:</strong> {{ order.phone }}</p>
+                        <div class="stack pp-inline-18def58b">
+                            <p class="text-muted pp-inline-6162970f">{{ order.address }}</p>
+                            <p class="text-muted pp-inline-1c244e6b"><strong>Phone:</strong> {{ order.phone }}</p>
                             {% if order.notes %}
-                            <p class="text-muted" style="margin-top: var(--space-2);"><strong>Notes:</strong> {{
+                            <p class="text-muted pp-inline-e8967558"><strong>Notes:</strong> {{
                                 order.notes }}</p>
                             {% endif %}
                         </div>
@@ -148,26 +131,25 @@
 
                     <div class="pp-card stack">
                         <h3>Payment info</h3>
-                        <div class="stack" style="gap: var(--space-2);">
+                        <div class="stack pp-inline-d9e896c6">
                             {% if order.payment_reference %}
                             <div>
                                 <span class="text-muted">Reference:</span>
-                                <code
-                                    style="display: block; margin-top: var(--space-1); padding: var(--space-2); background: var(--color-surface); border-radius: var(--radius-sm); font-size: var(--text-sm);">
+                                <code class="pp-inline-333a7d55">
                                     {{ order.payment_reference }}
                                 </code>
                             </div>
                             {% endif %}
 
                             {% if order.paid_at %}
-                            <div class="flex" style="justify-content: space-between;">
+                            <div class="flex pp-inline-8800ba3b">
                                 <span class="text-muted">Paid on:</span>
                                 <strong>{{ order.paid_at|date:"M d, Y - g:i A" }}</strong>
                             </div>
                             {% endif %}
 
                             {% if order.payment_method %}
-                            <div class="flex" style="justify-content: space-between;">
+                            <div class="flex pp-inline-8800ba3b">
                                 <span class="text-muted">Method:</span>
                                 <strong>{{ order.payment_method }}</strong>
                             </div>
@@ -177,13 +159,13 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex" style="justify-content: space-between; align-items: center; gap: var(--space-3);">
+                <div class="flex pp-inline-21f7d472">
                     <a href="{% url 'user_orders' %}" class="pp-btn pp-btn--secondary">
-                        <i class="fa-solid fa-arrow-left" style="margin-right: var(--space-2);"></i>
+                        <i class="fa-solid fa-arrow-left pp-inline-918e43be"></i>
                         Back to orders
                     </a>
 
-                    <div class="flex" style="gap: var(--space-2);">
+                    <div class="flex pp-inline-d9e896c6">
                         <a href="{% url 'track_order' %}" class="pp-btn pp-btn--secondary">
                             <i class="fa-solid fa-truck"></i>
                             Track order
@@ -208,74 +190,69 @@
                 <!-- Order Timeline (optional enhancement) -->
                 <div class="pp-card">
                     <h3>Order timeline</h3>
-                    <div class="stack" style="gap: var(--space-3); margin-top: var(--space-3);">
-                        <div class="flex" style="align-items: flex-start; gap: var(--space-3);">
-                            <div
-                                style="width: 24px; height: 24px; background: var(--color-success); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white;">
-                                <i class="fa-solid fa-check" style="font-size: var(--text-sm);"></i>
+                    <div class="stack pp-inline-97c7c7c8">
+                        <div class="flex pp-inline-a11c50b3">
+                            <div class="pp-inline-cf69af32">
+                                <i class="fa-solid fa-check pp-inline-794f1c32"></i>
                             </div>
-                            <div class="stack" style="gap: 0; flex: 1;">
+                            <div class="stack pp-inline-f487ce3f">
                                 <strong>Order placed</strong>
-                                <span class="text-muted" style="font-size: var(--text-sm);">{{ order.created_at|date:"M
+                                <span class="text-muted pp-inline-794f1c32">{{ order.created_at|date:"M
                                     d, Y - g:i A" }}</span>
                             </div>
                         </div>
 
                         {% if order.paid_at %}
-                        <div class="flex" style="align-items: flex-start; gap: var(--space-3);">
-                            <div
-                                style="width: 24px; height: 24px; background: var(--color-success); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white;">
+                        <div class="flex pp-inline-a11c50b3">
+                            <div class="pp-inline-cf69af32">
                                 <i class="fa-solid fa-check"></i>
                             </div>
-                            <div class="stack" style="gap: 0; flex: 1;">
+                            <div class="stack pp-inline-f487ce3f">
                                 <strong>Payment confirmed</strong>
-                                <span class="text-muted" style="font-size: var(--text-sm);">{{ order.paid_at|date:"M d,
+                                <span class="text-muted pp-inline-794f1c32">{{ order.paid_at|date:"M d,
                                     Y - g:i A" }}</span>
                             </div>
                         </div>
                         {% else %}
-                        <div class="flex" style="align-items: flex-start; gap: var(--space-3);">
-                            <div
-                                style="width: 24px; height: 24px; background: var(--color-border); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: var(--color-text-muted);">
+                        <div class="flex pp-inline-a11c50b3">
+                            <div class="pp-inline-61ab41bd">
                                 <i class="fa-solid fa-clock"></i>
                             </div>
-                            <div class="stack" style="gap: 0; flex: 1;">
+                            <div class="stack pp-inline-f487ce3f">
                                 <strong>Awaiting payment</strong>
-                                <span class="text-muted" style="font-size: var(--text-sm);">Payment not yet
+                                <span class="text-muted pp-inline-794f1c32">Payment not yet
                                     confirmed</span>
                             </div>
                         </div>
                         {% endif %}
 
                         {% if order.status == 'shipped' or order.status == 'delivered' %}
-                        <div class="flex" style="align-items: flex-start; gap: var(--space-3);">
-                            <div
-                                style="width: 24px; height: 24px; background: var(--color-success); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white;">
+                        <div class="flex pp-inline-a11c50b3">
+                            <div class="pp-inline-cf69af32">
                                 <i class="fa-solid fa-truck"></i>
                             </div>
-                            <div class="stack" style="gap: 0; flex: 1;">
+                            <div class="stack pp-inline-f487ce3f">
                                 <strong>Shipped</strong>
-                                <span class="text-muted" style="font-size: var(--text-sm);">Your order is on the
+                                <span class="text-muted pp-inline-794f1c32">Your order is on the
                                     way</span>
                             </div>
                         </div>
                         {% endif %}
 
                         {% if order.status == 'delivered' %}
-                        <div class="flex" style="align-items: flex-start; gap: var(--space-3);">
-                            <div
-                                style="width: 24px; height: 24px; background: var(--color-success); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white;">
+                        <div class="flex pp-inline-a11c50b3">
+                            <div class="pp-inline-cf69af32">
                                 <i class="fa-solid fa-circle-check"></i>
                             </div>
-                            <div class="stack" style="gap: 0; flex: 1;">
+                            <div class="stack pp-inline-f487ce3f">
                                 <strong>Delivered</strong>
-                                <span class="text-muted" style="font-size: var(--text-sm);">Order completed</span>
+                                <span class="text-muted pp-inline-794f1c32">Order completed</span>
                             </div>
                         </div>
                         {% endif %}
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
     </div>
 </section>
@@ -368,3 +345,4 @@
     })();
 </script>
 {% endblock %}
+

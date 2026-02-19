@@ -5,13 +5,13 @@
 {% block title %}{% if product %}{{ product.name }} - PoshPearl{% else %}Shop - PoshPearl{% endif %}{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/poshapp-shop.css' %}?v=20260216.5">
+<link rel="stylesheet" href="{% static 'assets/css/poshapp-shop.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block body_class %}pp-light pp-shop{% endblock %}
 
 {% block content %}
-<main class="pp-main" id="top">
+<div class="pp-main" id="top">
   {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
 
   {% if product %}
@@ -67,7 +67,7 @@
           </div>
 
           <div class="pp-hero__actions" role="group" aria-label="Purchase actions">
-            <button class="pp-btn primary" type="button" data-modal-target="quote">
+            <button class="pp-btn primary btn-gold" type="button" data-modal-target="quote">
               Request quote
             </button>
 
@@ -451,7 +451,7 @@
           <p>Share your expected volume and delivery location for a tailored response.</p>
         </div>
         <div class="pp-request__actions">
-          <button class="pp-btn primary" type="button" data-modal-target="quote">Request quote</button>
+          <button class="pp-btn primary btn-gold" type="button" data-modal-target="quote">Request quote</button>
           <a class="pp-btn ghost" href="/contact/">Contact</a>
         </div>
       </div>
@@ -462,8 +462,8 @@
     <div class="pp-purchase-bar__content">
       <span class="pp-purchase-bar__name">{{ product.name }}</span>
       <div class="pp-purchase-bar__actions">
-        <button class="pp-btn" type="button" data-add-to-cart data-product-id="{{ product.id }}">Add to cart</button>
-        <a class="pp-btn primary" href="{% url 'checkout' %}">Checkout</a>
+        <button class="pp-btn btn-gold" type="button" data-add-to-cart data-product-id="{{ product.id }}">Add to cart</button>
+        <a class="pp-btn primary btn-gold" href="{% url 'checkout' %}">Checkout</a>
       </div>
     </div>
   </div>
@@ -564,10 +564,10 @@
         <div class="pp-field__error" id="quote-message-error" role="status"></div>
       </div>
 
-      <button class="pp-btn primary" type="submit">Send request</button>
+      <button class="pp-btn primary btn-gold" type="submit">Send request</button>
     </form>
   </template>
-</main>
+</div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -661,3 +661,5 @@
   });
 </script>
 {% endblock %}
+
+

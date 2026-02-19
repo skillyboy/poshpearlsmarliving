@@ -112,6 +112,13 @@
     background: var(--pp-primary-dark);
 }
 
+.pp-shop .btn-gold {
+    text-transform: none;
+    letter-spacing: 0;
+    padding: 0.7rem 1.4rem;
+    border-radius: var(--pp-radius-pill);
+}
+
 .pp-btn:disabled {
     opacity: 0.65;
     cursor: not-allowed;

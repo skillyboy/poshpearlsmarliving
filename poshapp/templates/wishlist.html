@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load humanize %}
 {% load static %}
 
@@ -6,15 +6,15 @@
 {% block body_class %}pp-light pp-wishlist{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
-<link rel="stylesheet" href="{% static 'assets/css/wishlist-page.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v={{ STATIC_ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static 'assets/css/wishlist-page.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block content %}
 <section class="section">
     {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
     <div class="container">
-        <div class="flex" style="justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-8);">
+        <div class="flex pp-inline-50fcb9ef">
             <div class="stack">
                 <p class="pp-pill"><i class="fa-solid fa-heart"></i> Wishlist</p>
                 <h1 class="pp-section-title">My Wishlist</h1>
@@ -24,24 +24,23 @@
         </div>
 
         {% if is_guest %}
-        <div class="pp-card text-center stack" style="max-width: 500px; margin: 0 auto;">
+        <div class="pp-card text-center stack pp-inline-61c61a4b">
             <h2>Sign in to save your favorites</h2>
             <p class="text-muted">Create an account to keep your wishlist synced.</p>
-            <div class="flex" style="justify-content: center;">
+            <div class="flex pp-inline-541ffc0a">
                 <a class="pp-btn pp-btn--primary" href="/accounts/login/?next=/wishlist/">Sign in</a>
                 <a class="pp-btn pp-btn--secondary" href="{% url 'products' %}">Browse products</a>
             </div>
         </div>
         {% elif wishlist_items %}
-        <div class="grid" style="grid-template-columns: repeat(3, 1fr);" data-wishlist-grid>
+        <div class="grid pp-inline-cd0b791e" data-wishlist-grid>
             {% for item in wishlist_items %}
             {% with product=item.product %}
-            <div class="pp-card" data-wishlist-item="{{ product.id }}" style="display: flex; gap: var(--space-4);">
+            <div class="pp-card pp-inline-28ff5937" data-wishlist-item="{{ product.id }}">
                 {% with hero_image=product.images.first %}
-                <img src="{{ hero_image.image.url|default:product_fallback }}" alt="{{ product.name }}"
-                    style="width: 100px; height: 100px; object-fit: contain;">
+                <img class="pp-inline-03419874" src="{{ hero_image.image.url|default:product_fallback }}" alt="{{ product.name }}">
                 {% endwith %}
-                <div class="stack" style="flex: 1;">
+                <div class="stack pp-inline-d2dc0a7a">
                     <strong>{{ product.name }}</strong>
                     <div class="text-muted">NGN {{ product.price|intcomma }}</div>
                     <div class="flex">
@@ -56,7 +55,7 @@
             {% endfor %}
         </div>
         {% else %}
-        <div class="pp-card text-center stack" style="max-width: 500px; margin: 0 auto;">
+        <div class="pp-card text-center stack pp-inline-61c61a4b">
             <h2>Your wishlist is empty</h2>
             <p class="text-muted">Save products to review or purchase later.</p>
             <a class="pp-btn pp-btn--primary" href="{% url 'products' %}">Browse products</a>

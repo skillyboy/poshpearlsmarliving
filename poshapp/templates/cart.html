@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load humanize %}
 {% load static %}
 
@@ -6,15 +6,15 @@
 {% block body_class %}pp-light pp-cart-page{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
-<link rel="stylesheet" href="{% static 'assets/css/commerce.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v={{ STATIC_ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static 'assets/css/commerce.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block content %}
 <section class="section">
     {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
     <div class="container">
-        <div class="flex" style="justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-8);">
+        <div class="flex pp-inline-50fcb9ef">
             <div class="stack">
                 <p class="pp-pill"><i class="fa-solid fa-bag-shopping"></i> Cart</p>
                 <h1 class="pp-section-title">Your Cart</h1>
@@ -24,27 +24,20 @@
         </div>
 
         {% if cart.items %}
-        <div class="grid" style="grid-template-columns: 2fr 1fr;">
+        <div class="grid pp-inline-af72bea2">
             <div class="stack">
                 {% for item in cart.items %}
-                <div class="pp-card" data-cart-item data-item-id="{{ item.id }}"
-                    style="display: grid; grid-template-columns: 100px 1fr auto; gap: var(--space-4); align-items: center;">
-                    <img src="{{ item.image|default:product_fallback }}" alt="{{ item.name }}"
-                        style="width: 100%; height: 80px; object-fit: contain; border-radius: var(--radius-sm);">
+                <div class="pp-card pp-inline-fcfa8de6" data-cart-item data-item-id="{{ item.id }}">
+                    <img class="pp-inline-dd8761ba" src="{{ item.image|default:product_fallback }}" alt="{{ item.name }}">
                     <div>
                         <strong>{{ item.name }}</strong>
                         <div class="text-muted">{{ item.currency }} {{ item.unit_price|intcomma }} per unit</div>
-                        <div class="pp-qty flex" style="align-items: center; margin-top: var(--space-2);">
-                            <button class="pp-btn pp-btn--ghost" type="button" data-qty-dec
-                                style="padding: var(--space-1) var(--space-2);">-</button>
-                            <input type="number" min="1" value="{{ item.quantity }}" data-qty-input
-                                data-unit-price="{{ item.unit_price }}"
-                                style="width: 60px; text-align: center; margin: 0 var(--space-1);">
-                            <button class="pp-btn pp-btn--ghost" type="button" data-qty-inc
-                                style="padding: var(--space-1) var(--space-2);">+</button>
+                        <div class="pp-qty flex pp-inline-205df0ea">
+                            <button class="pp-btn pp-btn--ghost pp-inline-c42de8d7" type="button" data-qty-dec>-</button>
+                            <input class="pp-inline-9241d12f" type="number" min="1" value="{{ item.quantity }}" data-qty-input data-unit-price="{{ item.unit_price }}">
+                            <button class="pp-btn pp-btn--ghost pp-inline-c42de8d7" type="button" data-qty-inc>+</button>
                         </div>
-                        <button class="pp-btn pp-btn--ghost" type="button" data-cart-remove
-                            style="margin-top: var(--space-1);">Remove</button>
+                        <button class="pp-btn pp-btn--ghost pp-inline-df0422ce" type="button" data-cart-remove>Remove</button>
                     </div>
                     <div class="text-right" data-line-total data-currency="{{ item.currency }}">
                         <span class="text-muted">Total</span><br>
@@ -56,16 +49,16 @@
 
             <aside class="pp-card stack">
                 <h2>Summary</h2>
-                <div class="flex" style="justify-content: space-between;">
+                <div class="flex pp-inline-8800ba3b">
                     <span>Subtotal</span>
                     <strong>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong>
                 </div>
-                <div class="flex" style="justify-content: space-between;">
+                <div class="flex pp-inline-8800ba3b">
                     <span>Delivery estimate</span>
                     <span class="text-muted">Calculated at checkout</span>
                 </div>
-                <hr style="border: none; border-top: 1px solid var(--color-border); margin: var(--space-4) 0;">
-                <div class="flex" style="justify-content: space-between;">
+                <hr class="pp-inline-e73ac854">
+                <div class="flex pp-inline-8800ba3b">
                     <span>Total</span>
                     <strong>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong>
                 </div>
@@ -76,8 +69,8 @@
             </aside>
         </div>
         {% else %}
-        <div class="pp-card text-center stack" style="max-width: 500px; margin: 0 auto;">
-            <i class="fa-solid fa-basket-shopping" style="font-size: 3rem; color: var(--color-accent);"></i>
+        <div class="pp-card text-center stack pp-inline-61c61a4b">
+            <i class="fa-solid fa-basket-shopping pp-inline-e3c630b5"></i>
             <h2>Your cart is empty</h2>
             <p class="text-muted">Browse products and add items to your cart.</p>
             <div>

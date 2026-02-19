@@ -43,6 +43,15 @@ py manage.py createsuperuser
 py manage.py runserver
 ```
 
+## Frontend Guardrails
+
+Use these checks before merging template/CSS layout changes:
+
+```powershell
+venv\Scripts\python scripts\inline_style_audit.py
+venv\Scripts\python scripts\check_no_inline_styles.py
+```
+
 ## Paystack (MVP payments)
 
 Set these environment variables before running the server:

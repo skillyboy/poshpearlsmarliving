@@ -369,22 +369,27 @@
 }
 
 .pp-bulk-row--amber {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  color: #1a1a1a;
+  background: linear-gradient(135deg, var(--pp-burgundy-light), var(--pp-burgundy));
+  color: #fff;
 }
 
 .pp-bulk-row--plum {
-  background: linear-gradient(135deg, #7c2d4a, #5c2e2e);
-  color: white;
+  background: linear-gradient(135deg, var(--pp-burgundy-dark), var(--pp-burgundy));
+  color: #fff;
 }
 
 .pp-bulk-row--gold {
-  background: linear-gradient(135deg, #fcd34d, #fbbf24);
-  color: #1a1a1a;
+  background: linear-gradient(135deg, var(--pp-gold), var(--pp-gold-light));
+  color: #241d1b;
 }
 
 .pp-bulk-row strong {
   font-size: 1.25rem;
+}
+
+.pp-bulk-row--amber strong,
+.pp-bulk-row--plum strong {
+  color: #fff;
 }
 
 .pp-bulk-row__tag {

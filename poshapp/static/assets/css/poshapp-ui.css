@@ -113,7 +113,12 @@ body {
 }
 
 html {
+    scroll-behavior: smooth;
     scroll-padding-top: var(--pp-header-h);
+}
+
+[id] {
+    scroll-margin-top: calc(var(--pp-header-h) + 12px);
 }
 
 h1,
@@ -927,11 +932,14 @@ body.cart-open .pp-cart-drawer__panel {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto !important;
+    }
+
     * {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
     }
 }
 
@@ -957,18 +965,29 @@ body.cart-open .pp-cart-drawer__panel {
     padding: var(--pp-section-y-lg) 0;
 }
 
-/* Remove top padding only for the first page wrapper section */
+/* Global first-section flush rules */
 #main-content > .pp-section {
     padding-top: 0;
 }
 
 #main-content > :first-child {
-    margin-top: 0;
-    padding-top: 0;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    min-height: 0 !important;
 }
 
 #main-content > :first-child > :first-child {
     margin-top: 0;
+    padding-top: 0;
+}
+
+#main-content > :first-child > section:first-child,
+#main-content > :first-child > .pp-section:first-child,
+#main-content > :first-child > .section:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    min-height: auto;
+    height: auto;
 }
 
 main#main-content {
@@ -979,25 +998,18 @@ main#main-content {
 }
 
 main#main-content > section:first-child,
-main#main-content > .pp-section:first-child {
-    margin-top: 0;
-    padding-top: 0;
+main#main-content > .pp-section:first-child,
+main#main-content > .section:first-child {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    min-height: auto !important;
+    height: auto !important;
 }
 
 section {
     padding-block: var(--pp-section-y, 24px);
 }
 
-.container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-inline: var(--pp-space-2);
-}
-
-@media (min-width: 900px) {
-    .container { padding-inline: var(--pp-space-3); }
-}
 main#main-content > .container:first-child {
     padding-top: 0;
     margin-top: 0;

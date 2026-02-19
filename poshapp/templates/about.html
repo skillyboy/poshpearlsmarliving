@@ -1,12 +1,12 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}About Us - PoshPearl{% endblock %}
 {% block body_class %}pp-light pp-about{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
-<link rel="stylesheet" href="{% static 'assets/css/info-pages.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v={{ STATIC_ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static 'assets/css/info-pages.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block content %}
@@ -32,7 +32,7 @@
             </p>
         </div>
 
-        <div class="pp-info-grid" style="margin-top: 18px;">
+        <div class="pp-info-grid pp-inline-fc696d6c">
             <div class="pp-card pp-info-card">
                 <h3>Quality & Reliability</h3>
                 <p class="pp-muted">Every product is selected to meet high performance standards for durability, ease of use, and long-term value.</p>
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="pp-card pp-info-card" style="margin-top: 18px;">
+        <div class="pp-card pp-info-card pp-inline-fc696d6c">
             <h2>Who We Serve</h2>
             <p class="pp-muted">
                 We support residential homes, offices, estates, and commercial developments. We partner with individuals,
@@ -55,7 +55,7 @@
             </p>
         </div>
 
-        <div class="pp-card pp-info-card" style="margin-top: 18px;">
+        <div class="pp-card pp-info-card pp-inline-fc696d6c">
             <h2>What Sets Us Apart</h2>
             <ul>
                 <li>Premium, curated smart products that are tested for performance and reliability</li>
@@ -65,10 +65,11 @@
             </ul>
         </div>
 
-        <div class="pp-info-actions" style="margin-top: 18px;">
+        <div class="pp-info-actions pp-inline-fc696d6c">
             <a class="pp-btn-primary" href="{% url 'products' %}">Shop now</a>
             <a class="pp-btn-secondary" href="{% url 'contact' %}">Contact us</a>
         </div>
     </div>
 </section>
 {% endblock %}
+

@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load humanize %}
 {% load static %}
 
@@ -6,64 +6,58 @@
 {% block body_class %}pp-light pp-account{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
-<link rel="stylesheet" href="{% static 'assets/css/account.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v={{ STATIC_ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static 'assets/css/account.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block content %}
 <section class="section">
     <div class="container">
         <!-- Account Layout -->
-        <div class="grid" style="grid-template-columns: 280px 1fr; gap: var(--space-8);">
+        <div class="grid pp-inline-f8efba58">
             <!-- Sidebar -->
-            <aside class="pp-card stack" style="height: fit-content;">
-                <div class="flex"
-                    style="align-items: center; gap: var(--space-4); padding-bottom: var(--space-4); border-bottom: 1px solid var(--color-border);">
-                    <div
-                        style="width: 48px; height: 48px; background: var(--color-primary); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: var(--text-xl);">
+            <aside class="pp-card stack pp-inline-353f1a35">
+                <div class="flex pp-inline-50f5de89">
+                    <div class="pp-inline-8628b551">
                         {{ user.first_name|default:user.username|first|upper }}
                     </div>
-                    <div class="stack" style="gap: 0;">
-                        <strong style="font-size: var(--text-lg);">Hi, {{ user.first_name|default:user.username
+                    <div class="stack pp-inline-ccfbcd22">
+                        <strong class="pp-inline-98534288">Hi, {{ user.first_name|default:user.username
                             }}</strong>
-                        <span class="text-muted" style="font-size: var(--text-sm);">{{ user.email }}</span>
+                        <span class="text-muted pp-inline-794f1c32">{{ user.email }}</span>
                     </div>
                 </div>
 
-                <nav class="stack" style="gap: var(--space-1);">
-                    <a href="{% url 'dashboard' %}" class="flex"
-                        style="align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-primary); font-weight: 500;">
-                        <i class="fa-solid fa-house" style="width: 20px;"></i>
+                <nav class="stack pp-inline-18def58b">
+                    <a href="{% url 'dashboard' %}" class="flex pp-inline-ed704a56">
+                        <i class="fa-solid fa-house pp-inline-37ccaecd"></i>
                         <span>Dashboard</span>
                     </a>
-                    <a href="{% url 'user_orders' %}" class="flex"
-                        style="align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); color: var(--color-text-muted); transition: all var(--transition-base);">
-                        <i class="fa-solid fa-receipt" style="width: 20px;"></i>
+                    <a href="{% url 'user_orders' %}" class="flex pp-inline-db4ecfaa">
+                        <i class="fa-solid fa-receipt pp-inline-37ccaecd"></i>
                         <span>Orders</span>
                     </a>
-                    <a href="{% url 'wishlist' %}" class="flex"
-                        style="align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); color: var(--color-text-muted); transition: all var(--transition-base);">
-                        <i class="fa-solid fa-heart" style="width: 20px;"></i>
+                    <a href="{% url 'wishlist' %}" class="flex pp-inline-db4ecfaa">
+                        <i class="fa-solid fa-heart pp-inline-37ccaecd"></i>
                         <span>Wishlist</span>
                     </a>
-                    <a href="{% url 'track_order' %}" class="flex"
-                        style="align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); color: var(--color-text-muted); transition: all var(--transition-base);">
-                        <i class="fa-solid fa-truck" style="width: 20px;"></i>
+                    <a href="{% url 'track_order' %}" class="flex pp-inline-db4ecfaa">
+                        <i class="fa-solid fa-truck pp-inline-37ccaecd"></i>
                         <span>Track order</span>
                     </a>
                 </nav>
 
-                <a href="{% url 'products' %}" class="pp-btn pp-btn--secondary" style="margin-top: var(--space-4);">
-                    <i class="fa-solid fa-arrow-left" style="margin-right: var(--space-2);"></i>
+                <a href="{% url 'products' %}" class="pp-btn pp-btn--secondary pp-inline-b38a5076">
+                    <i class="fa-solid fa-arrow-left pp-inline-918e43be"></i>
                     Browse products
                 </a>
             </aside>
 
             <!-- Main Content -->
-            <main class="stack" style="gap: var(--space-6);">
+            <div class="stack pp-inline-a5b66c03">
                 <!-- Header -->
-                <div class="stack" style="gap: var(--space-2);">
-                    <p class="pp-pill" style="width: fit-content;">
+                <div class="stack pp-inline-d9e896c6">
+                    <p class="pp-pill pp-inline-f86e96ff">
                         <i class="fa-solid fa-user"></i> Account
                     </p>
                     <h1 class="pp-section-title">Welcome back, {{ user.first_name|default:user.username }}</h1>
@@ -71,18 +65,18 @@
                 </div>
 
                 <!-- Stats Cards -->
-                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+                <div class="grid pp-inline-e73c6a72">
                     <div class="pp-card stack">
                         <h3>Order summary</h3>
-                        <div class="flex" style="justify-content: space-between; align-items: center;">
+                        <div class="flex pp-inline-7e5ee0f9">
                             <span class="text-muted">Total orders:</span>
-                            <strong style="font-size: var(--text-2xl); color: var(--color-primary);">{{
+                            <strong class="pp-inline-f71138e7">{{
                                 order_count|default:0 }}</strong>
                         </div>
                         {% if recent_orders %}
-                        <div class="flex" style="justify-content: space-between; align-items: center;">
+                        <div class="flex pp-inline-7e5ee0f9">
                             <span class="text-muted">Latest status:</span>
-                            <span class="pp-pill" style="background: var(--color-accent); color: white;">{{
+                            <span class="pp-pill pp-inline-a86c0116">{{
                                 recent_orders.0.get_status_display }}</span>
                         </div>
                         {% else %}
@@ -93,7 +87,7 @@
                     <div class="pp-card stack">
                         <h3>Support</h3>
                         <p class="text-muted">Need help with your order?</p>
-                        <a href="{% url 'support' %}" class="pp-btn pp-btn--secondary" style="align-self: flex-start;">
+                        <a href="{% url 'support' %}" class="pp-btn pp-btn--secondary pp-inline-a1ae42c6">
                             <i class="fa-solid fa-headset"></i>
                             Get support
                         </a>
@@ -102,28 +96,22 @@
 
                 <!-- Recent Orders -->
                 <div class="pp-card stack">
-                    <div class="flex"
-                        style="justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                    <div class="flex pp-inline-ed3c4978">
                         <h2>Recent orders</h2>
                         <a href="{% url 'user_orders' %}" class="pp-btn pp-btn--secondary">View all</a>
                     </div>
 
                     {% if recent_orders %}
-                    <div class="stack" style="gap: var(--space-3);">
+                    <div class="stack pp-inline-ab1aef76">
                         {% for order in recent_orders %}
-                        <div class="grid"
-                            style="grid-template-columns: 2fr 1fr 1fr auto; align-items: center; gap: var(--space-4); padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md);">
-                            <div class="stack" style="gap: var(--space-1);">
+                        <div class="grid pp-inline-6ef94cda">
+                            <div class="stack pp-inline-18def58b">
                                 <strong>Order #{{ order.id }}</strong>
-                                <span class="text-muted" style="font-size: var(--text-sm);">{{ order.created_at|date:"M
+                                <span class="text-muted pp-inline-794f1c32">{{ order.created_at|date:"M
                                     d, Y" }}</span>
                             </div>
                             <div>
-                                <span class="pp-pill" style="background: 
-                                    {% if order.status == 'delivered' %}var(--color-success)
-                                    {% elif order.status == 'cancelled' %}var(--color-danger)
-                                    {% else %}var(--color-accent){% endif %}; 
-                                    color: white;">
+                                <span class="pp-pill pp-order-status {% if order.status == 'delivered' %}is-delivered{% elif order.status == 'cancelled' %}is-cancelled{% else %}is-accent{% endif %}">
                                     {{ order.get_status_display }}
                                 </span>
                             </div>
@@ -131,35 +119,33 @@
                                 <strong>{{ order.currency }} {{ order.subtotal|intcomma }}</strong>
                             </div>
                             <div>
-                                <a href="{% url 'user_order_detail' order.id %}" class="pp-btn pp-btn--ghost"
-                                    style="padding: var(--space-2) var(--space-3);">
-                                    View <i class="fa-solid fa-arrow-right" style="margin-left: var(--space-1);"></i>
+                                <a href="{% url 'user_order_detail' order.id %}" class="pp-btn pp-btn--ghost pp-inline-385314b2">
+                                    View <i class="fa-solid fa-arrow-right pp-inline-d290e90c"></i>
                                 </a>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
                     {% else %}
-                    <div class="text-center stack" style="padding: var(--space-8);">
-                        <i class="fa-solid fa-box-open" style="font-size: 3rem; color: var(--color-text-muted);"></i>
+                    <div class="text-center stack pp-inline-e7731a7f">
+                        <i class="fa-solid fa-box-open pp-inline-463fb13d"></i>
                         <p class="text-muted">No orders yet.</p>
-                        <a href="{% url 'products' %}" class="pp-btn pp-btn--primary"
-                            style="width: fit-content; margin: 0 auto;">Start shopping</a>
+                        <a href="{% url 'products' %}" class="pp-btn pp-btn--primary pp-inline-3c695256">Start shopping</a>
                     </div>
                     {% endif %}
                 </div>
 
                 <!-- Account Settings Link (optional) -->
-                <div class="pp-card" style="background: var(--color-surface);">
-                    <div class="flex" style="justify-content: space-between; align-items: center;">
-                        <div class="stack" style="gap: var(--space-1);">
+                <div class="pp-card pp-inline-794b3605">
+                    <div class="flex pp-inline-7e5ee0f9">
+                        <div class="stack pp-inline-18def58b">
                             <h3>Account settings</h3>
                             <p class="text-muted">Update your profile, email, or password</p>
                         </div>
                         <a href="#" class="pp-btn pp-btn--ghost">Manage account</a>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
     </div>
 </section>
@@ -216,3 +202,4 @@
     })();
 </script>
 {% endblock %}
+

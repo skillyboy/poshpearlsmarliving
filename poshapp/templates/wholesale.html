@@ -1,28 +1,28 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Wholesale & B2B - PoshPearl{% endblock %}
 {% block body_class %}pp-light pp-wholesale{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
-<link rel="stylesheet" href="{% static 'assets/css/info-pages.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v={{ STATIC_ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static 'assets/css/info-pages.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block content %}
 <section class="section">
     <div class="container">
-        <div class="text-center stack" style="max-width: 700px; margin: 0 auto;">
+        <div class="text-center stack pp-inline-8db68b98">
             <p class="pp-pill"><i class="fa-solid fa-handshake"></i> Wholesale</p>
             <h1 class="pp-section-title">Wholesale & B2B Partnership</h1>
             <p class="text-muted">Exclusive bulk pricing, priority support, and dedicated onboarding.</p>
-            <div class="flex" style="justify-content: center;">
+            <div class="flex pp-inline-541ffc0a">
                 <a class="pp-btn pp-btn--primary" href="#apply">Become a partner</a>
                 <a class="pp-btn pp-btn--secondary" href="{% url 'contact' %}">Contact us</a>
             </div>
         </div>
 
-        <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-top: var(--space-8);">
+        <div class="grid pp-inline-0ba9e55a">
             <div class="pp-card text-center">
                 <h3>Bulk pricing</h3>
                 <p class="text-muted">Save up to 40% on large orders.</p>
@@ -37,29 +37,28 @@
             </div>
         </div>
 
-        <div class="pp-card stack" style="margin-top: var(--space-6);">
+        <div class="pp-card stack pp-inline-89d613f6">
             <h2>Volume discount tiers</h2>
             <ul>
-                <li>10–49 units: 10% off</li>
-                <li>50–99 units: 20% off</li>
-                <li>100–299 units: 30% off</li>
+                <li>10-49 units: 10% off</li>
+                <li>50-99 units: 20% off</li>
+                <li>100-299 units: 30% off</li>
                 <li>300+ units: custom pricing</li>
             </ul>
         </div>
 
-        <div id="apply" class="pp-card stack" style="margin-top: var(--space-6);">
+        <div id="apply" class="pp-card stack pp-inline-89d613f6">
             <h2>Apply for partnership</h2>
             {% if form_submitted %}
-            <p class="text-muted">Application received! We’ll contact you soon.</p>
+            <p class="text-muted">Application received! We'll contact you soon.</p>
             {% else %}
-            <form method="post" class="grid" style="grid-template-columns: 1fr 1fr;">
+            <form method="post" class="grid pp-inline-b49781d6">
                 {% csrf_token %}
                 <input class="pp-input" name="company_name" placeholder="Company name" required>
                 <input class="pp-input" name="contact_name" placeholder="Contact person" required>
                 <input class="pp-input" name="email" placeholder="Email" required>
                 <input class="pp-input" name="phone" placeholder="Phone" required>
-                <textarea class="pp-input" name="business_address" placeholder="Business address" required
-                    style="grid-column: span 2;"></textarea>
+                <textarea class="pp-input pp-inline-b800928d" name="business_address" placeholder="Business address" required></textarea>
                 <select class="pp-input" name="business_type" required>
                     <option value="">Business type</option>
                     <option value="retailer">Retailer/Shop Owner</option>
@@ -75,9 +74,8 @@
                     <option value="100-299">100-299 units</option>
                     <option value="300+">300+ units</option>
                 </select>
-                <textarea class="pp-input" name="message" placeholder="Tell us about your business"
-                    style="grid-column: span 2;"></textarea>
-                <button class="pp-btn pp-btn--primary" type="submit" style="grid-column: span 2;">Submit
+                <textarea class="pp-input pp-inline-b800928d" name="message" placeholder="Tell us about your business"></textarea>
+                <button class="pp-btn pp-btn--primary pp-inline-b800928d" type="submit">Submit
                     application</button>
             </form>
             {% endif %}

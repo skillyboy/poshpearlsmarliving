@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load humanize %}
 {% load static %}
 
@@ -6,25 +6,25 @@
 {% block body_class %}pp-light pp-payment-failed{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
-<link rel="stylesheet" href="{% static 'assets/css/commerce.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v={{ STATIC_ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static 'assets/css/commerce.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block content %}
 <section class="section">
     <div class="container">
-        <div class="pp-card text-center stack" style="max-width: 500px; margin: 0 auto;">
-            <i class="fa-solid fa-circle-exclamation" style="font-size: 3rem; color: var(--color-danger);"></i>
+        <div class="pp-card text-center stack pp-inline-61c61a4b">
+            <i class="fa-solid fa-circle-exclamation pp-inline-ddfde0bb"></i>
             <h1>Payment failed</h1>
             <p class="text-muted">No worries, you can try again or contact support for help.</p>
             {% if error_message %}
-            <div class="pp-card" style="background: rgba(211, 47, 47, 0.1); border-color: var(--color-danger);">
+            <div class="pp-card pp-inline-48a5ddba">
                 <i class="fa-solid fa-circle-exclamation"></i>
                 <span>{{ error_message }}</span>
             </div>
             {% endif %}
-            <hr style="border: none; border-top: 1px solid var(--color-border); width: 100%;">
-            <div class="flex" style="justify-content: center;">
+            <hr class="pp-inline-ce7439b8">
+            <div class="flex pp-inline-541ffc0a">
                 <a class="pp-btn pp-btn--primary" href="{% url 'checkout' %}">Try payment again</a>
                 <a class="pp-btn pp-btn--secondary" href="{% url 'cart' %}">Back to cart</a>
                 <a class="pp-btn pp-btn--secondary" href="{% url 'support' %}">Contact support</a>

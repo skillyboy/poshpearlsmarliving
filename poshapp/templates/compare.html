@@ -5,11 +5,11 @@
 {% block title %}Compare Products - PoshPearl{% endblock %}
 
 {% block content %}
-<main class="section">
+<section class="section">
     <div class="container">
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="stack">
-            <ol class="breadcrumb" style="display: flex; gap: var(--space-2); list-style: none; padding: 0;">
+            <ol class="breadcrumb pp-inline-adf23e8a">
                 <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'products' %}">Shop</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Compare</li>
@@ -17,7 +17,7 @@
         </nav>
 
         <!-- Header -->
-        <div class="flex" style="justify-content: space-between; align-items: center; margin-bottom: var(--space-8);">
+        <div class="flex pp-inline-f3069726">
             <div>
                 <h1 class="h2 fw-bold text-gradient-gold">Product Comparison</h1>
                 <p class="text-secondary">Compare up to 4 products side-by-side to find the perfect fit</p>
@@ -31,7 +31,7 @@
         </div>
 
         <!-- Empty State -->
-        <div id="emptyState" class="text-center section" style="display: none;">
+        <div id="emptyState" class="text-center section pp-inline-9c766357">
             <div class="card glass-effect border-0 p-5">
                 <i class="fa-solid fa-code-compare fa-3x text-gold mb-3"></i>
                 <h3 class="h4 mb-3">No Products to Compare</h3>
@@ -44,11 +44,11 @@
         </div>
 
         <!-- Comparison Table -->
-        <div id="comparisonTable" class="table-responsive" style="display: none;">
+        <div id="comparisonTable" class="table-responsive pp-inline-9c766357">
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="bg-burgundy text-white" style="width: 150px;">Feature</th>
+                        <th class="bg-burgundy text-white pp-inline-d9900c66">Feature</th>
                         <th id="productHeader1" class="bg-burgundy-light text-white text-center"></th>
                         <th id="productHeader2" class="bg-burgundy-light text-white text-center"></th>
                         <th id="productHeader3" class="bg-burgundy-light text-white text-center"></th>
@@ -105,14 +105,14 @@
         </div>
 
         <!-- Actions -->
-        <div id="comparisonActions" class="text-center" style="display: none; margin-top: var(--space-4);">
+        <div id="comparisonActions" class="text-center pp-inline-ea335f17">
             <button id="clearAll" class="btn btn-outline-danger">
                 <i class="fa-solid fa-trash me-2"></i>
                 Clear All
             </button>
         </div>
     </div>
-</main>
+</section>
 
 <script src="{% static 'assets/js/compare.js' %}"></script>
 {% endblock %}

@@ -1,39 +1,38 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Pricing - PoshPearl{% endblock %}
 {% block body_class %}pp-light pp-pricing{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
-<link rel="stylesheet" href="{% static 'assets/css/pricing.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v={{ STATIC_ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static 'assets/css/pricing.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block content %}
 <section class="section">
     <div class="container">
-        <div class="text-center stack" style="max-width: 600px; margin: 0 auto;">
+        <div class="text-center stack pp-inline-7bdfe844">
             <p class="pp-pill"><i class="fa-solid fa-tag"></i> Pricing</p>
             <h1 class="pp-section-title">Flexible pricing that scales with you</h1>
             <p class="text-muted">Choose the plan that fits your smart living needs.</p>
         </div>
 
-        <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-top: var(--space-8);">
+        <div class="grid pp-inline-0ba9e55a">
             <article class="pp-card text-center stack">
                 <h3>Basic</h3>
-                <p class="pp-pricing-price" style="font-size: var(--text-3xl); color: var(--color-accent);">₦2,500</p>
-                <ul class="stack" style="list-style: none; padding: 0;">
+                <p class="pp-pricing-price pp-inline-a28440a0">NGN 2,500</p>
+                <ul class="stack pp-inline-1c278f8a">
                     <li>Smart lock starter kit</li>
                     <li>Basic access control</li>
                     <li>Email support</li>
                 </ul>
                 <a class="pp-btn pp-btn--primary" href="{% url 'products' %}">Explore products</a>
             </article>
-            <article class="pp-card text-center stack"
-                style="border: 2px solid var(--color-accent); transform: scale(1.05);">
+            <article class="pp-card text-center stack pp-inline-54ec6759">
                 <h3>Pro</h3>
-                <p class="pp-pricing-price" style="font-size: var(--text-3xl); color: var(--color-accent);">₦6,500</p>
-                <ul class="stack" style="list-style: none; padding: 0;">
+                <p class="pp-pricing-price pp-inline-a28440a0">NGN 6,500</p>
+                <ul class="stack pp-inline-1c278f8a">
                     <li>Device integration</li>
                     <li>Priority support</li>
                     <li>Automation scenes</li>
@@ -42,9 +41,9 @@
             </article>
             <article class="pp-card text-center stack">
                 <h3>Enterprise</h3>
-                <p class="pp-pricing-price" style="font-size: var(--text-3xl); color: var(--color-accent);">Contact us
+                <p class="pp-pricing-price pp-inline-a28440a0">Contact us
                 </p>
-                <ul class="stack" style="list-style: none; padding: 0;">
+                <ul class="stack pp-inline-1c278f8a">
                     <li>Custom integrations</li>
                     <li>Dedicated onboarding</li>
                     <li>Bulk discounts</li>
@@ -53,11 +52,11 @@
             </article>
         </div>
 
-        <section class="pp-card stack" style="margin-top: var(--space-8);">
+        <section class="pp-card stack pp-inline-baa54d7f">
             <h2>Feature compare / FAQ</h2>
-            <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="grid pp-inline-d1f473b0">
                 <div>
-                    <strong>What’s included?</strong>
+                    <strong>What's included?</strong>
                     <p class="text-muted">Every plan includes access to our product catalog and smart support.</p>
                 </div>
                 <div>

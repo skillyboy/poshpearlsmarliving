@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load humanize %}
 {% load static %}
 
@@ -6,22 +6,22 @@
 {% block body_class %}pp-light pp-checkout-page{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v=20260207">
-<link rel="stylesheet" href="{% static 'assets/css/commerce.css' %}?v=20260207">
+<link rel="stylesheet" href="{% static 'assets/css/light-pages.css' %}?v={{ STATIC_ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static 'assets/css/commerce.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block content %}
 <section class="section">
     <div class="container">
-        <div class="text-center stack" style="margin-bottom: var(--space-8);">
+        <div class="text-center stack pp-inline-461ff6e0">
             <p class="pp-pill"><i class="fa-solid fa-credit-card"></i> Checkout</p>
             <h1 class="pp-section-title">Checkout</h1>
             <p class="text-muted">Complete your order securely with Paystack.</p>
         </div>
 
         {% if empty_cart %}
-        <div class="pp-card text-center stack" style="max-width: 500px; margin: 0 auto;">
-            <i class="fa-solid fa-cart-shopping" style="font-size: 3rem; color: var(--color-accent);"></i>
+        <div class="pp-card text-center stack pp-inline-61c61a4b">
+            <i class="fa-solid fa-cart-shopping pp-inline-e3c630b5"></i>
             <h2>Your cart is empty</h2>
             <p class="text-muted">Add products before proceeding to checkout.</p>
             <div>
@@ -29,8 +29,8 @@
             </div>
         </div>
         {% elif order %}
-        <div class="pp-card text-center stack" style="max-width: 500px; margin: 0 auto;">
-            <i class="fa-solid fa-circle-check" style="font-size: 3rem; color: var(--color-success);"></i>
+        <div class="pp-card text-center stack pp-inline-61c61a4b">
+            <i class="fa-solid fa-circle-check pp-inline-3bbb39b4"></i>
             {% if order.payment_status == "paid" %}
             <h2>Payment successful</h2>
             <p class="text-muted">Your order #{{ order.id }} is confirmed.</p>
@@ -38,8 +38,8 @@
             <h2>Order received</h2>
             <p class="text-muted">Your order #{{ order.id }} is being processed.</p>
             {% endif %}
-            <hr style="border: none; border-top: 1px solid var(--color-border); width: 100%;">
-            <div class="flex" style="justify-content: space-between; width: 100%;">
+            <hr class="pp-inline-ce7439b8">
+            <div class="flex pp-inline-5d220266">
                 <span>Order total</span>
                 <strong>{{ order.currency }} {{ order.subtotal|intcomma }}</strong>
             </div>
@@ -49,18 +49,18 @@
             </div>
         </div>
         {% else %}
-        <div class="flex" style="justify-content: center; gap: var(--space-2); margin-bottom: var(--space-6);">
+        <div class="flex pp-inline-f89de956">
             <span class="pp-pill">1 Shipping</span>
             <span class="pp-pill">2 Review</span>
             <span class="pp-pill">3 Pay</span>
         </div>
 
-        <div class="grid" style="grid-template-columns: 2fr 1fr;">
+        <div class="grid pp-inline-af72bea2">
             <form method="post" action="{% url 'payment_initialize' %}" class="pp-card stack">
                 {% csrf_token %}
                 {% if payment_error %}
-                <div class="pp-card" style="background: rgba(211, 47, 47, 0.1); border-color: var(--color-danger);">
-                    <i class="fa-solid fa-circle-exclamation" style="color: var(--color-danger);"></i>
+                <div class="pp-card pp-inline-48a5ddba">
+                    <i class="fa-solid fa-circle-exclamation pp-inline-13f9f99a"></i>
                     <span>{{ payment_error }}</span>
                     {% if order_id %}
                     <div class="text-muted">Order ID: #{{ order_id }}</div>
@@ -71,25 +71,25 @@
                 <label class="pp-label" for="{{ form.full_name.id_for_label }}">Full name</label>
                 {{ form.full_name }}
                 {% if form.full_name.errors %}
-                <div class="text-muted" style="color: var(--color-danger);">{{ form.full_name.errors|striptags }}</div>
+                <div class="text-muted pp-inline-13f9f99a">{{ form.full_name.errors|striptags }}</div>
                 {% endif %}
 
                 <label class="pp-label" for="{{ form.email.id_for_label }}">Email address</label>
                 {{ form.email }}
                 {% if form.email.errors %}
-                <div class="text-muted" style="color: var(--color-danger);">{{ form.email.errors|striptags }}</div>
+                <div class="text-muted pp-inline-13f9f99a">{{ form.email.errors|striptags }}</div>
                 {% endif %}
 
                 <label class="pp-label" for="{{ form.phone.id_for_label }}">Phone number</label>
                 {{ form.phone }}
                 {% if form.phone.errors %}
-                <div class="text-muted" style="color: var(--color-danger);">{{ form.phone.errors|striptags }}</div>
+                <div class="text-muted pp-inline-13f9f99a">{{ form.phone.errors|striptags }}</div>
                 {% endif %}
 
                 <label class="pp-label" for="{{ form.address.id_for_label }}">Delivery address</label>
                 {{ form.address }}
                 {% if form.address.errors %}
-                <div class="text-muted" style="color: var(--color-danger);">{{ form.address.errors|striptags }}</div>
+                <div class="text-muted pp-inline-13f9f99a">{{ form.address.errors|striptags }}</div>
                 {% endif %}
 
                 <label class="pp-label" for="{{ form.notes.id_for_label }}">Order notes (optional)</label>
@@ -102,22 +102,22 @@
             <aside class="pp-card stack">
                 <h2>Order summary</h2>
                 {% for item in cart.items %}
-                <div class="flex" style="justify-content: space-between;">
+                <div class="flex pp-inline-8800ba3b">
                     <span>{{ item.name }} x {{ item.quantity }}</span>
                     <strong>{{ item.currency }} {{ item.line_total|intcomma }}</strong>
                 </div>
                 {% endfor %}
-                <hr style="border: none; border-top: 1px solid var(--color-border);">
-                <div class="flex" style="justify-content: space-between;">
+                <hr class="pp-inline-fe961622">
+                <div class="flex pp-inline-8800ba3b">
                     <span>Subtotal</span>
                     <strong>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong>
                 </div>
-                <div class="flex" style="justify-content: space-between;">
+                <div class="flex pp-inline-8800ba3b">
                     <span>Delivery</span>
                     <span class="text-muted">Calculated at checkout</span>
                 </div>
-                <hr style="border: none; border-top: 1px solid var(--color-border);">
-                <div class="flex" style="justify-content: space-between;">
+                <hr class="pp-inline-fe961622">
+                <div class="flex pp-inline-8800ba3b">
                     <span>Total</span>
                     <strong>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong>
                 </div>

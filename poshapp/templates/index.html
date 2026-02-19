@@ -5,8 +5,8 @@
 {% block title %}PoshPearl Smart Living{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/home.css' %}?v=20260216.6">
-<link rel="stylesheet" href="{% static 'assets/css/poshpearl-ui.css' %}?v=20260216.1">
+<link rel="stylesheet" href="{% static 'assets/css/home.css' %}?v={{ STATIC_ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static 'assets/css/poshpearl-ui.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block body_class %}pp-light pp-home{% endblock %}
@@ -17,7 +17,7 @@
 
   <section class="pp-home__hero section">
     <div class="container pp-home__hero-grid">
-      <div class="pp-home__hero-copy pp-glass">
+      <div class="pp-home__hero-copy pp-glass glass-effect">
         <p class="pp-home__eyebrow">Making life easy. Making homes smart.</p>
         <h1>Smart security, access, and comfort in one</h1>
         <p>PoshPearl SmartLiving delivers trusted smart locks, gate systems, automated curtains, and connected sensors
@@ -78,7 +78,7 @@
       </div>
       <div class="pp-home__device-grid">
         {% for product in products|slice:":3" %}
-        <article class="pp-home__device-card">
+        <article class="pp-home__device-card glass-effect">
           {% with hero_image=product.images.first %}
           <img src="{{ hero_image.image.url|default:product_fallback }}" alt="{{ product.name }}" loading="lazy"
             onerror="this.onerror=null;this.src='{{ product_fallback }}';">
@@ -88,7 +88,7 @@
           <a class="pp-btn pp-btn--ghost" href="{% url 'product_detail_products' product.slug %}">View details →</a>
         </article>
         {% empty %}
-        <article class="pp-home__device-card">
+        <article class="pp-home__device-card glass-effect">
           <img src="{{ product_fallback }}" alt="Smart device">
           <h3>Smart Locks</h3>
           <p>Reliable access with biometric security.</p>
@@ -125,7 +125,7 @@
         </div>
         <p class="pp-bulk-card__note">Tell us your quantity and we'll lock in the best rate for your project.</p>
         <div class="pp-home__bulk-actions">
-          <a class="pp-btn pp-btn--primary" href="{% url 'wholesale' %}">Request a bulk quote</a>
+          <a class="pp-btn pp-btn--primary btn-gold" href="{% url 'wholesale' %}">Request a bulk quote</a>
           <a class="pp-btn pp-btn--ghost" href="{% url 'product_detail_products' 'd2pro' %}">View D2Pro details</a>
         </div>
       </div>
@@ -223,3 +223,4 @@
   </section>
 </div>
 {% endblock %}
+

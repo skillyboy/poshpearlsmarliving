@@ -5,22 +5,19 @@
 {% block title %}{{ product.name }} - PoshPearl{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/products.css' %}?v=20260216.5">
-<link rel="stylesheet" href="{% static 'assets/css/product-detail.css' %}?v=20260216.5">
+<link rel="stylesheet" href="{% static 'assets/css/products.css' %}?v={{ STATIC_ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static 'assets/css/product-detail.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block body_class %}pp-light pp-products pp-product-detail{% endblock %}
 
 {% block content %}
-<main class="pp-detail">
+<div class="pp-detail">
   {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
 
-  <!-- Hero Section -->
   <section class="section">
     <div class="container">
-      <!-- Breadcrumb -->
-      <nav class="pp-breadcrumb" aria-label="Breadcrumb"
-        style="display: flex; gap: var(--space-2); margin-bottom: var(--space-6);">
+      <nav class="pp-breadcrumb pp-detail__breadcrumb" aria-label="Breadcrumb">
         <a href="{% url 'home' %}">Home</a>
         <span aria-hidden="true">/</span>
         <a href="{% url 'products' %}">Products</a>
@@ -32,22 +29,19 @@
         <span aria-current="page">{{ product.name }}</span>
       </nav>
 
-      <!-- Main Product Layout -->
-      <div class="grid" style="grid-template-columns: 280px 1fr; gap: var(--space-8);">
-        <!-- Filters Sidebar (only visible on desktop) -->
-        <aside class="pp-card stack" style="height: fit-content;">
-          <div class="flex" style="justify-content: space-between; align-items: center;">
+      <div class="pp-detail__layout">
+        <aside class="pp-card stack pp-detail__filters">
+          <div class="pp-detail__filter-head">
             <h3>Filters</h3>
             <a href="{% url 'products' %}" class="text-muted">Reset</a>
           </div>
 
           <div class="stack">
             <h4>Category</h4>
-            <div class="stack" style="gap: var(--space-2);">
+            <div class="stack pp-detail__checklist">
               {% for category in categories %}
-              <label class="flex" style="align-items: center; gap: var(--space-2);">
-                <input type="checkbox" {% if product.categories.all|length and category in product.categories.all
-                  %}checked{% endif %}>
+              <label class="pp-detail__check">
+                <input type="checkbox" {% if category in product.categories.all %}checked{% endif %}>
                 <span>{{ category.name }}</span>
               </label>
               {% endfor %}
@@ -56,76 +50,65 @@
 
           <div class="stack">
             <h4>Availability</h4>
-            <label class="flex" style="align-items: center; gap: var(--space-2);">
-              <input type="checkbox" {% if product.stock_quantity> 0 %}checked{% endif %}>
+            <label class="pp-detail__check">
+              <input type="checkbox" {% if product.stock_quantity > 0 %}checked{% endif %}>
               <span>In stock</span>
             </label>
           </div>
 
           <div class="stack">
             <h4>Compatibility</h4>
-            <div class="stack" style="gap: var(--space-2);">
-              <label class="flex" style="align-items: center; gap: var(--space-2);"><input type="checkbox"
-                  checked><span>Alexa</span></label>
-              <label class="flex" style="align-items: center; gap: var(--space-2);"><input
-                  type="checkbox"><span>Google</span></label>
-              <label class="flex" style="align-items: center; gap: var(--space-2);"><input type="checkbox"
-                  checked><span>App Control</span></label>
+            <div class="stack pp-detail__checklist">
+              <label class="pp-detail__check"><input type="checkbox" checked><span>Alexa</span></label>
+              <label class="pp-detail__check"><input type="checkbox"><span>Google</span></label>
+              <label class="pp-detail__check"><input type="checkbox" checked><span>App Control</span></label>
             </div>
           </div>
         </aside>
 
-        <!-- Product Summary -->
-        <section class="grid" style="grid-template-columns: 1fr 1fr; gap: var(--space-8);">
-          <!-- Gallery -->
+        <section class="pp-detail__summary">
           <div class="pp-detail__media stack" data-gallery>
             {% with hero_image=product.images.first %}
             <div class="pp-detail__main" data-gallery-main
-              data-modal-image="{{ hero_image.image.url|default:product_fallback }}" data-modal-alt="{{ product.name }}"
-              style="cursor: zoom-in;">
-              <img src="{{ hero_image.image.url|default:product_fallback }}" alt="{{ product.name }}" loading="eager"
-                decoding="async" style="width: 100%; height: auto; border-radius: var(--radius-lg);">
+              data-modal-image="{{ hero_image.image.url|default:product_fallback }}" data-modal-alt="{{ product.name }}">
+              <img class="pp-detail__main-image" src="{{ hero_image.image.url|default:product_fallback }}"
+                alt="{{ product.name }}" loading="eager" decoding="async">
             </div>
             {% endwith %}
 
-            <div class="flex" style="gap: var(--space-2);">
+            <div class="pp-detail__thumbs">
               {% for image in product.images.all|slice:":4" %}
               <button class="pp-detail__thumb{% if forloop.first %} is-active{% endif %}" type="button"
                 data-gallery-thumb data-preview-src="{{ image.image.url }}"
-                data-preview-alt="{{ image.alt_text|default:product.name }}"
-                style="width: 80px; height: 80px; border: 2px solid transparent; border-radius: var(--radius-md); overflow: hidden; padding: 0; cursor: pointer; {% if forloop.first %}border-color: var(--color-accent);{% endif %}">
+                data-preview-alt="{{ image.alt_text|default:product.name }}">
                 <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" loading="lazy"
-                  decoding="async" style="width: 100%; height: 100%; object-fit: cover;">
+                  decoding="async">
               </button>
               {% endfor %}
               {% if not product.images.exists %}
-              <button class="pp-detail__thumb is-active" type="button"
-                style="width: 80px; height: 80px; border: 2px solid var(--color-accent); border-radius: var(--radius-md); overflow: hidden; padding: 0;">
-                <img src="{{ product_fallback }}" alt="{{ product.name }}"
-                  style="width: 100%; height: 100%; object-fit: cover;">
+              <button class="pp-detail__thumb is-active" type="button">
+                <img src="{{ product_fallback }}" alt="{{ product.name }}">
               </button>
               {% endif %}
             </div>
           </div>
 
-          <!-- Product Info -->
-          <div class="stack">
+          <div class="stack pp-detail__info">
             <div>
-              <span class="pp-pill"
-                style="background: {% if product.stock_quantity > 0 %}var(--color-success){% else %}var(--color-accent){% endif %}; color: white;">
+              <span class="pp-pill pp-detail__stock-badge{% if product.stock_quantity > 0 %} is-instock{% else %} is-preorder{% endif %}">
                 {% if product.stock_quantity > 0 %}In stock{% else %}Limited Pre-order{% endif %}
               </span>
             </div>
 
-            <h1 style="font-size: var(--text-3xl);">{{ product.name }}</h1>
+            <h1 class="pp-detail__title">{{ product.name }}</h1>
 
-            <div class="flex" style="align-items: center; gap: var(--space-2);">
-              <span style="color: var(--color-accent);">★★★★★</span>
+            <div class="pp-detail__rating">
+              <span class="pp-detail__stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
               <span class="text-muted">4.8 (36 reviews)</span>
             </div>
 
-            <div class="flex" style="align-items: baseline; gap: var(--space-4);">
-              <div style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-primary);">
+            <div class="pp-detail__price-row">
+              <div class="pp-detail__price">
                 {% if product.price_tiers.exists %}
                 {{ product.currency }} {{ product.price_tiers.first.price|intcomma }}
                 {% elif product.price %}
@@ -135,7 +118,7 @@
                 {% endif %}
               </div>
               {% if tier_savings or product.compare_at_price %}
-              <div class="pp-pill" style="background: var(--color-success); color: white;">
+              <div class="pp-pill pp-detail__save-pill">
                 Save {{ product.currency }} {{ tier_savings|default:product.compare_at_price|intcomma }}
               </div>
               {% endif %}
@@ -150,15 +133,14 @@
             {% endif %}
 
             {% if price_tier_ranges %}
-            <div class="pp-card" style="background: var(--color-surface);">
+            <div class="pp-card pp-detail__tier-card">
               <h4>Volume Pricing</h4>
               <div class="stack">
                 {% for tier in price_tier_ranges %}
-                <div class="flex"
-                  style="justify-content: space-between; padding: var(--space-2); border-bottom: 1px solid var(--color-border);">
+                <div class="pp-detail__tier-row">
                   <span>
                     {% if tier.max %}
-                    {{ tier.min }}–{{ tier.max }} units
+                    {{ tier.min }}-{{ tier.max }} units
                     {% else %}
                     {{ tier.min }}+ units
                     {% endif %}
@@ -172,18 +154,21 @@
 
             {% with product.slug|default_if_none:''|lower as slug_lower %}
             {% if "d2pro" in slug_lower %}
-            <div class="pp-card" style="background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a1a1a;">
+            <div class="pp-card pp-bulk-card pp-bulk-card--brand">
               <div class="stack">
-                <p class="pp-pill" style="background: rgba(255,255,255,0.3);">Bulk pricing</p>
+                <p class="pp-pill pp-bulk-card__eyebrow">Bulk pricing</p>
                 <h3>D2Pro Smart Lock</h3>
                 <p>Volume discounts applied per order.</p>
-                <div class="stack">
-                  <div class="flex" style="justify-content: space-between;"><span>1-20 units</span><strong>NGN
-                      320,000</strong><span class="text-muted">/unit</span></div>
-                  <div class="flex" style="justify-content: space-between;"><span>21-100 units</span><strong>NGN
-                      280,000</strong><span class="text-muted">/unit</span></div>
-                  <div class="flex" style="justify-content: space-between;"><span>100+ units</span><strong>NGN
-                      250,000</strong><span class="text-muted">/unit</span></div>
+                <div class="stack pp-bulk-card__rows">
+                  <div class="pp-bulk-row pp-bulk-row--burgundy">
+                    <span>1-20 units</span><strong>NGN 320,000</strong><span class="text-muted">/unit</span>
+                  </div>
+                  <div class="pp-bulk-row pp-bulk-row--deep">
+                    <span>21-100 units</span><strong>NGN 280,000</strong><span class="text-muted">/unit</span>
+                  </div>
+                  <div class="pp-bulk-row pp-bulk-row--gold">
+                    <span>100+ units</span><strong>NGN 250,000</strong><span class="text-muted">/unit</span>
+                  </div>
                 </div>
                 <p class="text-muted">Tell us your quantity and we'll lock in the best rate.</p>
               </div>
@@ -191,20 +176,20 @@
             {% endif %}
             {% endwith %}
 
-            <div class="flex" style="gap: var(--space-3);">
-              <button class="pp-btn pp-btn--primary" type="button" data-add-to-cart data-product-id="{{ product.id }}"
-                style="flex: 2;">
+            <div class="pp-detail__actions">
+              <button class="pp-btn pp-btn--primary pp-detail__cta-main" type="button" data-add-to-cart
+                data-product-id="{{ product.id }}">
                 {% if product.stock_quantity > 0 %}Add to cart{% else %}Pre-order now{% endif %}
               </button>
-              <button class="pp-btn pp-btn--secondary" type="button" data-wishlist-toggle
-                data-product-id="{{ product.id }}" style="flex: 1;">
+              <button class="pp-btn pp-btn--secondary pp-detail__cta-side" type="button" data-wishlist-toggle
+                data-product-id="{{ product.id }}">
                 <i class="fa-regular fa-heart" aria-hidden="true"></i>
                 <span class="sr-only">Add to wishlist</span>
               </button>
-              <button class="pp-btn pp-btn--secondary" type="button" style="flex: 1;">Install</button>
+              <button class="pp-btn pp-btn--secondary pp-detail__cta-side" type="button">Install</button>
             </div>
 
-            <div class="flex" style="gap: var(--space-2);">
+            <div class="pp-detail__tags">
               <span class="pp-pill">Fingerprint</span>
               <span class="pp-pill">NFC</span>
               <span class="pp-pill">App Control</span>
@@ -215,40 +200,27 @@
     </div>
   </section>
 
-  <!-- Tabs Section -->
-  <section class="section" style="background: var(--color-surface);">
+  <section class="section pp-detail__tabs-section">
     <div class="container">
-      <!-- Tab Navigation -->
-      <nav class="flex"
-        style="justify-content: center; gap: var(--space-6); border-bottom: 2px solid var(--color-border); margin-bottom: var(--space-8);">
-        <a href="#overview" class="pp-tab"
-          style="padding: var(--space-3) 0; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--color-text-muted);">Overview</a>
-        <a href="#features" class="pp-tab is-active"
-          style="padding: var(--space-3) 0; border-bottom: 2px solid var(--color-accent); color: var(--color-accent);">Key
-          Features</a>
-        <a href="#specs" class="pp-tab"
-          style="padding: var(--space-3) 0; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--color-text-muted);">Specs</a>
-        <a href="#box" class="pp-tab"
-          style="padding: var(--space-3) 0; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--color-text-muted);">What's
-          in the box</a>
-        <a href="#support" class="pp-tab"
-          style="padding: var(--space-3) 0; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--color-text-muted);">Installation</a>
-        <a href="#reviews" class="pp-tab"
-          style="padding: var(--space-3) 0; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--color-text-muted);">Reviews</a>
+      <nav class="pp-detail__tablist">
+        <a href="#overview" class="pp-tab">Overview</a>
+        <a href="#features" class="pp-tab is-active">Key Features</a>
+        <a href="#specs" class="pp-tab">Specs</a>
+        <a href="#box" class="pp-tab">What's in the box</a>
+        <a href="#support" class="pp-tab">Installation</a>
+        <a href="#reviews" class="pp-tab">Reviews</a>
       </nav>
 
-      <!-- Tab Content -->
-      <div class="grid" style="grid-template-columns: 2fr 1fr; gap: var(--space-8);">
+      <div class="pp-detail__content">
         <div class="stack">
           <section id="overview" class="pp-card">
             <h2>Overview</h2>
-            <p class="text-muted">{{ product.description|default:"Premium biometric access control built for modern
-              smart homes." }}</p>
+            <p class="text-muted">{{ product.description|default:"Premium biometric access control built for modern smart homes." }}</p>
           </section>
 
           <section id="features" class="pp-card">
             <h2>Key Features</h2>
-            <ul class="stack" style="padding-left: var(--space-6);">
+            <ul class="stack pp-detail__feature-list">
               <li>Fingerprint + palm recognition</li>
               <li>PIN + RFID + NFC access</li>
               <li>Secure smartphone app control</li>
@@ -259,42 +231,33 @@
         </div>
 
         <aside class="stack">
-          <div class="pp-card" id="specs">
+          <div class="pp-card pp-detail__specs" id="specs">
             <h3>Specs</h3>
             <div class="stack">
-              <div class="flex" style="justify-content: space-between;"><span>Model</span><strong>{{
-                  product.sku|default:"D2Pro" }}</strong></div>
-              <div class="flex" style="justify-content: space-between;"><span>Dimensions</span><strong>137 ×
-                  46mm</strong></div>
-              <div class="flex" style="justify-content: space-between;"><span>Weight</span><strong>216g</strong></div>
-              <div class="flex" style="justify-content: space-between;"><span>Connectivity</span><strong>Wi‑Fi +
-                  App</strong></div>
+              <div class="pp-detail__spec-row"><span>Model</span><strong>{{ product.sku|default:"D2Pro" }}</strong></div>
+              <div class="pp-detail__spec-row"><span>Dimensions</span><strong>137 x 46mm</strong></div>
+              <div class="pp-detail__spec-row"><span>Weight</span><strong>216g</strong></div>
+              <div class="pp-detail__spec-row"><span>Connectivity</span><strong>Wi-Fi + App</strong></div>
             </div>
           </div>
 
-          <div class="pp-card" id="reviews">
+          <div class="pp-card pp-detail__reviews" id="reviews">
             <h3>Reviews</h3>
             <div class="stack">
-              <div class="flex" style="align-items: center; gap: var(--space-2);"><span>5★</span>
-                <div style="flex: 1; height: 8px; background: var(--color-border); border-radius: var(--radius-full);">
-                  <div
-                    style="width: 60%; height: 100%; background: var(--color-accent); border-radius: var(--radius-full);">
-                  </div>
-                </div><span>515</span>
+              <div class="pp-detail__review-row">
+                <span>5&#9733;</span>
+                <div class="pp-detail__bar-track"><div class="pp-detail__bar pp-detail__bar--60"></div></div>
+                <span>515</span>
               </div>
-              <div class="flex" style="align-items: center; gap: var(--space-2);"><span>4★</span>
-                <div style="flex: 1; height: 8px; background: var(--color-border); border-radius: var(--radius-full);">
-                  <div
-                    style="width: 30%; height: 100%; background: var(--color-accent); border-radius: var(--radius-full);">
-                  </div>
-                </div><span>535</span>
+              <div class="pp-detail__review-row">
+                <span>4&#9733;</span>
+                <div class="pp-detail__bar-track"><div class="pp-detail__bar pp-detail__bar--30"></div></div>
+                <span>535</span>
               </div>
-              <div class="flex" style="align-items: center; gap: var(--space-2);"><span>3★</span>
-                <div style="flex: 1; height: 8px; background: var(--color-border); border-radius: var(--radius-full);">
-                  <div
-                    style="width: 10%; height: 100%; background: var(--color-accent); border-radius: var(--radius-full);">
-                  </div>
-                </div><span>333</span>
+              <div class="pp-detail__review-row">
+                <span>3&#9733;</span>
+                <div class="pp-detail__bar-track"><div class="pp-detail__bar pp-detail__bar--10"></div></div>
+                <span>333</span>
               </div>
             </div>
           </div>
@@ -302,183 +265,5 @@
       </div>
     </div>
   </section>
-</main>
-
-<!-- Gallery Modal Template (hidden) -->
-<template id="gallery-modal-template">
-  <div class="pp-modal-content" style="max-width: 90vw; max-height: 90vh;">
-    <img src="" alt="" style="width: 100%; height: auto; object-fit: contain;">
-  </div>
-</template>
-
-<script>
-  (function () {
-    // Gallery thumb click handler
-    const mainImage = document.querySelector('[data-gallery-main] img');
-    const thumbs = document.querySelectorAll('[data-gallery-thumb]');
-
-    if (mainImage && thumbs.length) {
-      thumbs.forEach((thumb) => {
-        thumb.addEventListener('click', () => {
-          const src = thumb.getAttribute('data-preview-src');
-          const alt = thumb.getAttribute('data-preview-alt');
-
-          if (src) {
-            mainImage.src = src;
-            mainImage.alt = alt || '';
-          }
-
-          // Update active state
-          thumbs.forEach(t => {
-            t.style.borderColor = 'transparent';
-            t.classList.remove('is-active');
-          });
-          thumb.style.borderColor = 'var(--color-accent)';
-          thumb.classList.add('is-active');
-        });
-      });
-    }
-
-    // Modal functionality for main image zoom
-    const mainImageContainer = document.querySelector('[data-gallery-main]');
-    const modalTemplate = document.getElementById('gallery-modal-template');
-
-    if (mainImageContainer && modalTemplate) {
-      mainImageContainer.addEventListener('click', () => {
-        const imgSrc = mainImageContainer.getAttribute('data-modal-image');
-        const imgAlt = mainImageContainer.getAttribute('data-modal-alt');
-
-        if (!imgSrc) return;
-
-        // Create modal
-        const modal = document.createElement('div');
-        modal.className = 'pp-modal';
-        modal.setAttribute('role', 'dialog');
-        modal.setAttribute('aria-modal', 'true');
-        modal.setAttribute('aria-label', 'Image preview');
-        modal.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0,0,0,0.9);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 9999;
-          opacity: 0;
-          transition: opacity 0.2s;
-        `;
-
-        const content = modalTemplate.content.cloneNode(true);
-        const img = content.querySelector('img');
-        img.src = imgSrc;
-        img.alt = imgAlt || 'Product image';
-
-        modal.appendChild(content);
-        document.body.appendChild(modal);
-
-        // Trigger reflow for animation
-        setTimeout(() => modal.style.opacity = '1', 10);
-
-        // Close handlers
-        const closeModal = () => {
-          modal.style.opacity = '0';
-          setTimeout(() => modal.remove(), 200);
-        };
-
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) closeModal();
-        });
-
-        document.addEventListener('keydown', function escHandler(e) {
-          if (e.key === 'Escape') {
-            closeModal();
-            document.removeEventListener('keydown', escHandler);
-          }
-        });
-      });
-    }
-  })();
-</script>
-
-<style>
-  /* Tab styles */
-  .pp-tab {
-    text-decoration: none;
-    transition: all var(--transition-base);
-  }
-
-  .pp-tab:hover {
-    color: var(--color-accent) !important;
-  }
-
-  .pp-tab.is-active {
-    font-weight: 600;
-  }
-
-  /* Gallery thumb */
-  .pp-detail__thumb {
-    transition: border-color var(--transition-base);
-  }
-
-  .pp-detail__thumb:hover {
-    border-color: var(--color-accent) !important;
-  }
-
-  .pp-detail__thumb.is-active {
-    border-color: var(--color-accent) !important;
-  }
-
-  /* Main image zoom indicator */
-  [data-gallery-main] {
-    position: relative;
-    cursor: zoom-in;
-  }
-
-  [data-gallery-main]::after {
-    content: '🔍';
-    position: absolute;
-    bottom: var(--space-2);
-    right: var(--space-2);
-    background: rgba(255, 255, 255, 0.8);
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-full);
-    font-size: var(--text-sm);
-    opacity: 0;
-    transition: opacity var(--transition-base);
-  }
-
-  [data-gallery-main]:hover::after {
-    opacity: 1;
-  }
-
-  /* Responsive */
-  @media (max-width: 1024px) {
-    .grid[style*="grid-template-columns: 280px 1fr"] {
-      grid-template-columns: 1fr !important;
-    }
-
-    .pp-detail__filters {
-      display: none;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .grid[style*="grid-template-columns: 1fr 1fr"] {
-      grid-template-columns: 1fr !important;
-    }
-
-    nav.flex[style*="justify-content: center"] {
-      flex-wrap: wrap;
-      gap: var(--space-2) !important;
-    }
-
-    .pp-tab {
-      font-size: var(--text-sm);
-      padding: var(--space-2) !important;
-    }
-  }
-</style>
+</div>
 {% endblock %}

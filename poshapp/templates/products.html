@@ -5,8 +5,8 @@
 {% block title %}Products - PoshPearl{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/products.css' %}?v=20260216.5">
-<link rel="stylesheet" href="{% static 'assets/css/poshpearl-ui.css' %}?v=20260216.1">
+<link rel="stylesheet" href="{% static 'assets/css/products.css' %}?v={{ STATIC_ASSET_VERSION }}">
+<link rel="stylesheet" href="{% static 'assets/css/poshpearl-ui.css' %}?v={{ STATIC_ASSET_VERSION }}">
 {% endblock %}
 
 {% block body_class %}pp-light pp-products{% endblock %}
@@ -216,3 +216,4 @@
   })();
 </script>
 {% endblock %}
+

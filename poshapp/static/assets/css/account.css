@@ -94,6 +94,40 @@
   color: var(--pp-accent);
 }
 
+.pp-order-status {
+  color: #fff;
+}
+
+.pp-order-status--padded {
+  padding: var(--space-2) var(--space-4);
+}
+
+.pp-order-status--base {
+  font-size: var(--text-base);
+}
+
+.pp-order-status.is-delivered {
+  background: var(--color-success);
+}
+
+.pp-order-status.is-cancelled {
+  background: var(--color-danger);
+}
+
+.pp-order-status.is-shipped,
+.pp-order-status.is-accent,
+.pp-order-status.is-paid {
+  background: var(--color-accent);
+}
+
+.pp-order-status.is-processing {
+  background: #f59e0b;
+}
+
+.pp-order-status.is-muted {
+  background: var(--color-text-muted);
+}
+
 .pp-account-grid-2 {
   display: grid;
   gap: 16px;

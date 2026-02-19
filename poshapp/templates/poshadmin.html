@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PoshPearl Admin</title>
-  <link rel="stylesheet" href="{% static 'assets/admin/admin.css' %}?v=20260218.1">
+  <link rel="stylesheet" href="{% static 'assets/admin/admin.css' %}?v={{ STATIC_ASSET_VERSION }}">
 </head>
 <body>
   <div id="toast-root" aria-live="polite"></div>
@@ -37,7 +37,7 @@
       <div class="sidebar-overlay" id="sidebarOverlay"></div>
     </aside>
 
-    <main class="admin-main" id="adminMain">
+    <div class="admin-main" id="adminMain">
       <section class="page" id="dashboard" data-page>
         <div class="cards-row">
           <div class="card stat">
@@ -155,7 +155,7 @@
           </form>
         </div>
       </section>
-    </main>
+    </div>
   </div>
 
   <div class="modal" id="modal" aria-hidden="true">
@@ -169,6 +169,8 @@
     </div>
   </div>
 
-  <script src="{% static 'assets/admin/admin.js' %}?v=20260218.1"></script>
+  <script src="{% static 'assets/admin/admin.js' %}?v={{ STATIC_ASSET_VERSION }}"></script>
 </body>
 </html>
+
+

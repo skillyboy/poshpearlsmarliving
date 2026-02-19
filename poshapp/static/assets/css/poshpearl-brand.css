@@ -69,6 +69,14 @@
     --pp-transition-fast: 150ms ease-in-out;
     --pp-transition-base: 200ms ease-in-out;
     --pp-transition-slow: 300ms ease-in-out;
+
+    /* Legacy token bridge (deprecated) */
+    --primary: var(--pp-gold);
+    --primary_rgb: 245, 166, 35;
+    --primary-200: #ffe3ba;
+    --primary-300: #ffc057;
+    --primary-400: #f5a623;
+    --primary-600: #d48c1b;
 }
 
 /* ===================
@@ -525,4 +533,23 @@ a:focus-visible {
 .form-control:focus-visible {
     outline: 2px solid var(--pp-gold);
     outline-offset: 2px;
+}
+
+/* ===================
+   LEGACY OVERRIDES
+   =================== */
+.text-primary,
+.btn-primary-soft {
+    color: var(--pp-gold) !important;
+}
+
+.bg-primary,
+.btn-primary {
+    background: linear-gradient(135deg, var(--pp-gold), var(--pp-gold-light)) !important;
+    border-color: var(--pp-gold) !important;
+}
+
+.bg-primary-soft,
+.btn-primary-soft {
+    background-color: rgba(var(--primary_rgb), 0.2) !important;
 }
