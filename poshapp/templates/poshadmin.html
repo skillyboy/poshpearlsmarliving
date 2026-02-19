@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PoshPearl Admin</title>
+  <link rel="stylesheet" href="{% static 'assets/admin/admin.css' %}?v=20260218.1">
+</head>
+<body>
+  <div id="toast-root" aria-live="polite"></div>
+
+  <div class="admin-shell">
+    <header class="admin-header" id="adminHeader">
+      <button class="icon-btn header__menu" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
+      <div class="brand">
+        <span class="brand__logo">PP</span>
+        <span class="brand__name">PoshPearl Admin</span>
+      </div>
+      <div class="header__title" id="pageTitle">Dashboard</div>
+      <div class="header__actions">
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">☀️</button>
+        <div class="avatar" aria-label="Profile"></div>
+      </div>
+    </header>
+
+    <aside class="admin-sidebar" data-sidebar>
+      <div class="sidebar__inner">
+        <nav class="sidebar__nav" aria-label="Admin navigation">
+          <a href="#dashboard" class="nav-link is-active" data-nav>Dashboard</a>
+          <a href="#products" class="nav-link" data-nav>Products</a>
+          <a href="#orders" class="nav-link" data-nav>Orders</a>
+          <a href="#customers" class="nav-link" data-nav>Customers</a>
+          <a href="#settings" class="nav-link" data-nav>Settings</a>
+        </nav>
+      </div>
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    </aside>
+
+    <main class="admin-main" id="adminMain">
+      <section class="page" id="dashboard" data-page>
+        <div class="cards-row">
+          <div class="card stat">
+            <p class="label">Orders</p>
+            <p class="value" id="statOrders">0</p>
+          </div>
+          <div class="card stat">
+            <p class="label">Revenue</p>
+            <p class="value" id="statRevenue">NGN 0</p>
+          </div>
+          <div class="card stat">
+            <p class="label">Users</p>
+            <p class="value" id="statUsers">0</p>
+          </div>
+          <div class="card stat">
+            <p class="label">Low Stock</p>
+            <p class="value" id="statLowStock">0</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__head"><h3>Recent Orders</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+              <tbody id="recentOrdersBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__head"><h3>Latest Activity</h3></div>
+          <ul class="activity" id="activityList"></ul>
+        </div>
+      </section>
+
+      <section class="page" id="products" data-page hidden>
+        <div class="page-head">
+          <div class="page-head__left">
+            <h2>Products</h2>
+            <p class="text-muted">Manage catalog items</p>
+          </div>
+          <div class="page-head__right">
+            <input id="productSearch" class="input" type="search" placeholder="Search products..." />
+            <button class="btn primary" id="createProductBtn">Create Product</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Image</th><th>Name</th><th>SKU</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="productsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="orders" data-page hidden>
+        <div class="page-head">
+          <div><h2>Orders</h2><p class="text-muted">Track and update orders</p></div>
+        </div>
+        <div class="tabs" id="orderTabs">
+          <button class="tab is-active" data-status="all">All</button>
+          <button class="tab" data-status="pending">Pending</button>
+          <button class="tab" data-status="paid">Paid</button>
+          <button class="tab" data-status="shipped">Shipped</button>
+          <button class="tab" data-status="completed">Completed</button>
+          <button class="tab" data-status="cancelled">Cancelled</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+              <tbody id="ordersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="customers" data-page hidden>
+        <div class="page-head">
+          <div><h2>Customers</h2><p class="text-muted">Customer directory</p></div>
+          <input id="customerSearch" class="input" type="search" placeholder="Search customers..." />
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Date Joined</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="customersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="settings" data-page hidden>
+        <div class="page-head">
+          <div><h2>Settings</h2><p class="text-muted">Store preferences</p></div>
+        </div>
+        <div class="card form-card">
+          <form id="settingsForm">
+            <label class="field"><span>Store name</span><input class="input" name="store_name" required></label>
+            <label class="field"><span>Support email</span><input class="input" type="email" name="support_email" required></label>
+            <label class="field"><span>Currency</span>
+              <select class="input" name="currency">
+                <option value="NGN">NGN</option><option value="USD">USD</option><option value="EUR">EUR</option>
+              </select>
+            </label>
+            <label class="field"><span>Low stock threshold</span><input class="input" type="number" min="0" name="low_stock_threshold" value="3"></label>
+            <label class="field field--inline">
+              <span>Enable dark theme (cosmetic)</span><input type="checkbox" name="themeDark">
+            </label>
+            <button class="btn primary" type="submit">Save settings</button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal__overlay" id="modalOverlay"></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal__header">
+        <h3 id="modalTitle">Modal</h3>
+        <button class="icon-btn" id="modalClose" aria-label="Close">✕</button>
+      </div>
+      <div class="modal__body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="{% static 'assets/admin/admin.js' %}?v=20260218.1"></script>
+</body>
+</html>

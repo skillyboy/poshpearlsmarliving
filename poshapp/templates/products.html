@@ -5,58 +5,63 @@
 {% block title %}Products - PoshPearl{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/products.css' %}?v=20260216.1">
+<link rel="stylesheet" href="{% static 'assets/css/products.css' %}?v=20260216.5">
 <link rel="stylesheet" href="{% static 'assets/css/poshpearl-ui.css' %}?v=20260216.1">
 {% endblock %}
 
 {% block body_class %}pp-light pp-products{% endblock %}
 
 {% block content %}
-<main class="pp-products">
+<div class="pp-products">
   {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
 
-  <section class="pp-products__hero">
+  <section class="pp-products__hero section">
     <div class="container">
       <nav class="pp-products__breadcrumb" aria-label="Breadcrumb">
         <a href="{% url 'home' %}">Home</a>
         <span aria-hidden="true">/</span>
         <span aria-current="page">Products</span>
       </nav>
+
       <div class="pp-products__intro">
         <div>
           <h1>Products</h1>
-          <p>Smart security and smart living devices built for peace of mind.</p>
+          <p class="text-muted">Smart security and smart living devices built for peace of mind.</p>
         </div>
         <a class="pp-products__cta" href="{% url 'wholesale' %}">Book Consultation</a>
       </div>
     </div>
   </section>
 
-  <section class="pp-products__catalog">
+  <section class="pp-products__catalog section">
     <div class="container">
       <form method="get" class="pp-products__layout">
         <div class="pp-products__toolbar">
           <label class="pp-products__search" for="productSearch">
             <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-            <input id="productSearch" type="search" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Search products, locks, cameras...">
+            <span class="sr-only">Search products</span>
+            <input id="productSearch" type="search" name="q" value="{{ request.GET.q|default:'' }}"
+              placeholder="Search products, locks, cameras...">
           </label>
           <div class="pp-products__toolbar-actions">
             <span class="pp-products__filters-pill">Filters ({{ pagination.filter_count|default:0 }})</span>
             <select name="ordering" class="pp-products__sort">
               <option value="">Sort</option>
               <option value="updated" {% if request.GET.ordering == "updated" %}selected{% endif %}>Newest</option>
-              <option value="price" {% if request.GET.ordering == "price" %}selected{% endif %}>Price: Low to High</option>
-              <option value="-price" {% if request.GET.ordering == "-price" %}selected{% endif %}>Price: High to Low</option>
+              <option value="price" {% if request.GET.ordering == "price" %}selected{% endif %}>Price: Low to High
+              </option>
+              <option value="-price" {% if request.GET.ordering == "-price" %}selected{% endif %}>Price: High to Low
+              </option>
               <option value="name" {% if request.GET.ordering == "name" %}selected{% endif %}>Name: A-Z</option>
             </select>
           </div>
         </div>
 
-        <aside class="pp-products__filters pp-glass pp-filter-panel">
+        <aside class="pp-products__filters">
           <div class="pp-products__filters-header">
             <h3>Filters</h3>
             {% if pagination.has_filters %}
-              <a href="{% url 'products' %}" class="pp-products__reset">Reset</a>
+            <a href="{% url 'products' %}" class="pp-products__reset">Reset</a>
             {% endif %}
           </div>
 
@@ -65,8 +70,7 @@
             <div class="pp-products__checklist">
               {% for category in categories %}
               <label class="pp-products__check">
-                <input type="radio" name="category" value="{{ category.slug }}"
-                       {% if active_category and active_category.slug == category.slug %}checked{% endif %}>
+                <input type="radio" name="category" value="{{ category.slug }}" {% if active_category and active_category.slug == category.slug %}checked{% endif %}>
                 <span>{{ category.name }}</span>
               </label>
               {% endfor %}
@@ -80,8 +84,7 @@
           <div class="pp-products__filter-group">
             <h4>Availability</h4>
             <label class="pp-products__check">
-              <input type="checkbox" name="in_stock" value="true"
-                     {% if request.GET.in_stock in "true,1,yes,on" %}checked{% endif %}>
+              <input type="checkbox" name="in_stock" value="true" {% if request.GET.in_stock in "true,1,yes,on" %}checked{% endif %}>
               <span>In stock</span>
             </label>
           </div>
@@ -90,9 +93,9 @@
             <h4>Price range</h4>
             <div class="pp-products__range">
               <input type="range" min="0" max="600000" step="10000" name="min_price"
-                     value="{{ request.GET.min_price|default:0 }}" data-price-min>
+                value="{{ request.GET.min_price|default:0 }}" data-price-min>
               <input type="range" min="0" max="600000" step="10000" name="max_price"
-                     value="{{ request.GET.max_price|default:600000 }}" data-price-max>
+                value="{{ request.GET.max_price|default:600000 }}" data-price-max>
             </div>
             <div class="pp-products__range-values">
               <span data-price-min-value>NGN 0</span>
@@ -105,9 +108,9 @@
 
         <section class="pp-products__results">
           {% if pagination.total_count %}
-            <p class="pp-products__count">
-              Showing {{ pagination.start_index }}-{{ pagination.end_index }} of {{ pagination.total_count }} products
-            </p>
+          <p class="pp-products__count">
+            Showing {{ pagination.start_index }}-{{ pagination.end_index }} of {{ pagination.total_count }} products
+          </p>
           {% endif %}
 
           <div class="pp-products__grid">
@@ -115,78 +118,74 @@
             <article class="pp-product-card">
               <a class="pp-product-card__media" href="{% url 'product_detail_products' product.slug %}">
                 {% if product.stock_quantity == 0 %}
-                  <span class="pp-product-card__badge pp-product-card__badge--preorder">Pre-order</span>
+                <span class="pp-product-card__badge pp-product-card__badge--preorder">Pre-order</span>
                 {% else %}
-                  <span class="pp-product-card__badge">In stock</span>
+                <span class="pp-product-card__badge">In stock</span>
                 {% endif %}
                 {% with hero_image=product.images.first %}
-                  {% if hero_image %}
-                    <img src="{{ hero_image.image.url }}" alt="{{ product.name }}" loading="lazy" decoding="async"
-                         onerror="this.onerror=null;this.src='{{ product_fallback }}';">
-                  {% else %}
-                    <img src="{{ product_fallback }}" alt="{{ product.name }}" loading="lazy" decoding="async">
-                  {% endif %}
+                <img src="{{ hero_image.image.url|default:product_fallback }}" alt="{{ product.name }}" loading="lazy">
                 {% endwith %}
               </a>
               <div class="pp-product-card__body">
                 <h3>{{ product.name }}</h3>
                 <p>{{ product.short_description|default:product.description|truncatechars:60 }}</p>
                 {% with slug_lower=product.slug|lower name_lower=product.name|lower %}
-                  {% if product.price_tiers.exists %}
-                    {% with first_tier=product.price_tiers.first %}
-                      <div class="pp-product-card__price">{{ product.currency }} {{ first_tier.price|intcomma }}</div>
-                    {% endwith %}
-                    {% if product.price_tiers.count > 1 %}
-                      {% with last_tier=product.price_tiers.last %}
-                        <div class="pp-product-card__tier-note">20+ units: {{ product.currency }} {{ last_tier.price|intcomma }}</div>
-                      {% endwith %}
-                    {% endif %}
-                  {% elif "d2pro" in slug_lower or "d2pro" in name_lower %}
-                    <div class="pp-product-card__price">NGN 320,000</div>
-                    <div class="pp-product-card__tier-note">20+ units: NGN 280,000</div>
-                  {% elif product.price %}
-                    <div class="pp-product-card__price">{{ product.currency }} {{ product.price|intcomma }}</div>
-                  {% else %}
-                    <div class="pp-product-card__price">On request</div>
-                  {% endif %}
+                {% if product.price_tiers.exists %}
+                {% with first_tier=product.price_tiers.first %}
+                <div class="pp-product-card__price">{{ product.currency }} {{ first_tier.price|intcomma }}</div>
+                {% endwith %}
+                {% if product.price_tiers.count > 1 %}
+                {% with last_tier=product.price_tiers.last %}
+                <div class="pp-product-card__tier-note">20+ units: {{ product.currency }} {{ last_tier.price|intcomma }}</div>
+                {% endwith %}
+                {% endif %}
+                {% elif "d2pro" in slug_lower or "d2pro" in name_lower %}
+                <div class="pp-product-card__price">NGN 320,000</div>
+                <div class="pp-product-card__tier-note">20+ units: NGN 280,000</div>
+                {% elif product.price %}
+                <div class="pp-product-card__price">{{ product.currency }} {{ product.price|intcomma }}</div>
+                {% else %}
+                <div class="pp-product-card__price">On request</div>
+                {% endif %}
                 {% endwith %}
                 <div class="pp-product-card__chips">
                   {% for cat in product.categories.all|slice:":3" %}
-                    <span class="pp-product-chip">{{ cat.name }}</span>
+                  <span class="pp-product-chip">{{ cat.name }}</span>
                   {% empty %}
-                    <span class="pp-product-chip">Smart lock</span>
+                  <span class="pp-product-chip">Smart lock</span>
                   {% endfor %}
                 </div>
               </div>
               <div class="pp-product-card__actions">
                 <a href="{% url 'product_detail_products' product.slug %}" class="pp-products__btn pp-products__btn--primary">View details</a>
-                <button type="button" class="pp-products__btn pp-products__btn--ghost" data-add-to-cart data-product-id="{{ product.id }}">Add to cart</button>
-                <button type="button" class="pp-products__btn pp-products__btn--ghost" data-wishlist-toggle data-product-id="{{ product.id }}">
-                  <i class="fa-regular fa-heart" aria-hidden="true"></i>
-                  <span>Add to wishlist</span>
+                <button type="button" class="pp-products__btn pp-products__btn--ghost" data-add-to-cart
+                  data-product-id="{{ product.id }}">
+                  <i class="fa-regular fa-heart"></i>
                 </button>
               </div>
             </article>
             {% empty %}
             <div class="pp-products__empty">
-              <p>No products found. Try adjusting your filters.</p>
-              <a href="{% url 'products' %}" class="pp-btn pp-btn-primary">Reset filters</a>
+              <p class="text-muted">No products found. Try adjusting your filters.</p>
+              <a href="{% url 'products' %}" class="pp-products__btn pp-products__btn--primary">Reset filters</a>
             </div>
             {% endfor %}
           </div>
 
           {% if pagination.total_pages > 1 %}
           <nav class="pp-products__pagination" aria-label="Products pagination">
-            <a class="pp-products__page" href="?page={{ pagination.prev_page }}{% if pagination.querystring %}&{{ pagination.querystring }}{% endif %}">Prev</a>
+            <a class="pp-products__page"
+              href="?page={{ pagination.prev_page }}{% if pagination.querystring %}&{{ pagination.querystring }}{% endif %}">Prev</a>
             <span>Page {{ pagination.page }} of {{ pagination.total_pages }}</span>
-            <a class="pp-products__page" href="?page={{ pagination.next_page }}{% if pagination.querystring %}&{{ pagination.querystring }}{% endif %}">Next</a>
+            <a class="pp-products__page"
+              href="?page={{ pagination.next_page }}{% if pagination.querystring %}&{{ pagination.querystring }}{% endif %}">Next</a>
           </nav>
           {% endif %}
         </section>
       </form>
     </div>
   </section>
-</main>
+</div>
 
 <script>
   (function () {

@@ -299,7 +299,7 @@ html[data-theme="dark"] .feature-tag {
 html {
   font-size: 16px;
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  scroll-padding-top: var(--pp-header-h, 72px);
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
@@ -317,6 +317,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
 .section-anchor {
@@ -1157,7 +1159,7 @@ pre {
 
 .hero {
   position: relative;
-  padding: var(--space-20) 0 var(--space-32);
+  padding: 0 0 32px;
   background: #ffffff;
   color: var(--text-dark);
   overflow: hidden;

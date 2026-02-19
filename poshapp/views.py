@@ -1,19 +1,31 @@
 import json
 import logging
 from django.conf import settings
-from django.contrib.auth import login
+from django.contrib.auth import login, logout as auth_logout
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.tokens import default_token_generator
 from django.db import models, transaction
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.text import slugify
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from django.utils.crypto import get_random_string
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .forms import CheckoutForm, OrderTrackingForm, SignUpForm
-from .models import Category, Order, OrderItem, Product, User
+from .models import (
+    Category,
+    Order,
+    OrderItem,
+    Product,
+    ProductImage,
+    ProductPriceTier,
+    SiteSettings,
+    User,
+)
 from .cart import cart_summary, get_cart
 from .payments import (
     PaystackError,
@@ -30,6 +42,14 @@ from .emails import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+def logout_view(request):
+    """Allow GET/POST logout to avoid 405 when users click header link."""
+    if request.method in {"GET", "POST"}:
+        auth_logout(request)
+        return redirect("home")
+    return JsonResponse({"error": "Method not allowed"}, status=405)
 
 
 def _get_shop_queryset(request, exclude_id=None):
@@ -157,16 +177,15 @@ def _get_or_create_user_from_checkout(email, full_name, phone):
     first_name = name_parts[0] if name_parts else ""
     last_name = name_parts[1] if len(name_parts) > 1 else ""
     
+    temp_password = get_random_string(length=12)
     user = User.objects.create_user(
         username=username,
         email=email,
         first_name=first_name,
         last_name=last_name,
         phone_number=phone,
+        password=temp_password,
     )
-    temp_password = User.objects.make_random_password(length=12)
-    user.set_password(temp_password)
-    user.save()
 
     from django.conf import settings
     uid = urlsafe_base64_encode(force_bytes(user.pk))
@@ -882,3 +901,368 @@ def wishlist_api_add_all_to_cart(request):
         
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+
+
+@staff_member_required
+@ensure_csrf_cookie
+def poshadmin_view(request):
+    """Serve the lightweight hash-routed admin UI (staff only)."""
+    return render(request, "poshadmin.html")
+
+
+# ===============================
+# Staff JSON APIs for admin UI
+# ===============================
+
+def _serialize_product(p: Product):
+    first_img = p.images.first()
+    return {
+        "id": p.id,
+        "name": p.name,
+        "slug": p.slug,
+        "sku": p.sku,
+        "description": p.description,
+        "short_description": p.short_description,
+        "price": p.price or 0,
+        "compare_at_price": p.compare_at_price or 0,
+        "currency": p.currency,
+        "stock": p.stock_quantity,
+        "low_stock_threshold": getattr(p, "low_stock_threshold", 3),
+        "status": "archived" if getattr(p, "is_archived", False) else ("active" if p.is_active else "inactive"),
+        "updated_at": p.updated_at,
+        "image": first_img.image.url if first_img else "",
+        "primary_image_url": first_img.image.url if first_img else "",
+        "images": [
+            {
+                "id": img.id,
+                "url": img.image.url,
+                "order": img.display_order,
+                "is_primary": img.is_primary,
+            }
+            for img in p.images.all().order_by("display_order")
+        ],
+        "category_names": [c.name for c in p.categories.all()],
+        "category_ids": list(p.categories.values_list("id", flat=True)),
+        "tiers": [
+            {"min_qty": t.min_quantity, "price": t.price, "currency": t.currency}
+            for t in p.price_tiers.all()
+        ],
+    }
+
+
+@staff_member_required
+def poshadmin_api_products(request):
+    qs = Product.objects.prefetch_related("images", "categories", "price_tiers").all()
+    q = request.GET.get("q", "").strip()
+    status = request.GET.get("status")
+    low_stock = request.GET.get("low_stock")
+    if q:
+        qs = qs.filter(models.Q(name__icontains=q) | models.Q(sku__icontains=q))
+    if status == "active":
+        qs = qs.filter(is_active=True, is_archived=False)
+    elif status == "archived":
+        qs = qs.filter(is_archived=True)
+    elif status == "inactive":
+        qs = qs.filter(is_active=False, is_archived=False)
+    if low_stock in {"1", "true", "yes", "on"}:
+        qs = qs.filter(stock_quantity__lte=models.F("low_stock_threshold"))
+
+    data = [_serialize_product(p) for p in qs.order_by("-updated_at")[:200]]
+    return JsonResponse({"results": data})
+
+
+def _apply_product_payload(product: Product, payload: dict):
+    product.name = payload.get("name", product.name)
+    product.slug = payload.get("slug") or slugify(product.name)
+    product.sku = payload.get("sku") or product.sku or f"SKU-{product.id or ''}"
+    product.description = payload.get("description", product.description or "")
+    product.short_description = payload.get("short_description", product.short_description or "")[:255]
+    price_val = payload.get("price")
+    product.price = price_val if price_val is not None else product.price
+    compare_val = payload.get("compare_at_price")
+    product.compare_at_price = compare_val if compare_val is not None else product.compare_at_price
+    product.currency = payload.get("currency", product.currency or "NGN")
+    product.stock_quantity = payload.get("stock", product.stock_quantity)
+    product.low_stock_threshold = payload.get(
+        "low_stock_threshold", getattr(product, "low_stock_threshold", 3)
+    )
+    status = payload.get("status")
+    if status == "archived":
+        product.is_archived = True
+        product.is_active = False
+    elif status == "inactive":
+        product.is_archived = False
+        product.is_active = False
+    elif status:
+        product.is_archived = False
+        product.is_active = True
+    product.save()
+    # categories
+    category_ids = payload.get("category_ids")
+    if category_ids is not None:
+        product.categories.set(Category.objects.filter(id__in=category_ids))
+    # tiers
+    tiers = payload.get("tiers")
+    if tiers is not None:
+        product.price_tiers.all().delete()
+        for t in tiers:
+            min_qty = int(t.get("min_qty", 1))
+            price = t.get("price")
+            currency = t.get("currency", product.currency)
+            if price is None:
+                continue
+            ProductPriceTier.objects.create(
+                product=product,
+                min_quantity=min_qty,
+                price=price,
+                currency=currency,
+            )
+
+
+@staff_member_required
+def poshadmin_api_product_create(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=405)
+    try:
+        payload = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    product = Product()
+    _apply_product_payload(product, payload)
+    return JsonResponse({"product": _serialize_product(product)})
+
+
+@staff_member_required
+def poshadmin_api_product_update(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method not in {"PUT", "PATCH"}:
+        return JsonResponse({"error": "PUT/PATCH required"}, status=405)
+    try:
+        payload = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    _apply_product_payload(product, payload)
+    return JsonResponse({"product": _serialize_product(product)})
+
+
+@staff_member_required
+def poshadmin_api_product_status(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method != "PATCH":
+        return JsonResponse({"error": "PATCH required"}, status=405)
+    try:
+        payload = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    status = payload.get("status")
+    if status == "archived":
+        product.is_archived = True
+        product.is_active = False
+    elif status == "inactive":
+        product.is_archived = False
+        product.is_active = False
+    elif status == "active":
+        product.is_archived = False
+        product.is_active = True
+    product.save(update_fields=["is_archived", "is_active"])
+    return JsonResponse({"product": _serialize_product(product)})
+
+
+@staff_member_required
+@csrf_exempt  # allow multipart without explicit CSRF header
+def poshadmin_api_product_images_upload(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=405)
+    files = request.FILES.getlist("images") or request.FILES.getlist("file")
+    if not files:
+        return JsonResponse({"error": "No files uploaded"}, status=400)
+    if product.images.count() + len(files) > 8:
+        return JsonResponse({"error": "Max 8 images allowed"}, status=400)
+    created = []
+    order_base = product.images.count()
+    for idx, f in enumerate(files):
+        if f.content_type not in {"image/jpeg", "image/png"}:
+            continue
+        if f.size > 5 * 1024 * 1024:
+            continue
+        img = ProductImage.objects.create(
+            product=product,
+            image=f,
+            display_order=order_base + idx,
+            is_primary=False,
+        )
+        created.append({"id": img.id, "url": img.image.url, "order": img.display_order})
+    # Ensure primary exists
+    if not product.images.filter(is_primary=True).exists():
+        first = product.images.order_by("display_order").first()
+        if first:
+            first.is_primary = True
+            first.save(update_fields=["is_primary"])
+    return JsonResponse({"images": created})
+
+
+@staff_member_required
+def poshadmin_api_product_images_order(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method != "PATCH":
+        return JsonResponse({"error": "PATCH required"}, status=405)
+    try:
+        payload = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    order = payload.get("order", [])
+    for idx, img_id in enumerate(order):
+        ProductImage.objects.filter(product=product, id=img_id).update(display_order=idx)
+    return JsonResponse({"success": True})
+
+
+@staff_member_required
+def poshadmin_api_product_images_delete(request, pk, image_id):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method != "DELETE":
+        return JsonResponse({"error": "DELETE required"}, status=405)
+    ProductImage.objects.filter(product=product, id=image_id).delete()
+    # Reset primary if needed
+    if not product.images.filter(is_primary=True).exists():
+        first = product.images.order_by("display_order").first()
+        if first:
+            first.is_primary = True
+            first.save(update_fields=["is_primary"])
+    return JsonResponse({"success": True})
+
+
+@staff_member_required
+def poshadmin_api_orders(request):
+    status = request.GET.get("status")
+    qs = Order.objects.prefetch_related("items").all()
+    if status and status != "all":
+        qs = qs.filter(status=status)
+    data = []
+    for o in qs.order_by("-created_at")[:200]:
+        data.append({
+            "id": o.id,
+            "customer": o.full_name,
+            "email": o.email,
+            "total": o.total or o.amount or o.subtotal,
+            "currency": o.currency,
+            "status": o.status,
+            "payment_status": o.payment_status,
+            "internal_note": o.internal_note,
+            "date": o.created_at,
+            "items_count": o.items.count(),
+        })
+    return JsonResponse({"results": data})
+
+
+@staff_member_required
+def poshadmin_api_customers(request):
+    q = request.GET.get("q", "").strip()
+    qs = User.objects.filter(is_staff=False)
+    if q:
+        qs = qs.filter(models.Q(username__icontains=q) | models.Q(email__icontains=q) | models.Q(first_name__icontains=q) | models.Q(last_name__icontains=q))
+    data = []
+    for u in qs.order_by("-date_joined")[:200]:
+        data.append({
+            "id": u.id,
+            "name": (u.get_full_name() or u.username),
+            "email": u.email,
+            "phone": getattr(u, "phone_number", ""),
+            "joined": u.date_joined,
+            "status": "disabled" if not u.is_active else "active",
+        })
+    return JsonResponse({"results": data})
+
+
+# --------------------------
+# Additional admin endpoints
+# --------------------------
+
+def _get_sitesettings():
+    obj, _ = SiteSettings.objects.get_or_create(id=1)
+    return obj
+
+
+@staff_member_required
+def poshadmin_api_settings(request):
+    settings_obj = _get_sitesettings()
+    if request.method == "GET":
+        return JsonResponse({
+            "store_name": settings_obj.store_name,
+            "support_email": settings_obj.support_email,
+            "default_currency": settings_obj.default_currency,
+            "low_stock_threshold": settings_obj.low_stock_threshold,
+        })
+    if request.method == "POST":
+        try:
+            payload = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+        settings_obj.store_name = payload.get("store_name", settings_obj.store_name)
+        settings_obj.support_email = payload.get("support_email", settings_obj.support_email)
+        settings_obj.default_currency = payload.get("default_currency", settings_obj.default_currency)
+        settings_obj.low_stock_threshold = payload.get("low_stock_threshold", settings_obj.low_stock_threshold)
+        settings_obj.save()
+        return JsonResponse({"success": True})
+    return JsonResponse({"error": "Method not allowed"}, status=405)
+
+
+@staff_member_required
+def poshadmin_api_order_update(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    if request.method != "PATCH":
+        return JsonResponse({"error": "PATCH required"}, status=405)
+    try:
+        payload = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    allowed_status = {c[0] for c in Order.STATUS_CHOICES}
+    new_status = payload.get("status")
+    if new_status in allowed_status:
+        order.status = new_status
+    payment_status = payload.get("payment_status")
+    allowed_payment = {c[0] for c in Order.PAYMENT_STATUS_CHOICES}
+    if payment_status in allowed_payment:
+        order.payment_status = payment_status
+    if payload.get("internal_note") is not None:
+        order.internal_note = payload.get("internal_note", "")
+    order.save()
+    return JsonResponse({"order": {
+        "id": order.id,
+        "status": order.status,
+        "payment_status": order.payment_status,
+        "internal_note": order.internal_note,
+    }})
+
+
+@staff_member_required
+def poshadmin_api_order_resend(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=405)
+    send_order_received_email(order)
+    return JsonResponse({"success": True})
+
+
+@staff_member_required
+def poshadmin_api_customer_status(request, pk):
+    user = get_object_or_404(User, pk=pk, is_staff=False)
+    if request.method != "PATCH":
+        return JsonResponse({"error": "PATCH required"}, status=405)
+    try:
+        payload = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    action = payload.get("status")
+    if action == "disable":
+        user.is_active = False
+    elif action == "enable":
+        user.is_active = True
+    user.save(update_fields=["is_active"])
+    return JsonResponse({"id": user.id, "status": "disabled" if not user.is_active else "active"})
+
+
+@staff_member_required
+def poshadmin_api_categories(request):
+    data = [{"id": c.id, "name": c.name} for c in Category.objects.filter(is_active=True).order_by("name")]
+    return JsonResponse({"results": data})

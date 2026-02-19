@@ -5,12 +5,11 @@
 {% block title %}Compare Products - PoshPearl{% endblock %}
 
 {% block content %}
-<main class="pp-section">
+<main class="section">
     <div class="container">
-
         <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb" class="pp-stack-md">
-            <ol class="breadcrumb">
+        <nav aria-label="breadcrumb" class="stack">
+            <ol class="breadcrumb" style="display: flex; gap: var(--space-2); list-style: none; padding: 0;">
                 <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'products' %}">Shop</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Compare</li>
@@ -18,12 +17,12 @@
         </nav>
 
         <!-- Header -->
-        <div class="row pp-stack-lg">
-            <div class="col">
+        <div class="flex" style="justify-content: space-between; align-items: center; margin-bottom: var(--space-8);">
+            <div>
                 <h1 class="h2 fw-bold text-gradient-gold">Product Comparison</h1>
                 <p class="text-secondary">Compare up to 4 products side-by-side to find the perfect fit</p>
             </div>
-            <div class="col-auto">
+            <div>
                 <a href="{% url 'products' %}" class="btn btn-outline-secondary">
                     <i class="fa-solid fa-plus me-2"></i>
                     Add More Products
@@ -32,7 +31,7 @@
         </div>
 
         <!-- Empty State -->
-        <div id="emptyState" class="text-center pp-section" style="display: none;">
+        <div id="emptyState" class="text-center section" style="display: none;">
             <div class="card glass-effect border-0 p-5">
                 <i class="fa-solid fa-code-compare fa-3x text-gold mb-3"></i>
                 <h3 class="h4 mb-3">No Products to Compare</h3>
@@ -106,13 +105,12 @@
         </div>
 
         <!-- Actions -->
-        <div id="comparisonActions" class="pp-mt-md text-center" style="display: none;">
+        <div id="comparisonActions" class="text-center" style="display: none; margin-top: var(--space-4);">
             <button id="clearAll" class="btn btn-outline-danger">
                 <i class="fa-solid fa-trash me-2"></i>
                 Clear All
             </button>
         </div>
-
     </div>
 </main>
 

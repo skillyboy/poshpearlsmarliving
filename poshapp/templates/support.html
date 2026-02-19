@@ -10,47 +10,56 @@
 {% endblock %}
 
 {% block content %}
-<section class="pp-shell">
+<section class="section">
     <div class="container">
-        <div class="pp-support-hero">
+        <div class="text-center stack" style="max-width: 600px; margin: 0 auto;">
             <p class="pp-pill"><i class="fa-solid fa-headset"></i> Support</p>
             <h1 class="pp-section-title">How can we help you?</h1>
-            <div class="pp-support-search">
+            <div class="pp-support-search flex" style="justify-content: center; margin-top: var(--space-4);">
+                <label for="support-search" class="sr-only">Search support</label>
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search for answers...">
+                <input id="support-search" type="text" placeholder="Search for answers..." class="pp-input"
+                    style="max-width: 400px;">
             </div>
         </div>
 
-        <div class="pp-support-grid">
-            <div class="pp-card pp-support-card">
+        <div class="grid" style="grid-template-columns: repeat(4, 1fr); margin-top: var(--space-8);">
+            <div class="pp-card text-center">
                 <h3>Getting Started</h3>
-                <p class="pp-muted">Guides for setup and first use.</p>
+                <p class="text-muted">Guides for setup and first use.</p>
             </div>
-            <div class="pp-card pp-support-card">
+            <div class="pp-card text-center">
                 <h3>Managing Devices</h3>
-                <p class="pp-muted">Control devices and manage access.</p>
+                <p class="text-muted">Control devices and manage access.</p>
             </div>
-            <div class="pp-card pp-support-card">
+            <div class="pp-card text-center">
                 <h3>Account & Billing</h3>
-                <p class="pp-muted">Orders, payments, and invoices.</p>
+                <p class="text-muted">Orders, payments, and invoices.</p>
             </div>
-            <div class="pp-card pp-support-card">
+            <div class="pp-card text-center">
                 <h3>Troubleshooting</h3>
-                <p class="pp-muted">Resolve common issues quickly.</p>
+                <p class="text-muted">Resolve common issues quickly.</p>
             </div>
         </div>
 
-        <div class="pp-support-articles">
+        <div class="pp-card stack" style="margin-top: var(--space-6);">
             <h3>Popular Articles</h3>
-            <div class="pp-support-article">How to set up your smart lock</div>
-            <div class="pp-support-article">Create automation scenes</div>
-            <div class="pp-support-article">Update your account information</div>
+            <div class="stack">
+                <div class="pp-support-article"
+                    style="padding: var(--space-2); border-bottom: 1px solid var(--color-border);">How to set up your
+                    smart lock</div>
+                <div class="pp-support-article"
+                    style="padding: var(--space-2); border-bottom: 1px solid var(--color-border);">Create automation
+                    scenes</div>
+                <div class="pp-support-article" style="padding: var(--space-2);">Update your account information</div>
+            </div>
         </div>
 
-        <div class="pp-track-links" style="margin-top: 20px;">
-            <a class="pp-btn-secondary" href="https://wa.me/2347041087502" target="_blank" rel="noopener">WhatsApp</a>
-            <a class="pp-btn-secondary" href="mailto:support@poshpearl.com">Email Support</a>
-            <a class="pp-btn-secondary" href="tel:07041087502">Call Support</a>
+        <div class="flex" style="justify-content: center; margin-top: var(--space-6); gap: var(--space-3);">
+            <a class="pp-btn pp-btn--secondary" href="https://wa.me/2347041087502" target="_blank"
+                rel="noopener">WhatsApp</a>
+            <a class="pp-btn pp-btn--secondary" href="mailto:support@poshpearl.com">Email Support</a>
+            <a class="pp-btn pp-btn--secondary" href="tel:07041087502">Call Support</a>
         </div>
     </div>
 </section>

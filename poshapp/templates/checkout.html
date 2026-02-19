@@ -11,107 +11,117 @@
 {% endblock %}
 
 {% block content %}
-<section class="pp-shell">
+<section class="section">
     <div class="container">
-        <div class="pp-commerce-header">
-            <div>
-                <p class="pp-pill"><i class="fa-solid fa-credit-card"></i> Checkout</p>
-                <h1 class="pp-section-title">Checkout</h1>
-                <p class="pp-section-subtitle">Complete your order securely with Paystack.</p>
-            </div>
+        <div class="text-center stack" style="margin-bottom: var(--space-8);">
+            <p class="pp-pill"><i class="fa-solid fa-credit-card"></i> Checkout</p>
+            <h1 class="pp-section-title">Checkout</h1>
+            <p class="text-muted">Complete your order securely with Paystack.</p>
         </div>
 
         {% if empty_cart %}
-        <div class="pp-card pp-status-card">
-            <div class="pp-status-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+        <div class="pp-card text-center stack" style="max-width: 500px; margin: 0 auto;">
+            <i class="fa-solid fa-cart-shopping" style="font-size: 3rem; color: var(--color-accent);"></i>
             <h2>Your cart is empty</h2>
-            <p class="pp-muted">Add products before proceeding to checkout.</p>
-            <div class="pp-status-actions">
-                <a class="pp-btn-primary" href="{% url 'products' %}">Browse products</a>
+            <p class="text-muted">Add products before proceeding to checkout.</p>
+            <div>
+                <a class="pp-btn pp-btn--primary" href="{% url 'products' %}">Browse products</a>
             </div>
         </div>
         {% elif order %}
-        <div class="pp-card pp-status-card">
-            <div class="pp-status-icon"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="pp-card text-center stack" style="max-width: 500px; margin: 0 auto;">
+            <i class="fa-solid fa-circle-check" style="font-size: 3rem; color: var(--color-success);"></i>
             {% if order.payment_status == "paid" %}
             <h2>Payment successful</h2>
-            <p class="pp-muted">Your order #{{ order.id }} is confirmed.</p>
+            <p class="text-muted">Your order #{{ order.id }} is confirmed.</p>
             {% else %}
             <h2>Order received</h2>
-            <p class="pp-muted">Your order #{{ order.id }} is being processed.</p>
+            <p class="text-muted">Your order #{{ order.id }} is being processed.</p>
             {% endif %}
-            <div class="pp-divider"></div>
-            <div class="pp-summary-line"><span>Order total</span><strong>{{ order.currency }} {{ order.subtotal|intcomma }}</strong></div>
-            <div class="pp-status-actions">
-                <a class="pp-btn-primary" href="{% url 'track_order' %}">Track order</a>
-                <a class="pp-btn-secondary" href="{% url 'products' %}">Continue shopping</a>
+            <hr style="border: none; border-top: 1px solid var(--color-border); width: 100%;">
+            <div class="flex" style="justify-content: space-between; width: 100%;">
+                <span>Order total</span>
+                <strong>{{ order.currency }} {{ order.subtotal|intcomma }}</strong>
+            </div>
+            <div class="flex">
+                <a class="pp-btn pp-btn--primary" href="{% url 'track_order' %}">Track order</a>
+                <a class="pp-btn pp-btn--secondary" href="{% url 'products' %}">Continue shopping</a>
             </div>
         </div>
         {% else %}
-        <div class="pp-checkout-steps">
-            <span class="pp-checkout-step">1 Shipping</span>
-            <span class="pp-checkout-step">2 Review</span>
-            <span class="pp-checkout-step">3 Pay</span>
+        <div class="flex" style="justify-content: center; gap: var(--space-2); margin-bottom: var(--space-6);">
+            <span class="pp-pill">1 Shipping</span>
+            <span class="pp-pill">2 Review</span>
+            <span class="pp-pill">3 Pay</span>
         </div>
-        <div class="pp-checkout-grid">
-            <form method="post" action="{% url 'payment_initialize' %}" class="pp-card pp-checkout-form">
+
+        <div class="grid" style="grid-template-columns: 2fr 1fr;">
+            <form method="post" action="{% url 'payment_initialize' %}" class="pp-card stack">
                 {% csrf_token %}
                 {% if payment_error %}
-                <div class="pp-track-alert is-error">
-                    <i class="fa-solid fa-circle-exclamation"></i>
+                <div class="pp-card" style="background: rgba(211, 47, 47, 0.1); border-color: var(--color-danger);">
+                    <i class="fa-solid fa-circle-exclamation" style="color: var(--color-danger);"></i>
                     <span>{{ payment_error }}</span>
                     {% if order_id %}
-                    <div class="pp-muted">Order ID: #{{ order_id }}</div>
+                    <div class="text-muted">Order ID: #{{ order_id }}</div>
                     {% endif %}
                 </div>
                 {% endif %}
 
-                <label class="pp-track-label" for="{{ form.full_name.id_for_label }}">Full name</label>
+                <label class="pp-label" for="{{ form.full_name.id_for_label }}">Full name</label>
                 {{ form.full_name }}
                 {% if form.full_name.errors %}
-                <div class="pp-track-error">{{ form.full_name.errors|striptags }}</div>
+                <div class="text-muted" style="color: var(--color-danger);">{{ form.full_name.errors|striptags }}</div>
                 {% endif %}
 
-                <label class="pp-track-label" for="{{ form.email.id_for_label }}">Email address</label>
+                <label class="pp-label" for="{{ form.email.id_for_label }}">Email address</label>
                 {{ form.email }}
                 {% if form.email.errors %}
-                <div class="pp-track-error">{{ form.email.errors|striptags }}</div>
+                <div class="text-muted" style="color: var(--color-danger);">{{ form.email.errors|striptags }}</div>
                 {% endif %}
 
-                <label class="pp-track-label" for="{{ form.phone.id_for_label }}">Phone number</label>
+                <label class="pp-label" for="{{ form.phone.id_for_label }}">Phone number</label>
                 {{ form.phone }}
                 {% if form.phone.errors %}
-                <div class="pp-track-error">{{ form.phone.errors|striptags }}</div>
+                <div class="text-muted" style="color: var(--color-danger);">{{ form.phone.errors|striptags }}</div>
                 {% endif %}
 
-                <label class="pp-track-label" for="{{ form.address.id_for_label }}">Delivery address</label>
+                <label class="pp-label" for="{{ form.address.id_for_label }}">Delivery address</label>
                 {{ form.address }}
                 {% if form.address.errors %}
-                <div class="pp-track-error">{{ form.address.errors|striptags }}</div>
+                <div class="text-muted" style="color: var(--color-danger);">{{ form.address.errors|striptags }}</div>
                 {% endif %}
 
-                <label class="pp-track-label" for="{{ form.notes.id_for_label }}">Order notes (optional)</label>
+                <label class="pp-label" for="{{ form.notes.id_for_label }}">Order notes (optional)</label>
                 {{ form.notes }}
 
-                <button class="pp-btn-primary" type="submit">Proceed to payment</button>
-                <p class="pp-muted">You will be redirected to Paystack to complete payment.</p>
+                <button class="pp-btn pp-btn--primary" type="submit">Proceed to payment</button>
+                <p class="text-muted">You will be redirected to Paystack to complete payment.</p>
             </form>
 
-            <aside class="pp-card pp-summary-card">
+            <aside class="pp-card stack">
                 <h2>Order summary</h2>
                 {% for item in cart.items %}
-                <div class="pp-summary-line">
+                <div class="flex" style="justify-content: space-between;">
                     <span>{{ item.name }} x {{ item.quantity }}</span>
                     <strong>{{ item.currency }} {{ item.line_total|intcomma }}</strong>
                 </div>
                 {% endfor %}
-                <div class="pp-divider"></div>
-                <div class="pp-summary-line"><span>Subtotal</span><strong>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong></div>
-                <div class="pp-summary-line"><span>Delivery</span><span>Calculated at checkout</span></div>
-                <div class="pp-summary-total"><span>Total</span><strong>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong></div>
-                <div class="pp-summary-actions">
-                    <a class="pp-btn-secondary" href="{% url 'cart' %}">Back to cart</a>
+                <hr style="border: none; border-top: 1px solid var(--color-border);">
+                <div class="flex" style="justify-content: space-between;">
+                    <span>Subtotal</span>
+                    <strong>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong>
                 </div>
+                <div class="flex" style="justify-content: space-between;">
+                    <span>Delivery</span>
+                    <span class="text-muted">Calculated at checkout</span>
+                </div>
+                <hr style="border: none; border-top: 1px solid var(--color-border);">
+                <div class="flex" style="justify-content: space-between;">
+                    <span>Total</span>
+                    <strong>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong>
+                </div>
+                <a class="pp-btn pp-btn--secondary" href="{% url 'cart' %}">Back to cart</a>
             </aside>
         </div>
         {% endif %}

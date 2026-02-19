@@ -11,73 +11,77 @@
 {% endblock %}
 
 {% block content %}
-<section class="pp-shell">
+<section class="section">
     {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
     <div class="container">
-        <div class="pp-commerce-header">
-            <div>
+        <div class="flex" style="justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-8);">
+            <div class="stack">
                 <p class="pp-pill"><i class="fa-solid fa-bag-shopping"></i> Cart</p>
                 <h1 class="pp-section-title">Your Cart</h1>
-                <p class="pp-section-subtitle">Review your items and proceed to checkout.</p>
+                <p class="text-muted">Review your items and proceed to checkout.</p>
             </div>
-            <a class="pp-btn-secondary" href="{% url 'products' %}">Continue shopping</a>
+            <a class="pp-btn pp-btn--secondary" href="{% url 'products' %}">Continue shopping</a>
         </div>
 
         {% if cart.items %}
-        <div class="pp-commerce-grid">
-            <div class="pp-cart-list">
+        <div class="grid" style="grid-template-columns: 2fr 1fr;">
+            <div class="stack">
                 {% for item in cart.items %}
-                <div class="pp-cart-item" data-cart-item data-item-id="{{ item.id }}">
-                    <div class="pp-cart-item__media">
-                        <img src="{{ item.image|default:product_fallback }}" alt="{{ item.name }}" loading="lazy" decoding="async"
-                            onerror="this.onerror=null;this.src='{{ product_fallback }}';">
-                    </div>
+                <div class="pp-card" data-cart-item data-item-id="{{ item.id }}"
+                    style="display: grid; grid-template-columns: 100px 1fr auto; gap: var(--space-4); align-items: center;">
+                    <img src="{{ item.image|default:product_fallback }}" alt="{{ item.name }}"
+                        style="width: 100%; height: 80px; object-fit: contain; border-radius: var(--radius-sm);">
                     <div>
-                        <div class="pp-cart-item__title">{{ item.name }}</div>
-                        <div class="pp-cart-item__meta">{{ item.currency }} {{ item.unit_price|intcomma }} per unit</div>
-                        <div class="pp-qty" aria-label="Quantity">
-                            <button type="button" data-qty-dec>-</button>
-                            <input type="number" min="1" value="{{ item.quantity }}" data-qty-input data-unit-price="{{ item.unit_price }}">
-                            <button type="button" data-qty-inc>+</button>
+                        <strong>{{ item.name }}</strong>
+                        <div class="text-muted">{{ item.currency }} {{ item.unit_price|intcomma }} per unit</div>
+                        <div class="pp-qty flex" style="align-items: center; margin-top: var(--space-2);">
+                            <button class="pp-btn pp-btn--ghost" type="button" data-qty-dec
+                                style="padding: var(--space-1) var(--space-2);">-</button>
+                            <input type="number" min="1" value="{{ item.quantity }}" data-qty-input
+                                data-unit-price="{{ item.unit_price }}"
+                                style="width: 60px; text-align: center; margin: 0 var(--space-1);">
+                            <button class="pp-btn pp-btn--ghost" type="button" data-qty-inc
+                                style="padding: var(--space-1) var(--space-2);">+</button>
                         </div>
-                        <button class="pp-cart-remove" type="button" data-cart-remove>Remove</button>
+                        <button class="pp-btn pp-btn--ghost" type="button" data-cart-remove
+                            style="margin-top: var(--space-1);">Remove</button>
                     </div>
-                    <div class="pp-cart-item__total" data-line-total data-currency="{{ item.currency }}">
-                        <span class="pp-muted">Total</span>
+                    <div class="text-right" data-line-total data-currency="{{ item.currency }}">
+                        <span class="text-muted">Total</span><br>
                         <strong>{{ item.currency }} {{ item.line_total|intcomma }}</strong>
                     </div>
                 </div>
                 {% endfor %}
             </div>
 
-            <aside class="pp-card pp-summary-card">
+            <aside class="pp-card stack">
                 <h2>Summary</h2>
-                <div class="pp-summary-line">
+                <div class="flex" style="justify-content: space-between;">
                     <span>Subtotal</span>
                     <strong>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong>
                 </div>
-                <div class="pp-summary-line">
+                <div class="flex" style="justify-content: space-between;">
                     <span>Delivery estimate</span>
-                    <span>Calculated at checkout</span>
+                    <span class="text-muted">Calculated at checkout</span>
                 </div>
-                <div class="pp-divider"></div>
-                <div class="pp-summary-total">
+                <hr style="border: none; border-top: 1px solid var(--color-border); margin: var(--space-4) 0;">
+                <div class="flex" style="justify-content: space-between;">
                     <span>Total</span>
                     <strong>{{ cart.currency }} {{ cart.subtotal|intcomma }}</strong>
                 </div>
-                <div class="pp-summary-actions">
-                    <a class="pp-btn-primary" href="{% url 'checkout' %}">Proceed to checkout</a>
-                    <a class="pp-btn-secondary" href="{% url 'track_order' %}">Track an order</a>
+                <div class="stack">
+                    <a class="pp-btn pp-btn--primary" href="{% url 'checkout' %}">Proceed to checkout</a>
+                    <a class="pp-btn pp-btn--secondary" href="{% url 'track_order' %}">Track an order</a>
                 </div>
             </aside>
         </div>
         {% else %}
-        <div class="pp-card pp-status-card">
-            <div class="pp-status-icon"><i class="fa-solid fa-basket-shopping"></i></div>
+        <div class="pp-card text-center stack" style="max-width: 500px; margin: 0 auto;">
+            <i class="fa-solid fa-basket-shopping" style="font-size: 3rem; color: var(--color-accent);"></i>
             <h2>Your cart is empty</h2>
-            <p class="pp-muted">Browse products and add items to your cart.</p>
-            <div class="pp-status-actions">
-                <a class="pp-btn-primary" href="{% url 'products' %}">Browse products</a>
+            <p class="text-muted">Browse products and add items to your cart.</p>
+            <div>
+                <a class="pp-btn pp-btn--primary" href="{% url 'products' %}">Browse products</a>
             </div>
         </div>
         {% endif %}
@@ -85,6 +89,7 @@
 </section>
 
 <script>
+    // Quantity logic (keep inline for now, will move to ui.js later)
     document.querySelectorAll('[data-cart-item]').forEach(item => {
         const qtyInput = item.querySelector('[data-qty-input]');
         const qtyDec = item.querySelector('[data-qty-dec]');
@@ -96,7 +101,7 @@
             const qty = parseInt(qtyInput.value, 10) || 1;
             const total = qty * unitPrice;
             const currency = lineTotalEl.dataset.currency || "NGN";
-            lineTotalEl.innerHTML = `<span class="pp-muted">Total</span><strong>${currency} ${total.toLocaleString()}</strong>`;
+            lineTotalEl.innerHTML = `<span class="text-muted">Total</span><br><strong>${currency} ${total.toLocaleString()}</strong>`;
         };
 
         qtyDec?.addEventListener('click', () => {
@@ -117,5 +122,3 @@
     });
 </script>
 {% endblock %}
-
-

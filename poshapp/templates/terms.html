@@ -10,18 +10,16 @@
 {% endblock %}
 
 {% block content %}
-<section class="pp-shell">
+<section class="section">
     <div class="container">
-        <div class="pp-commerce-header">
-            <div>
-                <p class="pp-pill"><i class="fa-solid fa-file"></i> Legal</p>
-                <h1 class="pp-section-title">Terms of Service</h1>
-                <p class="pp-section-subtitle">Last updated: {{ "now"|date:"F d, Y" }}</p>
-            </div>
+        <div class="text-center stack">
+            <p class="pp-pill"><i class="fa-solid fa-file"></i> Legal</p>
+            <h1 class="pp-section-title">Terms of Service</h1>
+            <p class="text-muted">Last updated: {{ "now"|date:"F d, Y" }}</p>
         </div>
 
-        <div class="pp-legal-layout">
-            <aside class="pp-card pp-legal-nav">
+        <div class="grid" style="grid-template-columns: 200px 1fr; gap: var(--space-6); margin-top: var(--space-8);">
+            <aside class="pp-card stack">
                 <a href="#agreement">Agreement</a>
                 <a href="#use">Use of services</a>
                 <a href="#orders">Products and orders</a>
@@ -29,13 +27,14 @@
                 <a href="#returns">Returns</a>
                 <a href="#contact">Contact</a>
             </aside>
-            <article class="pp-card pp-legal-content">
+            <article class="pp-card stack">
                 <h2 id="agreement">1. Agreement to Terms</h2>
-                <p>By accessing and using PoshPearl's website and services, you agree to be bound by these Terms of Service.</p>
+                <p class="text-muted">By accessing and using PoshPearl's website and services, you agree to be bound by
+                    these Terms of Service.</p>
 
                 <h2 id="use">2. Use of Services</h2>
                 <h3>2.1 Eligibility</h3>
-                <p>You must be at least 18 years old to make purchases on our website.</p>
+                <p class="text-muted">You must be at least 18 years old to make purchases on our website.</p>
 
                 <h3>2.2 Account Responsibilities</h3>
                 <ul>
@@ -45,17 +44,20 @@
                 </ul>
 
                 <h2 id="orders">3. Products and Orders</h2>
-                <p>We strive to provide accurate product descriptions and images. Prices and availability may change.</p>
+                <p class="text-muted">We strive to provide accurate product descriptions and images. Prices and
+                    availability may change.</p>
 
                 <h2 id="shipping">4. Shipping and Delivery</h2>
-                <p>Orders are processed within 1-2 business days. Delivery times vary by location.</p>
+                <p class="text-muted">Orders are processed within 1-2 business days. Delivery times vary by location.
+                </p>
 
                 <h2 id="returns">5. Returns and Refunds</h2>
-                <p>Returns are accepted within 7 days of delivery for unopened products. Contact support to initiate a return.</p>
+                <p class="text-muted">Returns are accepted within 7 days of delivery for unopened products. Contact
+                    support to initiate a return.</p>
 
                 <h2 id="contact">6. Contact</h2>
-                <p>Email: support@poshpearl.com</p>
-                <p>Contact form: <a href="{% url 'contact' %}">Contact Us</a></p>
+                <p class="text-muted">Email: support@poshpearl.com</p>
+                <p class="text-muted">Contact form: <a href="{% url 'contact' %}">Contact Us</a></p>
             </article>
         </div>
     </div>

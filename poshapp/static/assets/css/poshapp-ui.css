@@ -19,6 +19,7 @@
     --pp-radius-md: 16px;
     --pp-radius-lg: 24px;
     --pp-transition: 180ms ease;
+    --pp-header-h: 68px;
     --pp-primary: var(--color-primary, #5F1E2C);
     --pp-primary-dark: var(--color-primary-dark, #4A1623);
     --pp-accent: var(--color-secondary, #F4B000);
@@ -43,6 +44,76 @@ body {
     color: var(--pp-text);
     font-family: "Inter", "Outfit", "Manrope", "Poppins", sans-serif;
     margin: 0;
+}
+
+/* =======================
+   Utilities & base tokens
+   ======================= */
+.mt-0 { margin-top: 0 !important; }
+.mb-0 { margin-bottom: 0 !important; }
+.py-2 { padding-block: var(--pp-space-2) !important; }
+.text-muted { color: var(--pp-muted) !important; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.grid-2 { display: grid; gap: var(--pp-space-2); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.grid-3 { display: grid; gap: var(--pp-space-2); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.grid-4 { display: grid; gap: var(--pp-space-2); grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+
+.pp-card {
+    background: var(--pp-surface);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius, 16px);
+    box-shadow: var(--pp-shadow, 0 10px 15px rgba(0,0,0,0.06));
+    padding: var(--pp-space-3);
+}
+
+.pp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+.pp-table th,
+.pp-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--pp-border);
+    text-align: left;
+}
+.pp-table thead th {
+    background: #faf8f6;
+}
+
+.pp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--pp-border);
+    background: var(--pp-surface);
+    font-weight: 600;
+    color: var(--pp-text);
+}
+.pp-btn.primary {
+    background: var(--pp-accent, #F4B000);
+    border-color: var(--pp-accent, #F4B000);
+    color: #402112;
+}
+.pp-btn.ghost {
+    background: transparent;
+}
+.pp-btn.danger {
+    background: #fef2f2;
+    border-color: #fecdd3;
+    color: #b91c1c;
+}
+
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+html {
+    scroll-padding-top: var(--pp-header-h);
 }
 
 h1,
@@ -90,7 +161,10 @@ body.pp-checkout {
 .site-header {
     position: sticky;
     top: 0;
-    z-index: 1000;
+    left: 0;
+    right: 0;
+    z-index: var(--z-sticky, 1000);
+    min-height: var(--pp-header-h);
     background: rgba(255, 255, 255, 0.92);
     border-bottom: 1px solid var(--pp-border);
     backdrop-filter: blur(18px);
@@ -866,7 +940,13 @@ body.cart-open .pp-cart-drawer__panel {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding-inline: var(--pp-space-2);
+}
+
+@media (min-width: 900px) {
+    .container {
+        padding-inline: var(--pp-space-3);
+    }
 }
 
 .pp-section {
@@ -894,8 +974,30 @@ body.cart-open .pp-cart-drawer__panel {
 main#main-content {
     padding-top: 0;
     margin-top: 0;
+    display: flow-root;
+    min-height: calc(100vh - var(--pp-header-h));
 }
 
+main#main-content > section:first-child,
+main#main-content > .pp-section:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+section {
+    padding-block: var(--pp-section-y, 24px);
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: var(--pp-space-2);
+}
+
+@media (min-width: 900px) {
+    .container { padding-inline: var(--pp-space-3); }
+}
 main#main-content > .container:first-child {
     padding-top: 0;
     margin-top: 0;

@@ -28,6 +28,7 @@ urlpatterns = [
     path("", include("poshapp.urls")),
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),  # Login, logout, password reset
+    path("accounts/", include("allauth.urls")),
     path("api/", posh_api.urls),
 ]
 

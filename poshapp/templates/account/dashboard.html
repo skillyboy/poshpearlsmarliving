@@ -11,77 +11,208 @@
 {% endblock %}
 
 {% block content %}
-<section class="pp-shell">
+<section class="section">
     <div class="container">
-        <div class="pp-account-layout">
-            <aside class="pp-card pp-account-sidebar">
-                <div class="pp-account-user">
-                    <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="User">
-                    <div>
-                        <strong>Hi, {{ user.first_name|default:user.username }}</strong>
-                        <div class="pp-muted">{{ user.email }}</div>
+        <!-- Account Layout -->
+        <div class="grid" style="grid-template-columns: 280px 1fr; gap: var(--space-8);">
+            <!-- Sidebar -->
+            <aside class="pp-card stack" style="height: fit-content;">
+                <div class="flex"
+                    style="align-items: center; gap: var(--space-4); padding-bottom: var(--space-4); border-bottom: 1px solid var(--color-border);">
+                    <div
+                        style="width: 48px; height: 48px; background: var(--color-primary); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: var(--text-xl);">
+                        {{ user.first_name|default:user.username|first|upper }}
+                    </div>
+                    <div class="stack" style="gap: 0;">
+                        <strong style="font-size: var(--text-lg);">Hi, {{ user.first_name|default:user.username
+                            }}</strong>
+                        <span class="text-muted" style="font-size: var(--text-sm);">{{ user.email }}</span>
                     </div>
                 </div>
-                <nav class="pp-account-nav">
-                    <a class="is-active" href="{% url 'dashboard' %}"><i class="fa-solid fa-house"></i> Dashboard</a>
-                    <a href="{% url 'user_orders' %}"><i class="fa-solid fa-receipt"></i> Orders</a>
-                    <a href="{% url 'wishlist' %}"><i class="fa-solid fa-heart"></i> Wishlist</a>
-                    <a href="{% url 'track_order' %}"><i class="fa-solid fa-truck"></i> Track order</a>
+
+                <nav class="stack" style="gap: var(--space-1);">
+                    <a href="{% url 'dashboard' %}" class="flex"
+                        style="align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-primary); font-weight: 500;">
+                        <i class="fa-solid fa-house" style="width: 20px;"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="{% url 'user_orders' %}" class="flex"
+                        style="align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); color: var(--color-text-muted); transition: all var(--transition-base);">
+                        <i class="fa-solid fa-receipt" style="width: 20px;"></i>
+                        <span>Orders</span>
+                    </a>
+                    <a href="{% url 'wishlist' %}" class="flex"
+                        style="align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); color: var(--color-text-muted); transition: all var(--transition-base);">
+                        <i class="fa-solid fa-heart" style="width: 20px;"></i>
+                        <span>Wishlist</span>
+                    </a>
+                    <a href="{% url 'track_order' %}" class="flex"
+                        style="align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); color: var(--color-text-muted); transition: all var(--transition-base);">
+                        <i class="fa-solid fa-truck" style="width: 20px;"></i>
+                        <span>Track order</span>
+                    </a>
                 </nav>
-                <a class="pp-btn-secondary" href="{% url 'products' %}">Browse products</a>
+
+                <a href="{% url 'products' %}" class="pp-btn pp-btn--secondary" style="margin-top: var(--space-4);">
+                    <i class="fa-solid fa-arrow-left" style="margin-right: var(--space-2);"></i>
+                    Browse products
+                </a>
             </aside>
 
-            <main>
-                <div class="pp-commerce-header">
-                    <div>
-                        <p class="pp-pill"><i class="fa-solid fa-user"></i> Account</p>
-                        <h1 class="pp-section-title">Welcome back, {{ user.first_name|default:user.username }}</h1>
-                        <p class="pp-section-subtitle">Manage your orders and account settings.</p>
-                    </div>
+            <!-- Main Content -->
+            <main class="stack" style="gap: var(--space-6);">
+                <!-- Header -->
+                <div class="stack" style="gap: var(--space-2);">
+                    <p class="pp-pill" style="width: fit-content;">
+                        <i class="fa-solid fa-user"></i> Account
+                    </p>
+                    <h1 class="pp-section-title">Welcome back, {{ user.first_name|default:user.username }}</h1>
+                    <p class="text-muted">Manage your orders and account settings.</p>
                 </div>
 
-                <div class="pp-account-grid-2">
-                    <div class="pp-card pp-account-card">
+                <!-- Stats Cards -->
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+                    <div class="pp-card stack">
                         <h3>Order summary</h3>
-                        <p class="pp-muted">Total orders: {{ order_count|default:0 }}</p>
+                        <div class="flex" style="justify-content: space-between; align-items: center;">
+                            <span class="text-muted">Total orders:</span>
+                            <strong style="font-size: var(--text-2xl); color: var(--color-primary);">{{
+                                order_count|default:0 }}</strong>
+                        </div>
                         {% if recent_orders %}
-                        <div class="pp-order-tag">Active: {{ recent_orders.0.get_status_display }}</div>
+                        <div class="flex" style="justify-content: space-between; align-items: center;">
+                            <span class="text-muted">Latest status:</span>
+                            <span class="pp-pill" style="background: var(--color-accent); color: white;">{{
+                                recent_orders.0.get_status_display }}</span>
+                        </div>
                         {% else %}
-                        <div class="pp-order-tag">No active orders</div>
+                        <p class="text-muted">No active orders</p>
                         {% endif %}
                     </div>
-                    <div class="pp-card pp-account-card">
+
+                    <div class="pp-card stack">
                         <h3>Support</h3>
-                        <p class="pp-muted">Need help with your order?</p>
-                        <a class="pp-btn-secondary" href="{% url 'support' %}">Get support</a>
+                        <p class="text-muted">Need help with your order?</p>
+                        <a href="{% url 'support' %}" class="pp-btn pp-btn--secondary" style="align-self: flex-start;">
+                            <i class="fa-solid fa-headset"></i>
+                            Get support
+                        </a>
                     </div>
                 </div>
 
-                <div class="pp-card pp-account-card" style="margin-top: 20px;">
-                    <div class="pp-commerce-header">
+                <!-- Recent Orders -->
+                <div class="pp-card stack">
+                    <div class="flex"
+                        style="justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
                         <h2>Recent orders</h2>
-                        <a class="pp-btn-secondary" href="{% url 'user_orders' %}">View all</a>
+                        <a href="{% url 'user_orders' %}" class="pp-btn pp-btn--secondary">View all</a>
                     </div>
+
                     {% if recent_orders %}
-                    <div class="pp-order-list">
+                    <div class="stack" style="gap: var(--space-3);">
                         {% for order in recent_orders %}
-                        <div class="pp-order-row">
-                            <div>
+                        <div class="grid"
+                            style="grid-template-columns: 2fr 1fr 1fr auto; align-items: center; gap: var(--space-4); padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md);">
+                            <div class="stack" style="gap: var(--space-1);">
                                 <strong>Order #{{ order.id }}</strong>
-                                <div class="pp-order-meta">{{ order.created_at|date:"M d, Y" }}</div>
+                                <span class="text-muted" style="font-size: var(--text-sm);">{{ order.created_at|date:"M
+                                    d, Y" }}</span>
                             </div>
-                            <div class="pp-order-tag">{{ order.get_status_display }}</div>
-                            <div class="pp-order-total">{{ order.currency }} {{ order.subtotal|intcomma }}</div>
-                            <a class="pp-btn-secondary" href="{% url 'user_order_detail' order.id %}">View</a>
+                            <div>
+                                <span class="pp-pill" style="background: 
+                                    {% if order.status == 'delivered' %}var(--color-success)
+                                    {% elif order.status == 'cancelled' %}var(--color-danger)
+                                    {% else %}var(--color-accent){% endif %}; 
+                                    color: white;">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </div>
+                            <div>
+                                <strong>{{ order.currency }} {{ order.subtotal|intcomma }}</strong>
+                            </div>
+                            <div>
+                                <a href="{% url 'user_order_detail' order.id %}" class="pp-btn pp-btn--ghost"
+                                    style="padding: var(--space-2) var(--space-3);">
+                                    View <i class="fa-solid fa-arrow-right" style="margin-left: var(--space-1);"></i>
+                                </a>
+                            </div>
                         </div>
                         {% endfor %}
                     </div>
                     {% else %}
-                    <p class="pp-muted">No orders yet.</p>
+                    <div class="text-center stack" style="padding: var(--space-8);">
+                        <i class="fa-solid fa-box-open" style="font-size: 3rem; color: var(--color-text-muted);"></i>
+                        <p class="text-muted">No orders yet.</p>
+                        <a href="{% url 'products' %}" class="pp-btn pp-btn--primary"
+                            style="width: fit-content; margin: 0 auto;">Start shopping</a>
+                    </div>
                     {% endif %}
+                </div>
+
+                <!-- Account Settings Link (optional) -->
+                <div class="pp-card" style="background: var(--color-surface);">
+                    <div class="flex" style="justify-content: space-between; align-items: center;">
+                        <div class="stack" style="gap: var(--space-1);">
+                            <h3>Account settings</h3>
+                            <p class="text-muted">Update your profile, email, or password</p>
+                        </div>
+                        <a href="#" class="pp-btn pp-btn--ghost">Manage account</a>
+                    </div>
                 </div>
             </main>
         </div>
     </div>
 </section>
+
+<style>
+    /* Sidebar navigation hover effects */
+    .pp-account-nav a:hover {
+        background: var(--color-surface);
+        color: var(--color-primary) !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .grid[style*="grid-template-columns: 280px 1fr"] {
+            grid-template-columns: 1fr !important;
+        }
+
+        .grid[style*="grid-template-columns: 2fr 1fr 1fr auto"] {
+            grid-template-columns: 1fr !important;
+            gap: var(--space-2) !important;
+        }
+
+        .grid[style*="grid-template-columns: 2fr 1fr 1fr auto"]>* {
+            text-align: left !important;
+        }
+
+        .grid[style*="grid-template-columns: 2fr 1fr 1fr auto"] .pp-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .grid[style*="grid-template-columns: 1fr 1fr"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+
+<!-- Optional: Add smooth scroll to top -->
+<script>
+    (function () {
+        // Highlight current page in sidebar
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.pp-account-nav a');
+
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.style.background = 'var(--color-surface)';
+                link.style.color = 'var(--color-primary)';
+                link.style.fontWeight = '500';
+            }
+        });
+    })();
+</script>
 {% endblock %}

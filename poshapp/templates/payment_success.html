@@ -11,27 +11,36 @@
 {% endblock %}
 
 {% block content %}
-<section class="pp-shell">
+<section class="section">
     <div class="container">
-        <div class="pp-card pp-status-card">
-            <div class="pp-status-icon"><i class="fa-solid fa-check"></i></div>
+        <div class="pp-card text-center stack" style="max-width: 500px; margin: 0 auto;">
+            <i class="fa-solid fa-check" style="font-size: 3rem; color: var(--color-success);"></i>
             <h1>Payment successful</h1>
-            <p class="pp-muted">Thank you! Your order has been placed and will be processed shortly.</p>
+            <p class="text-muted">Thank you! Your order has been placed and will be processed shortly.</p>
 
             {% if order %}
-            <div class="pp-divider"></div>
-            <div class="pp-summary-line"><span>Order ID</span><strong>#{{ order.id }}</strong></div>
-            <div class="pp-summary-line"><span>Amount</span><strong>{{ order.currency }} {{ order.amount|floatformat:0|intcomma }}</strong></div>
-            <div class="pp-summary-line"><span>Email</span><strong>{{ order.email }}</strong></div>
+            <hr style="border: none; border-top: 1px solid var(--color-border); width: 100%;">
+            <div class="flex" style="justify-content: space-between; width: 100%;">
+                <span>Order ID</span>
+                <strong>#{{ order.id }}</strong>
+            </div>
+            <div class="flex" style="justify-content: space-between; width: 100%;">
+                <span>Amount</span>
+                <strong>{{ order.currency }} {{ order.amount|floatformat:0|intcomma }}</strong>
+            </div>
+            <div class="flex" style="justify-content: space-between; width: 100%;">
+                <span>Email</span>
+                <strong>{{ order.email }}</strong>
+            </div>
             {% endif %}
 
-            <div class="pp-divider"></div>
-            <div class="pp-status-actions">
+            <hr style="border: none; border-top: 1px solid var(--color-border); width: 100%;">
+            <div class="flex" style="justify-content: center;">
                 {% if user.is_authenticated and order %}
-                <a class="pp-btn-primary" href="{% url 'user_order_detail' order.id %}">View order</a>
+                <a class="pp-btn pp-btn--primary" href="{% url 'user_order_detail' order.id %}">View order</a>
                 {% endif %}
-                <a class="pp-btn-secondary" href="{% url 'track_order' %}">Track order</a>
-                <a class="pp-btn-secondary" href="{% url 'products' %}">Continue shopping</a>
+                <a class="pp-btn pp-btn--secondary" href="{% url 'track_order' %}">Track order</a>
+                <a class="pp-btn pp-btn--secondary" href="{% url 'products' %}">Continue shopping</a>
             </div>
         </div>
     </div>

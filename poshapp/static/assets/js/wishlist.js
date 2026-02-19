@@ -58,6 +58,8 @@
       postJson(endpoint, { product_id: productId })
         .then(() => {
           toggleBtn.classList.toggle('active');
+          const message = active ? 'Removed from wishlist' : 'Added to wishlist';
+          document.dispatchEvent(new CustomEvent('pp:toast', { detail: { message, type: active ? 'info' : 'success' } }));
         })
         .catch((err) => {
           if (err.status === 401) {

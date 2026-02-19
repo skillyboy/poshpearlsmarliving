@@ -20,6 +20,7 @@ urlpatterns = [
     path("contact/", views.contact, name="contact"),
     path("health/", views.health, name="health"),
     path("accounts/signup/", views.signup_view, name="signup"),
+    path("accounts/logout/", views.logout_view, name="logout"),
     # User dashboard
     path("account/", views.dashboard_view, name="dashboard"),
     path("account/orders/", views.user_orders_view, name="user_orders"),
@@ -42,4 +43,21 @@ urlpatterns = [
     # Payment result pages
     path("payments/success/", views.payment_success_view, name="payment_success"),
     path("payments/failed/", views.payment_failed_view, name="payment_failed"),
+    # Admin lite UI
+    path("poshadmin/", views.poshadmin_view, name="poshadmin"),
+    # Admin JSON APIs (staff only)
+    path("poshadmin/api/products/", views.poshadmin_api_products, name="poshadmin_api_products"),
+    path("poshadmin/api/products/create/", views.poshadmin_api_product_create, name="poshadmin_api_product_create"),
+    path("poshadmin/api/products/<int:pk>/", views.poshadmin_api_product_update, name="poshadmin_api_product_update"),
+    path("poshadmin/api/products/<int:pk>/status/", views.poshadmin_api_product_status, name="poshadmin_api_product_status"),
+    path("poshadmin/api/products/<int:pk>/images/", views.poshadmin_api_product_images_upload, name="poshadmin_api_product_images_upload"),
+    path("poshadmin/api/products/<int:pk>/images/order/", views.poshadmin_api_product_images_order, name="poshadmin_api_product_images_order"),
+    path("poshadmin/api/products/<int:pk>/images/<int:image_id>/", views.poshadmin_api_product_images_delete, name="poshadmin_api_product_images_delete"),
+    path("poshadmin/api/orders/", views.poshadmin_api_orders, name="poshadmin_api_orders"),
+    path("poshadmin/api/customers/", views.poshadmin_api_customers, name="poshadmin_api_customers"),
+    path("poshadmin/api/settings/", views.poshadmin_api_settings, name="poshadmin_api_settings"),
+    path("poshadmin/api/orders/<int:pk>/", views.poshadmin_api_order_update, name="poshadmin_api_order_update"),
+    path("poshadmin/api/orders/<int:pk>/resend/", views.poshadmin_api_order_resend, name="poshadmin_api_order_resend"),
+    path("poshadmin/api/customers/<int:pk>/status/", views.poshadmin_api_customer_status, name="poshadmin_api_customer_status"),
+    path("poshadmin/api/categories/", views.poshadmin_api_categories, name="poshadmin_api_categories"),
 ]

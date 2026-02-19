@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load socialaccount %}
 
 {% block title %}Login - PoshPearl{% endblock %}
 
@@ -70,10 +71,10 @@
 
                 <div class="pp-auth__divider"><span>or</span></div>
 
-                <button type="button" class="pp-auth__google" aria-label="Continue with Google">
+                <a class="pp-auth__google" href="{% provider_login_url 'google' %}" aria-label="Continue with Google">
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" aria-hidden="true">
                     Continue with Google
-                </button>
+                </a>
 
             </form>
             <p class="pp-auth__footer">

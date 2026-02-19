@@ -11,59 +11,55 @@
 {% endblock %}
 
 {% block content %}
-<section class="pp-shell">
+<section class="section">
     {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
     <div class="container">
-        <div class="pp-commerce-header">
-            <div>
+        <div class="flex" style="justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-8);">
+            <div class="stack">
                 <p class="pp-pill"><i class="fa-solid fa-heart"></i> Wishlist</p>
                 <h1 class="pp-section-title">My Wishlist</h1>
-                <p class="pp-section-subtitle">Save items for later and add them to your cart anytime.</p>
+                <p class="text-muted">Save items for later and add them to your cart anytime.</p>
             </div>
-            <a class="pp-btn-secondary" href="{% url 'products' %}">Browse products</a>
+            <a class="pp-btn pp-btn--secondary" href="{% url 'products' %}">Browse products</a>
         </div>
 
         {% if is_guest %}
-        <div class="pp-card pp-wishlist-empty">
+        <div class="pp-card text-center stack" style="max-width: 500px; margin: 0 auto;">
             <h2>Sign in to save your favorites</h2>
-            <p class="pp-muted">Create an account to keep your wishlist synced.</p>
-            <div class="pp-status-actions">
-                <a class="pp-btn-primary" href="/accounts/login/?next=/wishlist/">Sign in</a>
-                <a class="pp-btn-secondary" href="{% url 'products' %}">Browse products</a>
+            <p class="text-muted">Create an account to keep your wishlist synced.</p>
+            <div class="flex" style="justify-content: center;">
+                <a class="pp-btn pp-btn--primary" href="/accounts/login/?next=/wishlist/">Sign in</a>
+                <a class="pp-btn pp-btn--secondary" href="{% url 'products' %}">Browse products</a>
             </div>
         </div>
         {% elif wishlist_items %}
-        <div class="pp-wishlist-grid" data-wishlist-grid>
+        <div class="grid" style="grid-template-columns: repeat(3, 1fr);" data-wishlist-grid>
             {% for item in wishlist_items %}
             {% with product=item.product %}
-            <div class="pp-card pp-wishlist-card" data-wishlist-item="{{ product.id }}">
+            <div class="pp-card" data-wishlist-item="{{ product.id }}" style="display: flex; gap: var(--space-4);">
                 {% with hero_image=product.images.first %}
-                {% if hero_image %}
-                <img src="{{ hero_image.image.url }}" alt="{{ product.name }}" loading="lazy" decoding="async"
-                    onerror="this.onerror=null;this.src='{{ product_fallback }}';">
-                {% else %}
-                <img src="{{ product_fallback }}" alt="{{ product.name }}" loading="lazy" decoding="async">
-                {% endif %}
+                <img src="{{ hero_image.image.url|default:product_fallback }}" alt="{{ product.name }}"
+                    style="width: 100px; height: 100px; object-fit: contain;">
                 {% endwith %}
-
-                <div>
+                <div class="stack" style="flex: 1;">
                     <strong>{{ product.name }}</strong>
-                    <div class="pp-muted">NGN {{ product.price|intcomma }}</div>
-                </div>
-
-                <div class="pp-wishlist-actions">
-                    <a class="pp-btn-primary" href="{% url 'product_detail_products' product.slug %}">View details</a>
-                    <button class="pp-btn-secondary" data-wishlist-remove data-product-id="{{ product.id }}">Remove</button>
+                    <div class="text-muted">NGN {{ product.price|intcomma }}</div>
+                    <div class="flex">
+                        <a class="pp-btn pp-btn--primary"
+                            href="{% url 'product_detail_products' product.slug %}">View</a>
+                        <button class="pp-btn pp-btn--secondary" data-wishlist-remove
+                            data-product-id="{{ product.id }}">Remove</button>
+                    </div>
                 </div>
             </div>
             {% endwith %}
             {% endfor %}
         </div>
         {% else %}
-        <div class="pp-card pp-wishlist-empty">
+        <div class="pp-card text-center stack" style="max-width: 500px; margin: 0 auto;">
             <h2>Your wishlist is empty</h2>
-            <p class="pp-muted">Save products to review or purchase later.</p>
-            <a class="pp-btn-primary" href="{% url 'products' %}">Browse products</a>
+            <p class="text-muted">Save products to review or purchase later.</p>
+            <a class="pp-btn pp-btn--primary" href="{% url 'products' %}">Browse products</a>
         </div>
         {% endif %}
     </div>

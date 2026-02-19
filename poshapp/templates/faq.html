@@ -11,17 +11,18 @@
 {% endblock %}
 
 {% block content %}
-<section class="pp-shell">
+<section class="section">
     <div class="container">
-        <div class="pp-info-hero">
+        <div class="text-center stack" style="max-width: 600px; margin: 0 auto;">
             <p class="pp-pill"><i class="fa-solid fa-circle-question"></i> FAQ</p>
             <h1 class="pp-section-title">Frequently Asked Questions</h1>
-            <p class="pp-section-subtitle">Everything you need to know about shopping with PoshPearl.</p>
+            <p class="text-muted">Everything you need to know about shopping with PoshPearl.</p>
         </div>
 
-        <div class="pp-card pp-info-card">
+        <div class="pp-card stack" style="max-width: 800px; margin: var(--space-8) auto 0;">
             <button class="pp-faq-question" type="button">How do I place an order?</button>
-            <div class="pp-faq-answer">Browse our catalog, add items to cart, and checkout. You can shop as a guest or create an account.</div>
+            <div class="pp-faq-answer">Browse our catalog, add items to cart, and checkout. You can shop as a guest or
+                create an account.</div>
 
             <button class="pp-faq-question" type="button">What payment methods do you accept?</button>
             <div class="pp-faq-answer">We accept Paystack-supported cards and bank transfers.</div>
@@ -33,9 +34,9 @@
             <div class="pp-faq-answer">Yes, wholesale partners get tiered pricing and priority support.</div>
         </div>
 
-        <div class="pp-info-actions" style="margin-top: 18px;">
-            <a class="pp-btn-primary" href="{% url 'contact' %}">Contact support</a>
-            <a class="pp-btn-secondary" href="{% url 'support' %}">Help center</a>
+        <div class="flex" style="justify-content: center; margin-top: var(--space-6);">
+            <a class="pp-btn pp-btn--primary" href="{% url 'contact' %}">Contact support</a>
+            <a class="pp-btn pp-btn--secondary" href="{% url 'support' %}">Help center</a>
         </div>
     </div>
 </section>

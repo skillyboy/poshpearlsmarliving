@@ -119,8 +119,10 @@
 }
 
 .pp-hero {
-    padding: var(--pp-page-top) 0 clamp(32px, 6vw, 80px);
+    padding: 0 0 clamp(32px, 6vw, 80px);
     position: relative;
+    min-height: auto;
+    align-content: start;
     scroll-margin-top: 120px;
 }
 

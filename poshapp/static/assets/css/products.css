@@ -24,7 +24,7 @@
 }
 
 .pp-products__hero {
-  padding: var(--pp-page-top) 0 12px;
+    padding: 0 0 12px;
 }
 
 .pp-products__breadcrumb {
@@ -479,7 +479,7 @@
    ===================================================== */
 
 body.pp-light.pp-products .pp-products__hero {
-  padding: var(--pp-page-top) 0 18px;
+    padding: 0 0 18px;
 }
 
 body.pp-light.pp-products .pp-products__intro h1 {

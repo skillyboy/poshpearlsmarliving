@@ -40,6 +40,8 @@ class Product(models.Model):
     )
     currency = models.CharField(max_length=3, default="NGN")
     stock_quantity = models.PositiveIntegerField(default=0)
+    low_stock_threshold = models.PositiveIntegerField(default=3)
+    is_archived = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
     categories = models.ManyToManyField(
@@ -190,6 +192,7 @@ class Order(models.Model):
 
     confirmation_sent_at = models.DateTimeField(null=True, blank=True)
     payment_confirmation_sent_at = models.DateTimeField(null=True, blank=True)
+    internal_note = models.TextField(blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -272,13 +275,27 @@ class WholesaleInquiry(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
-        ordering = ['-created_at']
-        verbose_name_plural = 'Wholesale Inquiries'
-    
+        ordering = ["-created_at"]
+        verbose_name_plural = "Wholesale Inquiries"
+
     def __str__(self):
-        return f"{self.company_name} - {self.get_status_display()}"
+        return f"{self.company_name} ({self.get_status_display()})"
+
+class SiteSettings(models.Model):
+    store_name = models.CharField(max_length=200, default="PoshPearl")
+    support_email = models.EmailField(default="support@example.com")
+    default_currency = models.CharField(max_length=3, default="NGN")
+    low_stock_threshold = models.PositiveIntegerField(default=3)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-updated_at"]
+        verbose_name_plural = "Site Settings"
+
+    def __str__(self):
+        return "Site Settings"
 
 
 class Wishlist(models.Model):

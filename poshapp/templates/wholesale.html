@@ -10,25 +10,34 @@
 {% endblock %}
 
 {% block content %}
-<section class="pp-shell">
+<section class="section">
     <div class="container">
-        <div class="pp-info-hero">
+        <div class="text-center stack" style="max-width: 700px; margin: 0 auto;">
             <p class="pp-pill"><i class="fa-solid fa-handshake"></i> Wholesale</p>
             <h1 class="pp-section-title">Wholesale & B2B Partnership</h1>
-            <p class="pp-section-subtitle">Exclusive bulk pricing, priority support, and dedicated onboarding.</p>
-            <div class="pp-info-actions">
-                <a class="pp-btn-primary" href="#apply">Become a partner</a>
-                <a class="pp-btn-secondary" href="{% url 'contact' %}">Contact us</a>
+            <p class="text-muted">Exclusive bulk pricing, priority support, and dedicated onboarding.</p>
+            <div class="flex" style="justify-content: center;">
+                <a class="pp-btn pp-btn--primary" href="#apply">Become a partner</a>
+                <a class="pp-btn pp-btn--secondary" href="{% url 'contact' %}">Contact us</a>
             </div>
         </div>
 
-        <div class="pp-info-grid">
-            <div class="pp-card pp-info-card"><h3>Bulk pricing</h3><p class="pp-muted">Save up to 40% on large orders.</p></div>
-            <div class="pp-card pp-info-card"><h3>Priority support</h3><p class="pp-muted">Dedicated account management.</p></div>
-            <div class="pp-card pp-info-card"><h3>Fast fulfillment</h3><p class="pp-muted">Reliable delivery for bulk orders.</p></div>
+        <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-top: var(--space-8);">
+            <div class="pp-card text-center">
+                <h3>Bulk pricing</h3>
+                <p class="text-muted">Save up to 40% on large orders.</p>
+            </div>
+            <div class="pp-card text-center">
+                <h3>Priority support</h3>
+                <p class="text-muted">Dedicated account management.</p>
+            </div>
+            <div class="pp-card text-center">
+                <h3>Fast fulfillment</h3>
+                <p class="text-muted">Reliable delivery for bulk orders.</p>
+            </div>
         </div>
 
-        <div class="pp-card pp-info-card" style="margin-top:18px;">
+        <div class="pp-card stack" style="margin-top: var(--space-6);">
             <h2>Volume discount tiers</h2>
             <ul>
                 <li>10–49 units: 10% off</li>
@@ -38,19 +47,20 @@
             </ul>
         </div>
 
-        <div id="apply" class="pp-card pp-info-card" style="margin-top:18px;">
+        <div id="apply" class="pp-card stack" style="margin-top: var(--space-6);">
             <h2>Apply for partnership</h2>
             {% if form_submitted %}
-            <p class="pp-muted">Application received! We’ll contact you soon.</p>
+            <p class="text-muted">Application received! We’ll contact you soon.</p>
             {% else %}
-            <form method="post" class="pp-info-grid">
+            <form method="post" class="grid" style="grid-template-columns: 1fr 1fr;">
                 {% csrf_token %}
                 <input class="pp-input" name="company_name" placeholder="Company name" required>
                 <input class="pp-input" name="contact_name" placeholder="Contact person" required>
                 <input class="pp-input" name="email" placeholder="Email" required>
                 <input class="pp-input" name="phone" placeholder="Phone" required>
-                <textarea class="pp-textarea" name="business_address" placeholder="Business address" required></textarea>
-                <select class="pp-select" name="business_type" required>
+                <textarea class="pp-input" name="business_address" placeholder="Business address" required
+                    style="grid-column: span 2;"></textarea>
+                <select class="pp-input" name="business_type" required>
                     <option value="">Business type</option>
                     <option value="retailer">Retailer/Shop Owner</option>
                     <option value="distributor">Distributor</option>
@@ -58,15 +68,17 @@
                     <option value="online">Online Store</option>
                     <option value="other">Other</option>
                 </select>
-                <select class="pp-select" name="expected_volume">
+                <select class="pp-input" name="expected_volume">
                     <option value="">Expected volume</option>
                     <option value="10-49">10-49 units</option>
                     <option value="50-99">50-99 units</option>
                     <option value="100-299">100-299 units</option>
                     <option value="300+">300+ units</option>
                 </select>
-                <textarea class="pp-textarea" name="message" placeholder="Tell us about your business"></textarea>
-                <button class="pp-btn-primary" type="submit">Submit application</button>
+                <textarea class="pp-input" name="message" placeholder="Tell us about your business"
+                    style="grid-column: span 2;"></textarea>
+                <button class="pp-btn pp-btn--primary" type="submit" style="grid-column: span 2;">Submit
+                    application</button>
             </form>
             {% endif %}
         </div>

@@ -108,7 +108,7 @@ html[data-theme="dark"] body.pp-light::before {
   opacity: 0.06;
 }
 
-body.pp-light > * {
+body.pp-light > *:not(.site-header) {
   position: relative;
   z-index: 1;
 }

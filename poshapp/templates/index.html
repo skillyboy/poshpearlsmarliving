@@ -5,35 +5,36 @@
 {% block title %}PoshPearl Smart Living{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'assets/css/home.css' %}?v=20260216.1">
+<link rel="stylesheet" href="{% static 'assets/css/home.css' %}?v=20260216.6">
 <link rel="stylesheet" href="{% static 'assets/css/poshpearl-ui.css' %}?v=20260216.1">
 {% endblock %}
 
 {% block body_class %}pp-light pp-home{% endblock %}
 
 {% block content %}
-<main class="pp-home">
+<div class="pp-home">
   {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
 
-  <section class="pp-home__hero">
+  <section class="pp-home__hero section">
     <div class="container pp-home__hero-grid">
       <div class="pp-home__hero-copy pp-glass">
         <p class="pp-home__eyebrow">Making life easy. Making homes smart.</p>
         <h1>Smart security, access, and comfort in one</h1>
-        <p>PoshPearl SmartLiving delivers trusted smart locks, gate systems, automated curtains, and connected sensors that keep your home or business safer, simpler, and more convenient.</p>
+        <p>PoshPearl SmartLiving delivers trusted smart locks, gate systems, automated curtains, and connected sensors
+          that keep your home or business safer, simpler, and more convenient.</p>
         <div class="pp-home__hero-actions">
-          <a class="pp-btn pp-btn-primary" href="{% url 'contact' %}">Book Consultation</a>
-          <a class="pp-btn pp-btn-ghost" href="{% url 'products' %}">Explore our solutions</a>
+          <a class="pp-btn pp-btn--primary" href="{% url 'contact' %}">Book Consultation</a>
+          <a class="pp-btn pp-btn--ghost" href="{% url 'products' %}">Explore our solutions</a>
         </div>
       </div>
       <div class="pp-home__hero-media">
         <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="Smart lock" loading="lazy"
-             onerror="this.onerror=null;this.src='{{ product_fallback }}';">
+          onerror="this.onerror=null;this.src='{{ product_fallback }}';">
       </div>
     </div>
   </section>
 
-  <section class="pp-home__features">
+  <section class="pp-home__features section">
     <div class="container">
       <h2>Live safer, easier, and more connected.</h2>
       <div class="pp-home__feature-grid">
@@ -56,7 +57,7 @@
     </div>
   </section>
 
-  <section class="pp-home__trust">
+  <section class="pp-home__trust section-sm">
     <div class="container">
       <p>Trusted by homes, estates, offices, and businesses across Nigeria</p>
       <div class="pp-home__logos">
@@ -69,7 +70,7 @@
     </div>
   </section>
 
-  <section class="pp-home__devices">
+  <section class="pp-home__devices section">
     <div class="container">
       <div class="pp-home__section-head">
         <h2>Smart devices, simple living</h2>
@@ -79,26 +80,59 @@
         {% for product in products|slice:":3" %}
         <article class="pp-home__device-card">
           {% with hero_image=product.images.first %}
-            <img src="{{ hero_image.image.url|default:product_fallback }}" alt="{{ product.name }}" loading="lazy"
-                 onerror="this.onerror=null;this.src='{{ product_fallback }}';">
+          <img src="{{ hero_image.image.url|default:product_fallback }}" alt="{{ product.name }}" loading="lazy"
+            onerror="this.onerror=null;this.src='{{ product_fallback }}';">
           {% endwith %}
           <h3>{{ product.name }}</h3>
           <p>{{ product.short_description|default:product.description|truncatechars:80 }}</p>
-          <a class="pp-btn pp-btn-ghost" href="{% url 'product_detail_products' product.slug %}">View details →</a>
+          <a class="pp-btn pp-btn--ghost" href="{% url 'product_detail_products' product.slug %}">View details →</a>
         </article>
         {% empty %}
         <article class="pp-home__device-card">
           <img src="{{ product_fallback }}" alt="Smart device">
           <h3>Smart Locks</h3>
           <p>Reliable access with biometric security.</p>
-          <a class="pp-btn pp-btn-ghost" href="{% url 'products' %}">Explore →</a>
+          <a class="pp-btn pp-btn--ghost" href="{% url 'products' %}">Explore →</a>
         </article>
         {% endfor %}
       </div>
     </div>
   </section>
 
-  <section class="pp-home__pricing">
+  <section class="pp-home__bulk section">
+    <div class="container">
+      <div class="pp-home__section-head">
+        <h2>Bulk pricing for D2Pro Smart Lock</h2>
+        <p>Scale up securely with volume discounts and priority fulfillment.</p>
+      </div>
+      <div class="pp-bulk-card">
+        <div class="pp-bulk-card__rows">
+          <div class="pp-bulk-row pp-bulk-row--amber">
+            <span>1-20 units</span>
+            <strong>NGN 320,000</strong>
+            <span class="pp-bulk-row__tag">per unit</span>
+          </div>
+          <div class="pp-bulk-row pp-bulk-row--plum">
+            <span>21-100 units</span>
+            <strong>NGN 280,000</strong>
+            <span class="pp-bulk-row__tag">per unit</span>
+          </div>
+          <div class="pp-bulk-row pp-bulk-row--gold">
+            <span>100+ units</span>
+            <strong>NGN 250,000</strong>
+            <span class="pp-bulk-row__tag">per unit</span>
+          </div>
+        </div>
+        <p class="pp-bulk-card__note">Tell us your quantity and we'll lock in the best rate for your project.</p>
+        <div class="pp-home__bulk-actions">
+          <a class="pp-btn pp-btn--primary" href="{% url 'wholesale' %}">Request a bulk quote</a>
+          <a class="pp-btn pp-btn--ghost" href="{% url 'product_detail_products' 'd2pro' %}">View D2Pro details</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pp-home__pricing section">
     <div class="container">
       <div class="pp-home__section-head">
         <h2>Clear pricing, flexible plans</h2>
@@ -113,7 +147,7 @@
             <li>Basic automations</li>
             <li>Email support</li>
           </ul>
-          <button class="pp-btn pp-btn-ghost">Get started</button>
+          <button class="pp-btn pp-btn--ghost">Get started</button>
         </article>
         <article class="pp-home__plan is-featured">
           <h3>Pro</h3>
@@ -123,7 +157,7 @@
             <li>Smart automations</li>
             <li>Priority support</li>
           </ul>
-          <button class="pp-btn pp-btn-primary">Get started</button>
+          <button class="pp-btn pp-btn--primary">Get started</button>
         </article>
         <article class="pp-home__plan">
           <h3>Enterprise</h3>
@@ -133,26 +167,39 @@
             <li>Dedicated account</li>
             <li>Custom integrations</li>
           </ul>
-          <button class="pp-btn pp-btn-ghost">Contact us</button>
+          <button class="pp-btn pp-btn--ghost">Contact us</button>
         </article>
       </div>
     </div>
   </section>
 
-  <section class="pp-home__help">
+  <section class="pp-home__help section">
     <div class="container">
       <div class="pp-home__section-head">
         <h2>How can we help you?</h2>
         <div class="pp-home__help-search">
+          <label for="help-search" class="sr-only">Search for answers</label>
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="search" placeholder="Search for answers...">
+          <input id="help-search" type="search" placeholder="Search for answers...">
         </div>
       </div>
       <div class="pp-home__help-grid">
-        <article><h3>Getting Started</h3><p>Guides for setting up your smart devices.</p></article>
-        <article><h3>Managing Devices</h3><p>Information for maintenance and automations.</p></article>
-        <article><h3>Account & Billing</h3><p>Payment subscriptions and billing info.</p></article>
-        <article><h3>Troubleshooting</h3><p>Solutions to common issues and errors.</p></article>
+        <article>
+          <h3>Getting Started</h3>
+          <p>Guides for setting up your smart devices.</p>
+        </article>
+        <article>
+          <h3>Managing Devices</h3>
+          <p>Information for maintenance and automations.</p>
+        </article>
+        <article>
+          <h3>Account & Billing</h3>
+          <p>Payment subscriptions and billing info.</p>
+        </article>
+        <article>
+          <h3>Troubleshooting</h3>
+          <p>Solutions to common issues and errors.</p>
+        </article>
       </div>
       <div class="pp-home__help-links">
         <a href="{% url 'support' %}">Live Chat</a>
@@ -162,17 +209,17 @@
     </div>
   </section>
 
-  <section class="pp-home__notfound">
+  <section class="pp-home__notfound section">
     <div class="container">
       <div class="pp-home__notfound-card">
         <h2>404</h2>
         <p>Oops! Page not found.</p>
         <div class="pp-home__notfound-actions">
-          <a class="pp-btn pp-btn-primary" href="{% url 'home' %}">Go back home</a>
-          <a class="pp-btn pp-btn-ghost" href="{% url 'support' %}">Search</a>
+          <a class="pp-btn pp-btn--primary" href="{% url 'home' %}">Go back home</a>
+          <a class="pp-btn pp-btn--ghost" href="{% url 'support' %}">Search</a>
         </div>
       </div>
     </div>
   </section>
-</main>
+</div>
 {% endblock %}

@@ -10,39 +10,40 @@
 {% endblock %}
 
 {% block content %}
-<section class="pp-shell">
+<section class="section">
     <div class="container">
-        <div class="pp-commerce-header">
-            <div>
-                <p class="pp-pill"><i class="fa-solid fa-star"></i> Smart features</p>
-                <h1 class="pp-section-title">Smart features that make life easier</h1>
-                <p class="pp-section-subtitle">Manage your devices with real-time alerts and simple controls.</p>
-            </div>
+        <div class="text-center stack" style="max-width: 600px; margin: 0 auto;">
+            <p class="pp-pill"><i class="fa-solid fa-star"></i> Smart features</p>
+            <h1 class="pp-section-title">Smart features that make life easier</h1>
+            <p class="text-muted">Manage your devices with real-time alerts and simple controls.</p>
         </div>
 
-        <div class="pp-features-grid">
-            <div class="pp-card pp-feature-card">
-                <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="App Control">
+        <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-top: var(--space-8);">
+            <div class="pp-card text-center stack">
+                <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="App Control"
+                    style="width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius-md);">
                 <h3>App Control</h3>
-                <p>Manage devices from your phone and grant access remotely.</p>
-                <div class="pp-feature-actions">
-                    <a class="pp-btn-primary" href="{% url 'products' %}">Explore products</a>
+                <p class="text-muted">Manage devices from your phone and grant access remotely.</p>
+                <div>
+                    <a class="pp-btn pp-btn--primary" href="{% url 'products' %}">Explore products</a>
                 </div>
             </div>
-            <div class="pp-card pp-feature-card">
-                <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="Real-Time Alerts">
+            <div class="pp-card text-center stack">
+                <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="Real-Time Alerts"
+                    style="width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius-md);">
                 <h3>Real-Time Alerts</h3>
-                <p>Instant notifications for activity, access, and security events.</p>
-                <div class="pp-feature-actions">
-                    <a class="pp-btn-secondary" href="{% url 'support' %}">Learn more</a>
+                <p class="text-muted">Instant notifications for activity, access, and security events.</p>
+                <div>
+                    <a class="pp-btn pp-btn--secondary" href="{% url 'support' %}">Learn more</a>
                 </div>
             </div>
-            <div class="pp-card pp-feature-card">
-                <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="Secure Access">
+            <div class="pp-card text-center stack">
+                <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="Secure Access"
+                    style="width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius-md);">
                 <h3>Secure Access</h3>
-                <p>Fingerprint, PIN, and RFID access for flexible security.</p>
-                <div class="pp-feature-actions">
-                    <a class="pp-btn-secondary" href="{% url 'products' %}">View devices</a>
+                <p class="text-muted">Fingerprint, PIN, and RFID access for flexible security.</p>
+                <div>
+                    <a class="pp-btn pp-btn--secondary" href="{% url 'products' %}">View devices</a>
                 </div>
             </div>
         </div>

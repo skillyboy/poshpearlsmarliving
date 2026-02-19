@@ -10,67 +10,67 @@
 {% endblock %}
 
 {% block content %}
-<section class="pp-shell">
+<section class="section">
     <div class="container">
-        <div class="pp-commerce-header">
-            <div>
-                <p class="pp-pill"><i class="fa-solid fa-tag"></i> Pricing</p>
-                <h1 class="pp-section-title">Flexible pricing that scales with you</h1>
-                <p class="pp-section-subtitle">Choose the plan that fits your smart living needs.</p>
-            </div>
+        <div class="text-center stack" style="max-width: 600px; margin: 0 auto;">
+            <p class="pp-pill"><i class="fa-solid fa-tag"></i> Pricing</p>
+            <h1 class="pp-section-title">Flexible pricing that scales with you</h1>
+            <p class="text-muted">Choose the plan that fits your smart living needs.</p>
         </div>
 
-        <div class="pp-pricing-grid">
-            <article class="pp-card pp-pricing-card">
+        <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-top: var(--space-8);">
+            <article class="pp-card text-center stack">
                 <h3>Basic</h3>
-                <p class="pp-pricing-price">₦2,500</p>
-                <ul>
+                <p class="pp-pricing-price" style="font-size: var(--text-3xl); color: var(--color-accent);">₦2,500</p>
+                <ul class="stack" style="list-style: none; padding: 0;">
                     <li>Smart lock starter kit</li>
                     <li>Basic access control</li>
                     <li>Email support</li>
                 </ul>
-                <a class="pp-btn-primary" href="{% url 'products' %}">Explore products</a>
+                <a class="pp-btn pp-btn--primary" href="{% url 'products' %}">Explore products</a>
             </article>
-            <article class="pp-card pp-pricing-card is-featured">
+            <article class="pp-card text-center stack"
+                style="border: 2px solid var(--color-accent); transform: scale(1.05);">
                 <h3>Pro</h3>
-                <p class="pp-pricing-price">₦6,500</p>
-                <ul>
+                <p class="pp-pricing-price" style="font-size: var(--text-3xl); color: var(--color-accent);">₦6,500</p>
+                <ul class="stack" style="list-style: none; padding: 0;">
                     <li>Device integration</li>
                     <li>Priority support</li>
                     <li>Automation scenes</li>
                 </ul>
-                <a class="pp-btn-primary" href="{% url 'products' %}">Explore products</a>
+                <a class="pp-btn pp-btn--primary" href="{% url 'products' %}">Explore products</a>
             </article>
-            <article class="pp-card pp-pricing-card">
+            <article class="pp-card text-center stack">
                 <h3>Enterprise</h3>
-                <p class="pp-pricing-price">Contact us</p>
-                <ul>
+                <p class="pp-pricing-price" style="font-size: var(--text-3xl); color: var(--color-accent);">Contact us
+                </p>
+                <ul class="stack" style="list-style: none; padding: 0;">
                     <li>Custom integrations</li>
                     <li>Dedicated onboarding</li>
                     <li>Bulk discounts</li>
                 </ul>
-                <a class="pp-btn-secondary" href="{% url 'wholesale' %}">Contact us</a>
+                <a class="pp-btn pp-btn--secondary" href="{% url 'wholesale' %}">Contact us</a>
             </article>
         </div>
 
-        <section class="pp-card pp-pricing-faq">
+        <section class="pp-card stack" style="margin-top: var(--space-8);">
             <h2>Feature compare / FAQ</h2>
-            <div class="pp-pricing-faq-grid">
+            <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
                 <div>
                     <strong>What’s included?</strong>
-                    <p class="pp-muted">Every plan includes access to our product catalog and smart support.</p>
+                    <p class="text-muted">Every plan includes access to our product catalog and smart support.</p>
                 </div>
                 <div>
                     <strong>Can I switch plans later?</strong>
-                    <p class="pp-muted">Yes. Upgrade or downgrade anytime based on your needs.</p>
+                    <p class="text-muted">Yes. Upgrade or downgrade anytime based on your needs.</p>
                 </div>
                 <div>
                     <strong>Do you offer bulk discounts?</strong>
-                    <p class="pp-muted">Yes, wholesale partners get tiered pricing and dedicated support.</p>
+                    <p class="text-muted">Yes, wholesale partners get tiered pricing and dedicated support.</p>
                 </div>
                 <div>
                     <strong>Need help choosing?</strong>
-                    <p class="pp-muted">Contact our team for a tailored recommendation.</p>
+                    <p class="text-muted">Contact our team for a tailored recommendation.</p>
                 </div>
             </div>
         </section>

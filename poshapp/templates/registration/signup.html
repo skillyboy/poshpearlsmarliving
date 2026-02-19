@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load socialaccount %}
 
 {% block title %}Create Account - PoshPearl{% endblock %}
 
@@ -77,6 +78,13 @@
                 <button type="submit" class="pp-auth__primary">
                     Create account
                 </button>
+
+                <div class="pp-auth__divider"><span>or</span></div>
+
+                <a class="pp-auth__google" href="{% provider_login_url 'google' %}" aria-label="Continue with Google">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" aria-hidden="true">
+                    Continue with Google
+                </a>
 
                 <p class="pp-auth__footer">
                     Already have an account? <a href="{% url 'login' %}">Log in</a>

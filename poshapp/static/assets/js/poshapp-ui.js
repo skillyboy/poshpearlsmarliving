@@ -47,6 +47,22 @@
         return `${currency} ${amount.toLocaleString()}`;
     };
 
+    const syncHeaderHeight = () => {
+        const header = qs('.site-header');
+        if (!header) return;
+        const h = header.getBoundingClientRect().height || 64;
+        root.style.setProperty('--pp-header-h', `${Math.round(h)}px`);
+    };
+    window.addEventListener('load', syncHeaderHeight);
+    window.addEventListener('resize', () => window.requestAnimationFrame(syncHeaderHeight));
+
+    // Global toast bridge for other scripts
+    document.addEventListener('pp:toast', (event) => {
+        const detail = event.detail || {};
+        if (!detail.message) return;
+        showToast(detail.message, detail.type || 'info', detail.action);
+    });
+
     const getCookie = (name) => {
         if (!document.cookie) return null;
         const token = document.cookie.split(';').map((item) => item.trim()).find((item) => item.startsWith(`${name}=`));
@@ -115,11 +131,17 @@
         data.items.forEach((item) => {
             const node = document.createElement('div');
             node.className = 'pp-cart-item-mini';
+            node.setAttribute('data-qty', item.quantity || 1);
             node.innerHTML = `
                 <img src="${item.image || '/static/assets/images/products/d2pro1.jpeg'}" alt="${escapeHtml(item.name)}" onerror="this.onerror=null;this.src='/static/assets/images/products/d2pro1.jpeg';">
                 <div>
                     <h4>${escapeHtml(item.name)}</h4>
                     <span>${item.quantity} × ${formatMoney(item.currency, item.unit_price)}</span>
+                </div>
+                <div class="pp-cart-mini__qty">
+                    <button type="button" data-cart-dec data-item-id="${item.id}" aria-label="Decrease quantity">-</button>
+                    <input type="number" value="${item.quantity}" min="1" aria-label="Quantity" readonly data-cart-qty-display>
+                    <button type="button" data-cart-inc data-item-id="${item.id}" aria-label="Increase quantity">+</button>
                 </div>
                 <button type="button" data-cart-remove data-item-id="${item.id}" aria-label="Remove item">
                     <i class="fa-solid fa-trash"></i>
@@ -235,13 +257,38 @@
     });
 
     cartItemsEl?.addEventListener('click', (event) => {
-        const target = event.target.closest('[data-cart-remove]');
-        if (!target) return;
-        const itemId = target.getAttribute('data-item-id');
+        const row = event.target.closest('.pp-cart-item-mini');
+        if (!row) return;
+        const itemId = row.querySelector('[data-item-id]')?.getAttribute('data-item-id');
         if (!itemId) return;
-        removeCartItem(itemId).catch((error) => {
-            showToast(error.message || 'Unable to remove item.', 'error');
-        });
+
+        if (event.target.closest('[data-cart-remove]')) {
+            removeCartItem(itemId).catch((error) => {
+                showToast(error.message || 'Unable to remove item.', 'error');
+            });
+            return;
+        }
+
+        const qtyInput = row.querySelector('[data-cart-qty-display]');
+        let qty = Number(qtyInput?.value || row.getAttribute('data-qty') || 1);
+
+        if (event.target.closest('[data-cart-inc]')) {
+            qty += 1;
+        } else if (event.target.closest('[data-cart-dec]')) {
+            qty = Math.max(1, qty - 1);
+        } else {
+            return;
+        }
+
+        updateItemQuantity(itemId, qty)
+            .then(() => {
+                row.setAttribute('data-qty', qty);
+                if (qtyInput) qtyInput.value = qty;
+                showToast('Cart updated.', 'success');
+            })
+            .catch((error) => {
+                showToast(error.message || 'Unable to update quantity.', 'error');
+            });
     });
 
     cartPage?.addEventListener('click', (event) => {
