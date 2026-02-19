@@ -48,19 +48,19 @@
         /* ===== DESIGN TOKENS ===== */
         :root {
             /* Colors */
-            --color-bg: #ffffff;
-            --color-surface: #f8f5f0;
+            --color-bg: var(--pp-white, #ffffff);
+            --color-surface: var(--pp-off-white, #f9fafb);
             --color-surface-soft: rgba(255, 255, 255, 0.9);
-            --color-text: #1a1a1a;
-            --color-text-muted: #666666;
-            --color-text-light: #999999;
+            --color-text: var(--pp-charcoal, #1a1a1a);
+            --color-text-muted: var(--pp-gray, #666666);
+            --color-text-light: var(--pp-gray-light, #9ca3af);
             --color-border: rgba(92, 46, 46, 0.12);
-            --color-primary: #5c2e2e;
-            --color-primary-light: #7a4646;
-            --color-accent: #b76e2e;
-            --color-accent-light: #d48c4a;
-            --color-success: #2e7d32;
-            --color-danger: #d32f2f;
+            --color-primary: var(--pp-burgundy, #5c2e2e);
+            --color-primary-light: var(--pp-burgundy-light, #7a4545);
+            --color-accent: var(--pp-gold, #f5a623);
+            --color-accent-light: var(--pp-gold-light, #ffb84d);
+            --color-success: var(--pp-success, #10b981);
+            --color-danger: var(--pp-danger, #ef4444);
 
             /* Typography */
             --font-base: 'Inter', system-ui, sans-serif;
@@ -359,7 +359,7 @@
     <a class="skip-link" href="#main-content">Skip to content</a>
 
     <header class="site-header" data-sticky-header>
-        <div class="container header-inner">
+        <div class="container-fluid header-inner">
             <a class="logo" href="/" aria-label="PoshPearl home">
                 <img src="{% static 'assets/images/poshlogo 2.png' %}" alt="PoshPearl" height="48" loading="lazy"
                     decoding="async">
@@ -463,7 +463,9 @@
     </aside>
 
     <main id="main-content">
-        {% block content %}{% endblock %}
+        <div class="content-wrapper">
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
     <footer class="site-footer">

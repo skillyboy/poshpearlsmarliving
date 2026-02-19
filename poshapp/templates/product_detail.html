@@ -29,8 +29,8 @@
         <span aria-current="page">{{ product.name }}</span>
       </nav>
 
-      <div class="pp-detail__layout">
-        <aside class="pp-card stack pp-detail__filters">
+      <div class="pp-detail__layout pp-product-grid pp-main-grid pp-main-grid--with-sidebar pp-responsive-grid pp-responsive-grid--sidebar">
+        <aside class="pp-card stack pp-detail__filters pp-detail__sidebar">
           <div class="pp-detail__filter-head">
             <h3>Filters</h3>
             <a href="{% url 'products' %}" class="text-muted">Reset</a>
@@ -66,7 +66,7 @@
           </div>
         </aside>
 
-        <section class="pp-detail__summary">
+        <section class="pp-detail__summary pp-detail__info-grid pp-main-grid pp-main-grid--halves pp-responsive-grid pp-responsive-grid--halves">
           <div class="pp-detail__media stack" data-gallery>
             {% with hero_image=product.images.first %}
             <div class="pp-detail__main" data-gallery-main
@@ -163,7 +163,7 @@
                   <div class="pp-bulk-row pp-bulk-row--burgundy">
                     <span>1-20 units</span><strong>NGN 320,000</strong><span class="text-muted">/unit</span>
                   </div>
-                  <div class="pp-bulk-row pp-bulk-row--deep">
+                  <div class="pp-bulk-row pp-bulk-row--burgundy-deep">
                     <span>21-100 units</span><strong>NGN 280,000</strong><span class="text-muted">/unit</span>
                   </div>
                   <div class="pp-bulk-row pp-bulk-row--gold">

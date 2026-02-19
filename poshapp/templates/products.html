@@ -16,26 +16,29 @@
   {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
 
   <section class="pp-products__hero section">
-    <div class="container">
-      <nav class="pp-products__breadcrumb" aria-label="Breadcrumb">
-        <a href="{% url 'home' %}">Home</a>
-        <span aria-hidden="true">/</span>
-        <span aria-current="page">Products</span>
-      </nav>
+    <div class="container-fluid">
+      <div class="container">
+        <nav class="pp-products__breadcrumb" aria-label="Breadcrumb">
+          <a href="{% url 'home' %}">Home</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Products</span>
+        </nav>
 
-      <div class="pp-products__intro">
-        <div>
-          <h1>Products</h1>
-          <p class="text-muted">Smart security and smart living devices built for peace of mind.</p>
+        <div class="pp-products__intro">
+          <div>
+            <h1>Products</h1>
+            <p class="text-muted">Smart security and smart living devices built for peace of mind.</p>
+          </div>
+          <a class="pp-products__cta" href="{% url 'wholesale' %}">Book Consultation</a>
         </div>
-        <a class="pp-products__cta" href="{% url 'wholesale' %}">Book Consultation</a>
       </div>
     </div>
   </section>
 
   <section class="pp-products__catalog section">
-    <div class="container">
-      <form method="get" class="pp-products__layout">
+    <div class="container-fluid">
+      <div class="container">
+        <form method="get" class="pp-products__layout">
         <div class="pp-products__toolbar">
           <label class="pp-products__search" for="productSearch">
             <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
@@ -182,7 +185,8 @@
           </nav>
           {% endif %}
         </section>
-      </form>
+        </form>
+      </div>
     </div>
   </section>
 </div>

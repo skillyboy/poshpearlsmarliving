@@ -16,20 +16,22 @@
   {% static 'assets/images/products/d2pro1.jpeg' as product_fallback %}
 
   <section class="pp-home__hero section">
-    <div class="container pp-home__hero-grid">
-      <div class="pp-home__hero-copy pp-glass glass-effect">
-        <p class="pp-home__eyebrow">Making life easy. Making homes smart.</p>
-        <h1>Smart security, access, and comfort in one</h1>
-        <p>PoshPearl SmartLiving delivers trusted smart locks, gate systems, automated curtains, and connected sensors
-          that keep your home or business safer, simpler, and more convenient.</p>
-        <div class="pp-home__hero-actions">
-          <a class="pp-btn pp-btn--primary" href="{% url 'contact' %}">Book Consultation</a>
-          <a class="pp-btn pp-btn--ghost" href="{% url 'products' %}">Explore our solutions</a>
+    <div class="container-fluid">
+      <div class="container pp-home__hero-grid">
+        <div class="pp-home__hero-copy pp-glass glass-effect">
+          <p class="pp-home__eyebrow">Making life easy. Making homes smart.</p>
+          <h1>Smart security, access, and comfort in one</h1>
+          <p>PoshPearl SmartLiving delivers trusted smart locks, gate systems, automated curtains, and connected sensors
+            that keep your home or business safer, simpler, and more convenient.</p>
+          <div class="pp-home__hero-actions">
+            <a class="pp-btn pp-btn--primary" href="{% url 'contact' %}">Book Consultation</a>
+            <a class="pp-btn pp-btn--ghost" href="{% url 'products' %}">Explore our solutions</a>
+          </div>
         </div>
-      </div>
-      <div class="pp-home__hero-media">
-        <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="Smart lock" loading="lazy"
-          onerror="this.onerror=null;this.src='{{ product_fallback }}';">
+        <div class="pp-home__hero-media">
+          <img src="{% static 'assets/images/products/d2pro1.jpeg' %}" alt="Smart lock" loading="lazy"
+            onerror="this.onerror=null;this.src='{{ product_fallback }}';">
+        </div>
       </div>
     </div>
   </section>
@@ -107,17 +109,17 @@
       </div>
       <div class="pp-bulk-card">
         <div class="pp-bulk-card__rows">
-          <div class="pp-bulk-row pp-bulk-row--amber">
+          <div class="pp-bulk-row pp-bulk-row--gold">
             <span>1-20 units</span>
             <strong>NGN 320,000</strong>
             <span class="pp-bulk-row__tag">per unit</span>
           </div>
-          <div class="pp-bulk-row pp-bulk-row--plum">
+          <div class="pp-bulk-row pp-bulk-row--burgundy">
             <span>21-100 units</span>
             <strong>NGN 280,000</strong>
             <span class="pp-bulk-row__tag">per unit</span>
           </div>
-          <div class="pp-bulk-row pp-bulk-row--gold">
+          <div class="pp-bulk-row pp-bulk-row--burgundy-deep">
             <span>100+ units</span>
             <strong>NGN 250,000</strong>
             <span class="pp-bulk-row__tag">per unit</span>

@@ -858,3 +858,26 @@
     margin-top: var(--space-2);
 }
 /* AUTO-GENERATED INLINE STYLE UTILS: END */
+
+/* Mobile safety for extracted inline grid helpers */
+@media (max-width: 991.98px) {
+    .pp-inline-0ba9e55a,
+    .pp-inline-10ecd7a1,
+    .pp-inline-20f46961,
+    .pp-inline-6ef94cda,
+    .pp-inline-7f1f70dd,
+    .pp-inline-a4c8ba47,
+    .pp-inline-aca3c6d9,
+    .pp-inline-af72bea2,
+    .pp-inline-b49781d6,
+    .pp-inline-cd0b791e,
+    .pp-inline-d1f473b0,
+    .pp-inline-e73c6a72,
+    .pp-inline-ef5c0dbd,
+    .pp-inline-f5c317f1,
+    .pp-inline-f8efba58,
+    .pp-inline-fcfa8de6 {
+        grid-template-columns: 1fr !important;
+        gap: var(--space-3);
+    }
+}

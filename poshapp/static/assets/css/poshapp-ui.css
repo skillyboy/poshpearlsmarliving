@@ -6,6 +6,9 @@
     --pp-space-5: 40px;
     --pp-space-6: 48px;
     --pp-space-7: 56px;
+    --pp-gutter-x: clamp(16px, 3vw, 32px);
+    --pp-gutter-fluid: clamp(16px, 4vw, 48px);
+    --pp-container-max: 1280px;
     --pp-page-top: 0px;
     --pp-section-y: 36px;
     --pp-section-y-lg: 48px;
@@ -20,6 +23,7 @@
     --pp-radius-lg: 24px;
     --pp-transition: 180ms ease;
     --pp-header-h: 68px;
+    --site-header-h: var(--pp-header-h);
     --pp-primary: var(--color-primary, #5F1E2C);
     --pp-primary-dark: var(--color-primary-dark, #4A1623);
     --pp-accent: var(--color-secondary, #F4B000);
@@ -114,11 +118,11 @@ body {
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: var(--pp-header-h);
+    scroll-padding-top: var(--site-header-h, var(--pp-header-h));
 }
 
 [id] {
-    scroll-margin-top: calc(var(--pp-header-h) + 12px);
+    scroll-margin-top: calc(var(--site-header-h, var(--pp-header-h)) + 12px);
 }
 
 h1,
@@ -189,6 +193,8 @@ body.pp-checkout {
     align-items: center;
     justify-content: space-between;
     gap: var(--pp-space-3);
+    width: min(100%, var(--pp-container-max));
+    margin-inline: auto;
     padding: 14px 0;
 }
 
@@ -943,17 +949,48 @@ body.cart-open .pp-cart-drawer__panel {
     }
 }
 
-/* Base container after removing Bootstrap */
+/* Responsive container system */
 .container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-inline: var(--pp-space-2);
+    width: min(100%, var(--pp-container-max));
+    margin-inline: auto;
+    padding-inline: var(--pp-gutter-x);
 }
 
-@media (min-width: 900px) {
-    .container {
-        padding-inline: var(--pp-space-3);
+.container-fluid {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--pp-gutter-fluid);
+}
+
+.content-wrapper {
+    width: 100%;
+    min-width: 0;
+    display: block;
+}
+
+.pp-responsive-grid,
+.pp-main-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--pp-space-3);
+}
+
+.pp-responsive-grid--sidebar,
+.pp-responsive-grid--halves,
+.pp-main-grid--with-sidebar,
+.pp-main-grid--halves {
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 992px) {
+    .pp-responsive-grid--sidebar,
+    .pp-main-grid--with-sidebar {
+        grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+    }
+
+    .pp-responsive-grid--halves,
+    .pp-main-grid--halves {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -965,63 +1002,33 @@ body.cart-open .pp-cart-drawer__panel {
     padding: var(--pp-section-y-lg) 0;
 }
 
-/* Global first-section flush rules */
-#main-content > .pp-section {
-    padding-top: 0;
-}
-
-#main-content > :first-child {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-    min-height: 0 !important;
-}
-
-#main-content > :first-child > :first-child {
-    margin-top: 0;
-    padding-top: 0;
-}
-
-#main-content > :first-child > section:first-child,
-#main-content > :first-child > .pp-section:first-child,
-#main-content > :first-child > .section:first-child {
-    margin-top: 0;
-    padding-top: 0;
-    min-height: auto;
-    height: auto;
-}
-
 main#main-content {
-    padding-top: 0;
-    margin-top: 0;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    min-height: calc(100vh - var(--site-header-h, var(--pp-header-h)));
     display: flow-root;
-    min-height: calc(100vh - var(--pp-header-h));
 }
 
-main#main-content > section:first-child,
-main#main-content > .pp-section:first-child,
-main#main-content > .section:first-child {
+main#main-content > .content-wrapper > :first-child,
+main#main-content > .content-wrapper > :first-child > :first-child {
     margin-top: 0 !important;
     padding-top: 0 !important;
-    min-height: auto !important;
-    height: auto !important;
+}
+
+main#main-content > .content-wrapper > :first-child:is(section, .section, .pp-section),
+main#main-content > .content-wrapper > :first-child > :first-child:is(section, .section, .pp-section) {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
 }
 
 section {
     padding-block: var(--pp-section-y, 24px);
 }
 
-main#main-content > .container:first-child {
-    padding-top: 0;
-    margin-top: 0;
-}
-
-.pp-home__hero,
-.pp-products__hero,
-.pp-hero,
-.pp-detail__hero,
-.pp-shell {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
+img,
+video {
+    max-width: 100%;
+    height: auto;
 }
 
 .pp-stack-sm {
@@ -1038,12 +1045,6 @@ main#main-content > .container:first-child {
 
 .pp-mt-md {
     margin-top: var(--pp-space-4);
-}
-
-@media (min-width: 1024px) {
-    .container {
-        padding: 0 32px;
-    }
 }
 
 /* ============================================

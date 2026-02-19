@@ -51,10 +51,37 @@
         const header = qs('.site-header');
         if (!header) return;
         const h = header.getBoundingClientRect().height || 64;
-        root.style.setProperty('--pp-header-h', `${Math.round(h)}px`);
+        const headerHeight = `${Math.round(h)}px`;
+        root.style.setProperty('--pp-header-h', headerHeight);
+        root.style.setProperty('--site-header-h', headerHeight);
     };
+    const syncHeaderHeightDebounced = (() => {
+        let resizeTimer = null;
+        return () => {
+            if (resizeTimer) {
+                window.clearTimeout(resizeTimer);
+            }
+            resizeTimer = window.setTimeout(() => {
+                resizeTimer = null;
+                window.requestAnimationFrame(syncHeaderHeight);
+            }, 100);
+        };
+    })();
+
+    document.addEventListener('DOMContentLoaded', syncHeaderHeight);
     window.addEventListener('load', syncHeaderHeight);
-    window.addEventListener('resize', () => window.requestAnimationFrame(syncHeaderHeight));
+    window.addEventListener('resize', syncHeaderHeightDebounced);
+    syncHeaderHeight();
+
+    if ('ResizeObserver' in window) {
+        const headerObserverTarget = qs('.site-header');
+        if (headerObserverTarget) {
+            const headerObserver = new ResizeObserver(() => {
+                syncHeaderHeight();
+            });
+            headerObserver.observe(headerObserverTarget);
+        }
+    }
 
     // Global toast bridge for other scripts
     document.addEventListener('pp:toast', (event) => {
