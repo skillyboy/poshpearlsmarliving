@@ -11,7 +11,7 @@
 
 /* ===== HERO SECTION ===== */
 .pp-home__hero {
-  padding: 0 0 var(--section-spacing);
+  padding: 0 0 var(--pp-section-y-lg);
   position: relative;
   overflow: hidden;
 }
@@ -131,7 +131,7 @@
 
 /* ===== FEATURES SECTION ===== */
 .pp-home__features {
-  padding: 0 0 var(--section-spacing);
+  padding: 0 0 var(--pp-section-y-lg);
   background: #faf7f2;
 }
 
@@ -193,7 +193,7 @@
 
 /* ===== TRUST SECTION ===== */
 .pp-home__trust {
-  padding: 0 0 var(--section-spacing);
+  padding: 0 0 var(--pp-section-y-lg);
   background: white;
   text-align: center;
 }
@@ -231,7 +231,7 @@
 
 /* ===== DEVICES SECTION ===== */
 .pp-home__devices {
-  padding: 0 0 var(--section-spacing);
+  padding: 0 0 var(--pp-section-y-lg);
   background: #faf7f2;
 }
 
@@ -335,7 +335,7 @@
 
 /* ===== BULK PRICING SECTION ===== */
 .pp-home__bulk {
-  padding: 0 0 var(--section-spacing);
+  padding: 0 0 var(--pp-section-y-lg);
   background: white;
 }
 
@@ -418,7 +418,7 @@
 
 /* ===== PRICING SECTION ===== */
 .pp-home__pricing {
-  padding: 0 0 var(--section-spacing);
+  padding: 0 0 var(--pp-section-y-lg);
   background: #faf7f2;
 }
 
@@ -493,7 +493,7 @@
 
 /* ===== HELP SECTION ===== */
 .pp-home__help {
-  padding: 0 0 var(--section-spacing);
+  padding: 0 0 var(--pp-section-y-lg);
   background: white;
 }
 
@@ -584,7 +584,7 @@
 
 /* ===== 404 SECTION ===== */
 .pp-home__notfound {
-  padding: 0 0 var(--section-spacing);
+  padding: 0 0 var(--pp-section-y-lg);
   background: #faf7f2;
 }
 
@@ -730,7 +730,7 @@
 
 /* Ensure home page last section keeps bottom spacing */
 .pp-home > section:last-of-type {
-  padding-bottom: var(--section-spacing);
+  padding-bottom: var(--pp-section-y-lg);
 }
 
 /* Remove any margin from first elements inside sections */
