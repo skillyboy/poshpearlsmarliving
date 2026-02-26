@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 from decouple import config, Csv
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,13 +24,36 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
+RAILWAY_ENVIRONMENT = os.getenv("RAILWAY_ENVIRONMENT", "").strip()
+RAILWAY_PROJECT_ID = os.getenv("RAILWAY_PROJECT_ID", "").strip()
+RAILWAY_PUBLIC_DOMAIN = os.getenv("RAILWAY_PUBLIC_DOMAIN", "").strip()
+ON_RAILWAY = bool(RAILWAY_ENVIRONMENT or RAILWAY_PROJECT_ID or RAILWAY_PUBLIC_DOMAIN)
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-8h#26!*_lmp1mfmmrc9fu1f$y5rf$5%@^sf&dj)20x_h!)cz9#')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config("DEBUG", default=not ON_RAILWAY, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,testserver', cast=Csv())
+if not DEBUG and SECRET_KEY.startswith("django-insecure-"):
+    raise ImproperlyConfigured(
+        "Set a secure SECRET_KEY environment variable for production."
+    )
+
+_allowed_hosts = [
+    host.strip()
+    for host in config(
+        "ALLOWED_HOSTS",
+        default="localhost,127.0.0.1,testserver",
+        cast=Csv(),
+    )
+    if host.strip()
+]
+if RAILWAY_PUBLIC_DOMAIN:
+    _allowed_hosts.append(RAILWAY_PUBLIC_DOMAIN)
+if ON_RAILWAY:
+    _allowed_hosts.append(".railway.app")
+ALLOWED_HOSTS = sorted(set(_allowed_hosts))
 
 # Security / production settings
 SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=not DEBUG, cast=bool)
@@ -54,8 +78,14 @@ X_FRAME_OPTIONS = config("X_FRAME_OPTIONS", default="DENY")
 REFERRER_POLICY = config(
     "REFERRER_POLICY", default="strict-origin-when-cross-origin"
 )
-_csrf_origins = config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
-CSRF_TRUSTED_ORIGINS = [origin for origin in _csrf_origins if origin]
+_csrf_origins = [
+    origin.strip()
+    for origin in config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
+    if origin.strip()
+]
+if RAILWAY_PUBLIC_DOMAIN:
+    _csrf_origins.append(f"https://{RAILWAY_PUBLIC_DOMAIN}")
+CSRF_TRUSTED_ORIGINS = sorted(set(_csrf_origins))
 
 
 # Application definition
