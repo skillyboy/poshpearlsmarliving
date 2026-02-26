@@ -13,12 +13,23 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 import sys
 from pathlib import Path
-from decouple import config, Csv
+from decouple import Csv, config
 import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+PRIMARY_DOMAIN = "poshpearlsmartliving.com"
+WWW_DOMAIN = f"www.{PRIMARY_DOMAIN}"
+
+# Optional .env loader for local/dev environment variables
+ENV_PATH = BASE_DIR / ".env"
+if ENV_PATH.exists():
+    for line in ENV_PATH.read_text().splitlines():
+        if not line or line.strip().startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        os.environ.setdefault(key.strip(), value.strip().strip("'\""))
 
 
 # Quick-start development settings - unsuitable for production
@@ -30,7 +41,10 @@ RAILWAY_PUBLIC_DOMAIN = os.getenv("RAILWAY_PUBLIC_DOMAIN", "").strip()
 ON_RAILWAY = bool(RAILWAY_ENVIRONMENT or RAILWAY_PROJECT_ID or RAILWAY_PUBLIC_DOMAIN)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-8h#26!*_lmp1mfmmrc9fu1f$y5rf$5%@^sf&dj)20x_h!)cz9#')
+SECRET_KEY = config(
+    "SECRET_KEY",
+    default="django-insecure-8h#26!*_lmp1mfmmrc9fu1f$y5rf$5%@^sf&dj)20x_h!)cz9#",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=not ON_RAILWAY, cast=bool)
@@ -44,7 +58,7 @@ _allowed_hosts = [
     host.strip()
     for host in config(
         "ALLOWED_HOSTS",
-        default="localhost,127.0.0.1,testserver",
+        default=f"localhost,127.0.0.1,testserver,{PRIMARY_DOMAIN},{WWW_DOMAIN}",
         cast=Csv(),
     )
     if host.strip()
@@ -80,7 +94,11 @@ REFERRER_POLICY = config(
 )
 _csrf_origins = [
     origin.strip()
-    for origin in config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
+    for origin in config(
+        "CSRF_TRUSTED_ORIGINS",
+        default=f"https://{PRIMARY_DOMAIN},https://{WWW_DOMAIN}",
+        cast=Csv(),
+    )
     if origin.strip()
 ]
 if RAILWAY_PUBLIC_DOMAIN:
@@ -238,15 +256,6 @@ if AWS_STORAGE_BUCKET_NAME:
     else:
         MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
 
-# Optional .env loader for local MVP config
-ENV_PATH = BASE_DIR / ".env"
-if ENV_PATH.exists():
-    for line in ENV_PATH.read_text().splitlines():
-        if not line or line.strip().startswith("#") or "=" not in line:
-            continue
-        key, value = line.split("=", 1)
-        os.environ.setdefault(key.strip(), value.strip().strip("'\""))
-
 # Paystack settings (use test keys for local MVP)
 PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY", "")
 PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY", "")
@@ -272,7 +281,10 @@ if EMAIL_ALLOW_INSECURE_SSL:
     EMAIL_BACKEND = "poshapp.email_backends.InsecureSMTP"
     EMAIL_USE_TLS = False
     EMAIL_USE_SSL = True
-SITE_URL = os.getenv("SITE_URL", "http://localhost:8000")
+SITE_URL = config(
+    "SITE_URL",
+    default=f"http://localhost:8000" if DEBUG else f"https://{PRIMARY_DOMAIN}",
+)
 
 # django-allauth config
 ACCOUNT_EMAIL_REQUIRED = True
