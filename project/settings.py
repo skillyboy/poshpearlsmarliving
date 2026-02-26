@@ -39,11 +39,16 @@ RAILWAY_ENVIRONMENT = os.getenv("RAILWAY_ENVIRONMENT", "").strip()
 RAILWAY_PROJECT_ID = os.getenv("RAILWAY_PROJECT_ID", "").strip()
 RAILWAY_PUBLIC_DOMAIN = os.getenv("RAILWAY_PUBLIC_DOMAIN", "").strip()
 ON_RAILWAY = bool(RAILWAY_ENVIRONMENT or RAILWAY_PROJECT_ID or RAILWAY_PUBLIC_DOMAIN)
+DEFAULT_INSECURE_SECRET_KEY = (
+    "django-insecure-8h#26!*_lmp1mfmmrc9fu1f$y5rf$5%@^sf&dj)20x_h!)cz9#"
+)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config(
-    "SECRET_KEY",
-    default="django-insecure-8h#26!*_lmp1mfmmrc9fu1f$y5rf$5%@^sf&dj)20x_h!)cz9#",
+SECRET_KEY = (
+    os.getenv("SECRET_KEY", "").strip()
+    or os.getenv("DJANGO_SECRET_KEY", "").strip()
+    or os.getenv("RAILWAY_SECRET_KEY", "").strip()
+    or config("SECRET_KEY", default=DEFAULT_INSECURE_SECRET_KEY)
 )
 
 
@@ -52,7 +57,7 @@ DEBUG = config("DEBUG", default=not ON_RAILWAY, cast=bool)
 
 if not DEBUG and SECRET_KEY.startswith("django-insecure-"):
     raise ImproperlyConfigured(
-        "Set a secure SECRET_KEY environment variable for production."
+        "Set SECRET_KEY (or DJANGO_SECRET_KEY / RAILWAY_SECRET_KEY) to a secure value for production."
     )
 
 _allowed_hosts = [
