@@ -35,6 +35,7 @@ SECRET_KEY=your-generated-secret-key-here
 - `DEBUG` - Set to `False` in production
 - `ALLOWED_HOSTS` - Comma-separated domain names
 - `CSRF_TRUSTED_ORIGINS` - Comma-separated HTTPS origins
+- `RAILWAY_PUBLIC_DOMAIN` - Auto-provided by Railway; settings will auto-add it to hosts/CSRF
 - `SECURE_SSL_REDIRECT` - `True` in production
 - `SESSION_COOKIE_SECURE` - `True` in production
 - `CSRF_COOKIE_SECURE` - `True` in production
@@ -143,16 +144,20 @@ python manage.py createsuperuser
 gunicorn project.wsgi:application --bind 0.0.0.0:$PORT
 ```
 
+If you use this repository's `Procfile`, steps 3 and 4 are executed automatically
+at startup.
+
 ### Platform-Specific Guides
 
 #### Railway
 
 1. Connect your GitHub repository
-2. Add environment variables in Settings ? Variables
-3. Set start command:
-   `gunicorn project.wsgi:application --bind 0.0.0.0:$PORT`
-4. Railway will auto-detect Django and deploy
-5. Run migrations via Railway CLI or dashboard console
+2. Add environment variables in `Settings -> Variables` (at minimum: `SECRET_KEY`, `DEBUG=False`, `DATABASE_URL`, `SITE_URL`, Paystack keys).
+3. Leave start command empty to use `Procfile`, or set it to:
+   `python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn project.wsgi:application --bind 0.0.0.0:$PORT`
+4. Deploy. Railway will provide `RAILWAY_PUBLIC_DOMAIN`, which is auto-trusted by settings.
+5. Create admin user once via Railway Shell:
+   `python manage.py createsuperuser`
 
 #### Heroku
 

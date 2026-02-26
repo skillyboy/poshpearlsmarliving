@@ -109,3 +109,17 @@ PAYSTACK_BASE_URL=https://api.paystack.co
 - PATCH `/api/cart/items/{item_id}` `{ "quantity": 2 }`
 - DELETE `/api/cart/items/{item_id}`
 - DELETE `/api/cart`
+
+## Railway Quick Deploy
+
+1. Copy `.env.example` values into Railway `Settings -> Variables`
+2. Set at least:
+   - `SECRET_KEY` (strong random value)
+   - `DEBUG=False`
+   - `DATABASE_URL` (Railway Postgres connection string)
+   - `SITE_URL` (your Railway/custom domain)
+3. Deploy from GitHub (the included `Procfile` runs migrate + collectstatic + Gunicorn)
+4. After first deploy, open Railway shell and run:
+   - `python manage.py createsuperuser`
+
+For full production setup, see `docs/DEPLOYMENT.md`.
