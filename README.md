@@ -116,10 +116,11 @@ PAYSTACK_BASE_URL=https://api.paystack.co
 2. Set at least:
    - `SECRET_KEY` (strong random value)
    - `DEBUG=False`
-   - `DATABASE_URL` (Railway Postgres connection string)
+   - `DATABASE_URL=${{Postgres.DATABASE_URL}}`
    - `SITE_URL` (your Railway/custom domain)
 3. Deploy from GitHub (the included `Procfile` runs migrate + collectstatic + Gunicorn)
 4. After first deploy, open Railway shell and run:
    - `python manage.py createsuperuser`
+   - `python -c "import os; print(os.getenv('DATABASE_URL',''))"` and verify it is not using `@host:`/`@localhost:`
 
 For full production setup, see `docs/DEPLOYMENT.md`.

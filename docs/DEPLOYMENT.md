@@ -78,8 +78,9 @@ SECRET_KEY=your-generated-secret-key-here
 
 2. **Set `DATABASE_URL`** in your environment:
 ```
-DATABASE_URL=postgresql://user:password@host:5432/dbname
+DATABASE_URL=${{Postgres.DATABASE_URL}}
 ```
+Do not use placeholder hosts such as `host` or `localhost` in Railway production.
 
 3. **Run migrations:**
 ```bash
@@ -153,11 +154,19 @@ at startup.
 
 1. Connect your GitHub repository
 2. Add environment variables in `Settings -> Variables` (at minimum: `SECRET_KEY`, `DEBUG=False`, `DATABASE_URL`, `SITE_URL`, Paystack keys).
-3. Leave start command empty to use `Procfile`, or set it to:
+3. Wire `DATABASE_URL` to your Railway Postgres reference:
+   `DATABASE_URL=${{Postgres.DATABASE_URL}}`
+4. Validate the runtime value in Railway Shell before redeploy:
+   `python -c "import os; print(os.getenv('DATABASE_URL',''))"`
+   Ensure it contains a real host and not `@host:` / `@localhost:`.
+5. Leave start command empty to use `Procfile`, or set it to:
    `python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn project.wsgi:application --bind 0.0.0.0:$PORT`
-4. Deploy. Railway will provide `RAILWAY_PUBLIC_DOMAIN`, which is auto-trusted by settings.
-5. Create admin user once via Railway Shell:
+6. Deploy. Railway will provide `RAILWAY_PUBLIC_DOMAIN`, which is auto-trusted by settings.
+7. Create admin user once via Railway Shell:
    `python manage.py createsuperuser`
+8. Run smoke checks:
+   - Open `/` and `/admin/`
+   - Confirm deploy logs contain no `OperationalError` entries
 
 #### Heroku
 
@@ -218,6 +227,7 @@ heroku run python manage.py createsuperuser
 - Verify PostgreSQL is running
 - Check `DATABASE_URL` in `.env` or platform variables
 - Ensure database exists and credentials are valid
+- In Railway, ensure `DATABASE_URL` is set from `${{Postgres.DATABASE_URL}}` (not a placeholder URL)
 
 **Email not sending:**
 - Check SMTP credentials

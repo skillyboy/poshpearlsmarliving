@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 from decouple import Csv, config
 import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
@@ -171,6 +172,14 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 sqlite_path = (BASE_DIR / "db.sqlite3").as_posix()
 sqlite_url = f"sqlite:///{sqlite_path}"
+RAW_DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
+if RAW_DATABASE_URL and ON_RAILWAY:
+    parsed_db_url = urlparse(RAW_DATABASE_URL)
+    if parsed_db_url.hostname in {"host", "localhost"}:
+        raise ImproperlyConfigured(
+            "DATABASE_URL is using a placeholder/localhost host. In Railway, set DATABASE_URL to your Postgres connection reference (for example: ${{Postgres.DATABASE_URL}})."
+        )
+
 DATABASES = {
     "default": dj_database_url.config(
         default=sqlite_url,
